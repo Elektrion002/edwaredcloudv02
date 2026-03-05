@@ -1,0 +1,103 @@
+objetivo crear un subsistema web app que permita la administración de usuarios, niveles de usuarios, clientes, 
+pedidos, ventas, cobranza, finanzas, productos, almacenes, inventarios de almacenes, 
+movimientos de almacenes, ubicación de productos en cada almacén, en tablas relacionadas en donde aplique, 
+
+para ello se debe crear una base de datos separada del sistema web app maestro en el vps posgresql
+
+Fase 01 subsistema negocios
+Crear un dashboard de bienvenida al sistema el cual será responsivo, en el pondremos tarjetas con las descripciones de cada módulo del subsistema, con login para este subsistema con username y password o PIN rapido
+
+modulo 01 Gestión de usuarios del staff
+El administrador podrá agregar o editar usuarios del staff en este módulo en el subsistema
+
+ID
+Username
+Nombres
+Apellidos
+celular whatsapp
+Fecha nacimiento
+Password
+PIN Rápido 4 a 10 dígitos
+Cargo
+Nivel de usuario (Super Admin, Admin, User, Customer)
+Nivel de usuario Numérico (10, 20, 30, 50, 100 etc)
+Antigüedad
+Activación lógica
+
+Los usuarios pueden autogestionar sus contraseñas o pines dentro del mismo sistema sin importar su nivel.
+
+Modulo 02 Gestion de Cartera de Clientes
+El administrador podrá agregar o editar clientes en este módulo en el subsistema
+
+ID
+Código Único 10 caracteres (CF00000001)
+RFC
+Nombre de Negocio
+Nombres (Representante si es una empresa)
+Apellidos (Representante si es una empresa)
+celular whatsapp
+Password
+PIN Rápido 4-10 DÍGITOS
+Dirección Física para búsqueda en mapa google
+Ruta Asignada
+Vendedor Asignado
+Crédito asignado
+Deuda Acumulada
+Activación lógica
+
+El cliente puede autogestionar su password y contraseña en la ruta de clientes.
+
+Modulo 03 Gestión de los productos
+El administrador puede crear o editar productos desde este módulo en el subsistema
+
+ID
+SKU
+Descripción
+Unidad de Medida
+Precio Costo
+Precio Venta General
+Caducidad
+Proveedores
+Activación lógica.
+
+Módulo 04 Gestión de los almacenes
+El administrador puede crear o editar almacenes desde este módulo en el subsistema
+
+ID
+Código Almacén (ALM0000001)
+Descripción
+Dirección Física para búsqueda en mapa google
+Activación lógica.
+
+Módulo 05 Gestión de los inventarios en el almacén
+El administrador puede administrar los ítems del SKU en el inventario de cada almacén desde este módulo en el subsistema
+
+FKEY ID DEL ALMACÉN 
+FKEY ID DEL SKU
+Descripción basada en SKU
+Nivel Mínimo Alerta crítica
+Nivel Óptimo Surtimiento
+Nivel Maximo Sobrepasado
+Stock Actual
+Costo basado en precio costo autocalculado del SKU
+Costo basado en precio general autocalculado del SKU
+
+
+Módulo 06 Gestión de los movimientos de SKU en cada almacén
+El administrador puede administrar los movimientos positivos o negativos o ajuste de stock de auditoría de  ítems del SKU en el inventario de cada almacén desde este módulo en el subsistema
+
+ID Movimiento
+FKEY ID DEL SKU
+FKEY ID DEL ALMACÉN 
+FKEY CatMovimiento
+Descripción del movimiento base CatMovimiento
+Naturaleza Movimiento (resta o suma o ajusta stock del SKU en el inventario del almacén)
+FKID USUARIO
+Nombre Usuario base FKID USUARIO
+TIMESTAMP FECHA Y HORA
+
+
+Módulo 07 Gestión de Catálogos de categorías
+El administrador puede administrar los ítems de los catálogos de categorías para no hacer hardcode en los htmls y administrar los tipos de catálogos de categorías auxiliares.
+
+MÓDULOS 08….XX continua Se enviará la petición en otra fase para los demás módulos
