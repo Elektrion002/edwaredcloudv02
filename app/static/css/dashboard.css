@@ -1,0 +1,30 @@
+.welcome-section {
+    text-align: center;
+    margin-bottom: 4rem;
+}
+
+.welcome-section h1 {
+    font-size: 4rem;
+    font-weight: 700;
+    color: #ffffff;
+    letter-spacing: -1px;
+    margin-bottom: 1rem;
+    font-family: var(--font-heading);
+}
+
+.welcome-section p {
+    font-size: 1.2rem;
+    color: var(--accent-gold);
+    font-weight: 500;
+    max-width: 700px;
+    margin: 0 auto;
+}
+
+@media (max-width: 768px) {
+    .welcome-section h1 {
+        font-size: 2.8rem;
+    }
+    .welcome-section p {
+        font-size: 1.1rem;
+    }
+}

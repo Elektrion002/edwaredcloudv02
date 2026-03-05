@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+
+{% block content %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/dashboard.css') }}">
+
+<div class="welcome-section">
+    <h1>Centro de Mando</h1>
+    <p>Gestione sus ecosistemas digitales con potencia y precisión.</p>
+</div>
+
+<div class="dashboard-grid">
+    {% for module in modules %}
+    <div class="card" onclick="location.href='{{ module.route }}'">
+        <h3>{{ module.title }}</h3>
+        <p>{{ module.description }}</p>
+    </div>
+    {% endfor %}
+</div>
+{% endblock %}

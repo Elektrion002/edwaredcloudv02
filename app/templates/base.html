@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ title }} - EdwaredCloud Master</title>
+    
+    <!-- Fonts: Montserrat (Elegant) & Open Sans (Clean) -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;600;700&family=Open+Sans:wght@300;400;600&display=swap" rel="stylesheet">
+    
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/variables.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/main.css') }}">
+    
+    <!-- Meta tags for SEO & Branding -->
+    <meta name="description" content="EdwaredCloud Master System - Luxury Executive Management Dashboard.">
+    <meta name="theme-color" content="#0a192f">
+</head>
+<body>
+    <header>
+        <div class="logo">EdwaredCloud v2</div>
+        <button class="hamburger" id="hamburger">Menu</button>
+        <nav class="nav-links" id="nav-links">
+            <a href="{{ url_for('main.index') }}">Panel Principal</a>
+            <a href="{{ url_for('admin.login') }}" class="btn-login">Staff Login</a>
+        </nav>
+    </header>
+
+    <main>
+        {% block content %}{% endblock %}
+    </main>
+
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js"></script>
+    <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+</body>
+</html>

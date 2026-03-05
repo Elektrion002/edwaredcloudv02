@@ -1,0 +1,76 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="login-container">
+    <div class="login-card">
+        <h2>Acceso Administrativo</h2>
+        <form>
+            <div class="form-group">
+                <label for="username">Usuario</label>
+                <input type="text" id="username" name="username" placeholder="Ingrese su usuario">
+            </div>
+            <div class="form-group">
+                <label for="password">Contraseña</label>
+                <input type="password" id="password" name="password" placeholder="Ingrese su contraseña">
+            </div>
+            <button type="submit" class="btn-login-submit">Entrar</button>
+        </form>
+    </div>
+</div>
+
+<style>
+    .login-container {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 60vh;
+    }
+    .login-card {
+        background: var(--color-card-bg);
+        border: 1px solid var(--color-card-border);
+        padding: 3rem;
+        border-radius: 12px;
+        width: 100%;
+        max-width: 400px;
+        backdrop-filter: blur(10px);
+    }
+    .login-card h2 {
+        text-align: center;
+        margin-bottom: 2rem;
+    }
+    .form-group {
+        margin-bottom: 1.5rem;
+    }
+    .form-group label {
+        display: block;
+        margin-bottom: 0.5rem;
+        font-size: 0.9rem;
+    }
+    .form-group input {
+        width: 100%;
+        padding: 0.8rem;
+        background: rgba(255, 255, 255, 0.05);
+        border: 1px solid var(--color-card-border);
+        border-radius: 5px;
+        color: var(--color-text-main);
+        outline: none;
+    }
+    .form-group input:focus {
+        border-color: var(--color-primary-light);
+    }
+    .btn-login-submit {
+        width: 100%;
+        padding: 1rem;
+        background: var(--color-primary);
+        border: none;
+        color: var(--color-text-main);
+        border-radius: 5px;
+        cursor: pointer;
+        font-size: 1rem;
+        transition: background 0.3s;
+    }
+    .btn-login-submit:hover {
+        background: var(--color-primary-light);
+    }
+</style>
+{% endblock %}
