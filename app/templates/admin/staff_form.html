@@ -1,0 +1,191 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="form-header">
+    <h1 class="page-title">{{ title }}</h1>
+    <a href="{{ url_for('admin.staff_list') }}" class="btn-back">← Volver al Listado</a>
+</div>
+
+<div class="glass-form-container">
+    <form method="POST" class="cinematic-form">
+        {{ form.hidden_tag() }}
+        
+        <div class="form-row">
+            <div class="form-group">
+                {{ form.username.label }}
+                {{ form.username(class="form-control", placeholder="usuario_staff") }}
+                {% for error in form.username.errors %}<span class="error">{{ error }}</span>{% endfor %}
+            </div>
+        </div>
+
+        <div class="form-row grid-2">
+            <div class="form-group">
+                {{ form.nombres.label }}
+                {{ form.nombres(class="form-control", placeholder="Juan") }}
+                {% for error in form.nombres.errors %}<span class="error">{{ error }}</span>{% endfor %}
+            </div>
+            <div class="form-group">
+                {{ form.apellidos.label }}
+                {{ form.apellidos(class="form-control", placeholder="Pérez") }}
+                {% for error in form.apellidos.errors %}<span class="error">{{ error }}</span>{% endfor %}
+            </div>
+        </div>
+
+        <div class="form-row grid-2">
+            <div class="form-group">
+                {{ form.whatsapp.label }}
+                {{ form.whatsapp(class="form-control", placeholder="+52 ...") }}
+            </div>
+            <div class="form-group">
+                {{ form.fecha_nacimiento.label }}
+                {{ form.fecha_nacimiento(class="form-control", type="date") }}
+            </div>
+        </div>
+
+        <div class="form-row grid-2">
+            <div class="form-group">
+                {{ form.password.label }}
+                {{ form.password(class="form-control", placeholder="Dejar en blanco para no cambiar") }}
+                {% for error in form.password.errors %}<span class="error">{{ error }}</span>{% endfor %}
+            </div>
+            <div class="form-group">
+                {{ form.confirm_password.label }}
+                {{ form.confirm_password(class="form-control") }}
+            </div>
+        </div>
+
+        <div class="form-row grid-2">
+            <div class="form-group">
+                {{ form.cargo.label }}
+                {{ form.cargo(class="form-control", placeholder="Ej. Gerente") }}
+            </div>
+            <div class="form-group">
+                {{ form.pin_rapido.label }}
+                {{ form.pin_rapido(class="form-control", placeholder="4 a 10 dígitos") }}
+            </div>
+        </div>
+
+        <div class="form-row grid-2">
+            <div class="form-group">
+                {{ form.nivel_etiqueta.label }}
+                {{ form.nivel_etiqueta(class="form-control select-gold") }}
+            </div>
+            <div class="form-group">
+                {{ form.nivel_numerico.label }}
+                {{ form.nivel_numerico(class="form-control select-gold") }}
+            </div>
+        </div>
+
+        <div class="form-group checkbox-group">
+            {{ form.activo() }} {{ form.activo.label }}
+        </div>
+
+        <div class="form-submit">
+            {{ form.submit(class="btn-gold-large") }}
+        </div>
+    </form>
+</div>
+
+<style>
+.form-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 2rem;
+}
+
+.btn-back {
+    color: var(--accent-slate);
+    text-decoration: none;
+    font-weight: 600;
+}
+
+.glass-form-container {
+    background: var(--ui-surface);
+    backdrop-filter: blur(20px);
+    border: 1px solid var(--ui-border);
+    border-radius: 12px;
+    padding: 3rem;
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+.grid-2 {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1.5rem;
+}
+
+@media (max-width: 600px) {
+    .grid-2 { grid-template-columns: 1fr; }
+}
+
+.form-group {
+    margin-bottom: 1.5rem;
+    display: flex;
+    flex-direction: column;
+}
+
+.form-group label {
+    color: var(--accent-gold);
+    font-family: var(--font-heading);
+    font-size: 0.85rem;
+    text-transform: uppercase;
+    margin-bottom: 0.5rem;
+    letter-spacing: 0.5px;
+}
+
+.form-control {
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    color: white;
+    padding: 0.8rem 1rem;
+    border-radius: 4px;
+    font-size: 1rem;
+    transition: border-color 0.3s;
+}
+
+.form-control:focus {
+    outline: none;
+    border-color: var(--accent-gold);
+    background: rgba(255, 255, 255, 0.1);
+}
+
+.select-gold option {
+    background: var(--primary-navy);
+    color: white;
+}
+
+.checkbox-group {
+    flex-direction: row;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.btn-gold-large {
+    width: 100%;
+    background: var(--accent-gold);
+    color: var(--primary-navy);
+    border: none;
+    padding: 1.2rem;
+    border-radius: 4px;
+    font-family: var(--font-heading);
+    font-weight: 700;
+    font-size: 1.1rem;
+    cursor: pointer;
+    transition: transform 0.2s, box-shadow 0.2s;
+    margin-top: 1rem;
+}
+
+.btn-gold-large:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 20px rgba(255, 215, 0, 0.2);
+}
+
+.error {
+    color: #f87171;
+    font-size: 0.8rem;
+    margin-top: 0.3rem;
+}
+</style>
+{% endblock %}
