@@ -45,6 +45,9 @@ Los clientes pueden autogestionar sus contraseñas o pines dentro del mismo sist
 
 si el cliente se olvida de su pin o contraseña podra autogestionar enviando por whats app
 una temporal desde el mismo subsistema usando su numero celular
+el cajero o administrador podra enviar la ruta de credenciales a los clientes
+ellos podran acceder a su credencial con un login dependiente de sus datos al hacer login en la ruta con su identificador pin o contraseña podra ver su codigo QR
+el cliente podra ver sus ultimos movimientos o solicitar un reporte de los mismos como en el banco.
 
 
 Modulo 03 Gestión de Puntos de Recompensa
@@ -79,13 +82,17 @@ y que cantidad de puntos se requieren para cangear alguno de ellos
 ID
 SKU
 descripcion
+tipo de producto
 Precio de venta
 precio costo
 precio en puntos cangeables
-bandera de si es cangeable o no
+bandera de si es cangeable o no con puntos recompensas
 puntos que genera su compra
 imagen se debe guardar en una carpeta en el vps
 desactivado logico
+
+validar sku unicos y datos que sean obligatorios deben ser evaluados para no tirar la pagina al editar o crear
+datos sensibles no deben 
 
 
 

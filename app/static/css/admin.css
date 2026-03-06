@@ -153,6 +153,19 @@
   background: rgba(255, 255, 255, 0.1);
 }
 
+/* Improved Select Contrast */
+select.form-control {
+  background-color: var(--primary-navy) !important;
+  color: white !important;
+  cursor: pointer;
+}
+
+select.form-control option {
+  background-color: var(--primary-navy);
+  color: white;
+  padding: 10px;
+}
+
 .select-gold option {
   background: var(--primary-navy);
   color: white;
@@ -190,4 +203,43 @@
   color: #f87171;
   font-size: 0.8rem;
   margin-top: 0.3rem;
+}
+
+.customer-info-box {
+  line-height: 1.4;
+}
+
+.bold-white {
+  font-weight: 700;
+  color: white;
+}
+
+.badge-gold-small {
+  background: rgba(255, 215, 0, 0.1);
+  color: var(--accent-gold);
+  border: 1px solid rgba(255, 215, 0, 0.2);
+  padding: 0.1rem 0.4rem;
+  border-radius: 4px;
+  font-size: 0.7rem;
+  font-weight: 700;
+}
+
+.link-mini {
+  color: var(--accent-slate);
+  font-size: 0.8rem;
+  margin-left: 5px;
+  transition: color 0.2s;
+}
+
+.link-mini:hover {
+  color: var(--accent-gold);
+}
+
+.badge-blue {
+  background: rgba(0, 102, 255, 0.1);
+  color: #3b82f6;
+  padding: 0.3rem 0.8rem;
+  border-radius: 20px;
+  font-size: 0.75rem;
+  font-weight: 600;
 }
