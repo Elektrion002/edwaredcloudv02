@@ -3,6 +3,8 @@ from app.admin import bp
 from app.models.user import StaffUser
 from app.models.customer import Customer
 from app.admin.forms import StaffUserForm, LoginForm, CustomerForm
+from app import db
+from flask_login import login_required, login_user, logout_user, current_user
 
 @bp.route('/profile', methods=['GET', 'POST'])
 @login_required
