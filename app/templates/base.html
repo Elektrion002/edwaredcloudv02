@@ -24,7 +24,7 @@
         <nav class="nav-links" id="nav-links">
             <a href="{{ url_for('main.index') }}">Panel Principal</a>
             {% if current_user.is_authenticated %}
-                {% if getattr(current_user, 'is_staff', False) %}
+                {% if current_user.is_staff %}
                     {% if current_user.nivel_numerico <= 20 %}
                         <a href="{{ url_for('admin.staff_list') }}">Gestión Staff</a>
                         <a href="{{ url_for('admin.customer_list') }}">Gestión Clientes</a>

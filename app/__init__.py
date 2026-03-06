@@ -5,7 +5,13 @@ from flask_login import LoginManager
 
 db = SQLAlchemy()
 login_manager = LoginManager()
-login_manager.login_view = 'admin.login' # Adjusted to admin.login
+login_manager.login_view = 'admin.login'
+
+from flask_login import AnonymousUserMixin
+class AnonymousUser(AnonymousUserMixin):
+    is_staff = False
+
+login_manager.anonymous_user = AnonymousUser
 
 def create_app(config_class=Config):
     app = Flask(__name__)
