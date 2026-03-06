@@ -35,6 +35,7 @@
                     {% if current_user.nivel_numerico <= 20 %}
                         <a href="{{ url_for('admin.staff_list') }}">Gestión Staff</a>
                         <a href="{{ url_for('admin.customer_list') }}">Gestión Clientes</a>
+                        <a href="{{ url_for('admin.subsystem_list') }}">Gestión Subsistemas</a>
                     {% endif %}
                     <a href="{{ url_for('admin.profile') }}">Mi Perfil</a>
                 {% else %}
