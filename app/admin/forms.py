@@ -10,7 +10,7 @@ class StaffUserForm(FlaskForm):
     fecha_nacimiento = DateField('Fecha de Nacimiento', format='%Y-%m-%d', validators=[Optional()])
     password = PasswordField('Contraseña', validators=[Optional(), Length(min=6, max=128)])
     confirm_password = PasswordField('Confirmar Contraseña', validators=[EqualTo('password')])
-    pin_rapido = StringField('PIN Rápido (4-10 dígitos)', validators=[Optional(), Length(min=4, max=10)])
+    pin_rapido = PasswordField('PIN Rápido (4-10 dígitos)', validators=[Optional(), Length(min=4, max=10)])
     cargo = StringField('Cargo', validators=[Optional(), Length(max=100)])
     
     nivel_etiqueta = SelectField('Nivel de Acceso', choices=[
