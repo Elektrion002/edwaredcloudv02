@@ -58,7 +58,7 @@ Password: MEwar3x4-12VpS
 Fase 03
 
 modulo 01 Gestión de usuarios del staff
-El administrador podrá agregar o editar usuarios del staff en este módulo en el sistema maestro
+El administrador podrá agregar o editar usuarios del staff en este módulo en el sistema maestro. este debe estar oculto del panel principal de bienvenida publico, el panel publico tiene las taregtas de los microservicios web que tiene el sistema maestro llamados subsistemas, el panel del administrador permite la gestion de usuarios y es distinto al publico para acceder a el es necesario el login al sistema maestro y su base de datos es independiente de los subsistemas aqui los items de la base de datos de usuarios de sistema maestro:
 
 ID
 Username
@@ -75,6 +75,8 @@ Antigüedad
 Activación lógica
 
 Los usuarios pueden autogestionar sus contraseñas o pines dentro del mismo sistema sin importar su nivel.
+
+dime las diferencias y si cumplimos con el requerimiento
 
 Modulo 02 Gestion de Cartera de Clientes
 El administrador podrá agregar o editar clientes en este módulo en el sistema maestro

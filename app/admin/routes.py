@@ -6,6 +6,30 @@ from app import db
 from flask_login import login_required, login_user, logout_user, current_user
 from app.admin.forms import StaffUserForm, LoginForm
 
+@bp.route('/profile', methods=['GET', 'POST'])
+@login_required
+def profile():
+    form = StaffUserForm(obj=current_user)
+    # Hide fields that aren't for self-management
+    del form.username
+    del form.nivel_etiqueta
+    del form.nivel_numerico
+    del form.activo
+    
+    if form.validate_on_submit():
+        current_user.nombres = form.nombres.data
+        current_user.apellidos = form.apellidos.data
+        current_user.whatsapp = form.whatsapp.data
+        current_user.fecha_nacimiento = form.fecha_nacimiento.data
+        current_user.pin_rapido = form.pin_rapido.data
+        current_user.cargo = form.cargo.data
+        if form.password.data:
+            current_user.set_password(form.password.data)
+        db.session.commit()
+        flash('Perfil actualizado exitosamente.')
+        return redirect(url_for('admin.profile'))
+    return render_template('admin/profile.html', title='Mi Perfil', form=form)
+
 @bp.route('/login', methods=['GET', 'POST'])
 def login():
     if current_user.is_authenticated:

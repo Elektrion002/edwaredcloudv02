@@ -194,3 +194,32 @@ main {
     from { transform: translateX(100%); opacity: 0; }
     to { transform: translateX(0); opacity: 1; }
 }
+
+/* Discreet & Logout Styles */
+.admin-access-discreet {
+    margin-top: 5rem;
+    text-align: center;
+    opacity: 0.3;
+    transition: opacity 0.3s;
+}
+
+.admin-access-discreet:hover {
+    opacity: 1;
+}
+
+.discreet-link {
+    color: var(--accent-slate);
+    text-decoration: none;
+    font-size: 0.75rem;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+}
+
+.btn-logout {
+    color: #ff4d4d !important;
+    font-size: 0.8rem !important;
+}
+
+.btn-logout:hover {
+    color: #ff3333 !important;
+}

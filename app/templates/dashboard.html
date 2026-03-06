@@ -16,4 +16,10 @@
     </div>
     {% endfor %}
 </div>
+
+{% if not current_user.is_authenticated %}
+<div class="admin-access-discreet">
+    <a href="{{ url_for('admin.login') }}" class="discreet-link">Acceso Administrador</a>
+</div>
+{% endif %}
 {% endblock %}

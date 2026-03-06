@@ -23,7 +23,13 @@
         <button class="hamburger" id="hamburger">Menu</button>
         <nav class="nav-links" id="nav-links">
             <a href="{{ url_for('main.index') }}">Panel Principal</a>
-            <a href="{{ url_for('admin.login') }}" class="btn-login">Staff Login</a>
+            {% if current_user.is_authenticated %}
+                {% if current_user.nivel_numerico <= 20 %}
+                    <a href="{{ url_for('admin.staff_list') }}">Gestión Staff</a>
+                {% endif %}
+                <a href="{{ url_for('admin.profile') }}">Mi Perfil</a>
+                <a href="{{ url_for('admin.logout') }}" class="btn-logout">Salir</a>
+            {% endif %}
         </nav>
     </header>
 

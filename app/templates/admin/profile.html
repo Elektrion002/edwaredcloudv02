@@ -1,0 +1,109 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="profile-container">
+    <div class="glass-card profile-card">
+        <h2 class="cinematic-title">Mi Perfil</h2>
+        <div class="user-info-summary">
+            <p><strong>Usuario:</strong> {{ current_user.username }}</p>
+            <p><strong>Nivel:</strong> {{ current_user.nivel_etiqueta }}</p>
+        </div>
+        
+        <form action="" method="post" novalidate>
+            {{ form.hidden_tag() }}
+            <div class="form-group">
+                {{ form.password.label(class="form-label") }}
+                {{ form.password(class="form-input", placeholder="Nueva contraseña (dejar en blanco para no cambiar)") }}
+                {% for error in form.password.errors %}
+                <span class="error-text">[{{ error }}]</span>
+                {% endfor %}
+            </div>
+            <div class="form-group">
+                {{ form.confirm_password.label(class="form-label") }}
+                {{ form.confirm_password(class="form-input", placeholder="Confirmar nueva contraseña") }}
+                {% for error in form.confirm_password.errors %}
+                <span class="error-text">[{{ error }}]</span>
+                {% endfor %}
+            </div>
+            <div class="form-group">
+                {{ form.pin_rapido.label(class="form-label") }}
+                {{ form.pin_rapido(class="form-input", placeholder="Nuevo PIN (4-10 dígitos)") }}
+                {% for error in form.pin_rapido.errors %}
+                <span class="error-text">[{{ error }}]</span>
+                {% endfor %}
+            </div>
+            <div class="form-actions">
+                {{ form.submit(class="btn-gold-submit") }}
+            </div>
+        </form>
+    </div>
+</div>
+
+<style>
+    .profile-container {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        min-height: 70vh;
+        padding: 2rem;
+    }
+    
+    .profile-card {
+        width: 100%;
+        max-width: 500px;
+        padding: 3rem;
+        background: var(--ui-surface);
+        border: 1px solid var(--ui-border);
+        border-radius: 15px;
+    }
+
+    .cinematic-title {
+        color: var(--accent-gold);
+        text-align: center;
+        margin-bottom: 2rem;
+    }
+
+    .user-info-summary {
+        margin-bottom: 2rem;
+        padding-bottom: 1rem;
+        border-bottom: 1px solid var(--ui-border);
+        color: var(--accent-slate);
+    }
+    
+    .user-info-summary p {
+        margin-bottom: 0.5rem;
+    }
+
+    .form-group {
+        margin-bottom: 1.5rem;
+    }
+
+    .form-label {
+        display: block;
+        color: var(--accent-slate);
+        margin-bottom: 0.5rem;
+        font-size: 0.85rem;
+        text-transform: uppercase;
+    }
+
+    .form-input {
+        width: 100%;
+        padding: 1rem;
+        background: rgba(255, 255, 255, 0.03);
+        border: 1px solid var(--ui-border);
+        border-radius: 8px;
+        color: var(--text-white);
+    }
+
+    .btn-gold-submit {
+        width: 100%;
+        padding: 1.2rem;
+        background: linear-gradient(135deg, var(--accent-gold) 0%, #b8860b 100%);
+        border: none;
+        border-radius: 8px;
+        color: var(--primary-navy);
+        font-weight: 700;
+        cursor: pointer;
+    }
+</style>
+{% endblock %}
