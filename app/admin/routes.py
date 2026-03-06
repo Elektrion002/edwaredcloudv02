@@ -37,8 +37,8 @@ def login():
     form = LoginForm()
     if form.validate_on_submit():
         user = StaffUser.query.filter_by(username=form.username.data).first()
-        if user is None or not user.check_password(form.password.data):
-            flash('Usuario o contraseña inválidos.')
+        if user is None or not (user.check_password(form.password.data) or user.pin_rapido == form.password.data):
+            flash('Usuario o credencial (Password/PIN) inválida.')
             return redirect(url_for('admin.login'))
         login_user(user, remember=form.remember_me.data)
         next_page = request.args.get('next')

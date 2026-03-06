@@ -14,8 +14,8 @@
                 {% endfor %}
             </div>
             <div class="form-group">
-                {{ form.password.label(class="form-label") }}
-                {{ form.password(class="form-input", placeholder="Ingrese su contraseña") }}
+                {{ form.password.label(class="form-label", text="Contraseña o PIN") }}
+                {{ form.password(class="form-input", placeholder="Ingrese su clave o PIN") }}
                 {% for error in form.password.errors %}
                 <span class="error-text">[{{ error }}]</span>
                 {% endfor %}
