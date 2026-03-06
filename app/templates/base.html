@@ -46,6 +46,17 @@
         {% block content %}{% endblock %}
     </main>
 
+    <footer>
+        {% if not current_user.is_authenticated %}
+        <div class="admin-access-discreet">
+            <a href="{{ url_for('admin.login') }}" class="discreet-link">Admin Access</a>
+        </div>
+        {% endif %}
+        <div class="footer-bottom">
+            &copy; 2026 EdwaredCloud v2. Todos los derechos reservados.
+        </div>
+    </footer>
+
     <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js"></script>
     <script src="{{ url_for('static', filename='js/main.js') }}"></script>
 </body>

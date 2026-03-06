@@ -196,23 +196,36 @@ main {
 }
 
 /* Discreet & Logout Styles */
-.admin-access-discreet {
-    margin-top: 5rem;
+footer {
+    padding: 4rem 5% 2rem;
     text-align: center;
-    opacity: 0.3;
-    transition: opacity 0.3s;
+    border-top: 1px solid var(--ui-border);
+    margin-top: 4rem;
+}
+
+.admin-access-discreet {
+    margin-bottom: 2rem;
+    opacity: 0.15;
+    transition: opacity 0.5s ease;
 }
 
 .admin-access-discreet:hover {
-    opacity: 1;
+    opacity: 0.8;
 }
 
 .discreet-link {
     color: var(--accent-slate);
     text-decoration: none;
-    font-size: 0.75rem;
-    letter-spacing: 1px;
+    font-size: 0.65rem;
+    letter-spacing: 2px;
     text-transform: uppercase;
+    font-weight: 300;
+}
+
+.footer-bottom {
+    font-size: 0.8rem;
+    color: var(--accent-slate);
+    opacity: 0.5;
 }
 
 .btn-logout {
