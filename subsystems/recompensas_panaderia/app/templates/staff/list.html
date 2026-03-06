@@ -1,0 +1,88 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="header-actions">
+    <h2 class="title">Gestión de Staff - Subsistema</h2>
+    {% if current_user.nivel_numerico <= 20 %}
+        <a href="{{ url_for('staff.new') }}" class="btn btn-gold"><i class="fas fa-plus"></i> Nuevo Usuario</a>
+    {% endif %}
+</div>
+
+<div class="glass-card mt-2">
+    <table class="data-table">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Usuario</th>
+                <th>Nombre</th>
+                <th>Cargo</th>
+                <th>Nivel</th>
+                <th>Estado</th>
+                <th>Acciones</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for user in users %}
+            <tr>
+                <td>#{{ user.id }}</td>
+                <td><span class="bold-white">{{ user.username }}</span></td>
+                <td>{{ user.nombres }} {{ user.apellidos }}</td>
+                <td>{{ user.cargo }}</td>
+                <td><span class="badge">{{ user.nivel_usuario }}</span></td>
+                <td>
+                    <span class="status {{ 'active' if user.activo else 'inactive' }}">
+                        <i class="fas fa-circle"></i> {{ 'Activo' if user.activo else 'Inactivo' }}
+                    </span>
+                </td>
+                <td>
+                    <a href="{{ url_for('staff.edit', id=user.id) }}" class="edit-link"><i class="fas fa-edit"></i> Editar</a>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+<style>
+    .header-actions {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 2rem;
+    }
+    .data-table {
+        width: 100%;
+        border-collapse: collapse;
+    }
+    .data-table th {
+        text-align: left;
+        padding: 1rem;
+        color: var(--accent-gold);
+        text-transform: uppercase;
+        font-size: 0.75rem;
+        border-bottom: 1px solid var(--ui-border);
+    }
+    .data-table td {
+        padding: 1rem;
+        border-bottom: 1px solid rgba(255,255,255,0.05);
+    }
+    .bold-white { font-weight: 600; color: white; }
+    .badge {
+        background: rgba(255,215,0,0.1);
+        color: var(--accent-gold);
+        padding: 0.2rem 0.5rem;
+        border-radius: 4px;
+        font-size: 0.8rem;
+    }
+    .status { font-size: 0.8rem; font-weight: 600; }
+    .status.active { color: #4ade80; }
+    .status.inactive { color: #f87171; }
+    .edit-link {
+        color: var(--accent-slate);
+        text-decoration: none;
+        font-weight: 500;
+    }
+    .edit-link:hover { color: var(--accent-gold); }
+    .mt-2 { margin-top: 1rem; }
+</style>
+{% endblock %}

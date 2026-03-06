@@ -1,0 +1,101 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="header-actions">
+    <h2 class="title">{{ title }}</h2>
+    <a href="{{ url_for('staff.list') }}" class="btn-back"><i class="fas fa-arrow-left"></i> Volver a la lista</a>
+</div>
+
+<div class="glass-card form-container">
+    <form action="" method="post" novalidate>
+        {{ form.hidden_tag() }}
+        <div class="grid-2">
+            <div class="form-group">
+                {{ form.username.label }}
+                {{ form.username(class="form-input") }}
+                {% for error in form.username.errors %}
+                    <span class="error">[{{ error }}]</span>
+                {% endfor %}
+            </div>
+            <div class="form-group">
+                {{ form.celular_whatsapp.label }}
+                {{ form.celular_whatsapp(class="form-input") }}
+            </div>
+            <div class="form-group">
+                {{ form.nombres.label }}
+                {{ form.nombres(class="form-input") }}
+            </div>
+            <div class="form-group">
+                {{ form.apellidos.label }}
+                {{ form.apellidos(class="form-input") }}
+            </div>
+            <div class="form-group">
+                {{ form.cargo.label }}
+                {{ form.cargo(class="form-input") }}
+            </div>
+            <div class="form-group">
+                {{ form.fecha_nacimiento.label }}
+                {{ form.fecha_nacimiento(class="form-input", type="date") }}
+            </div>
+            
+            {% if current_user.nivel_numerico <= 20 %}
+            <div class="form-group">
+                {{ form.nivel_usuario.label }}
+                {{ form.nivel_usuario(class="form-input select-dark") }}
+            </div>
+            <div class="form-group">
+                {{ form.nivel_numerico.label }}
+                {{ form.nivel_numerico(class="form-input select-dark") }}
+            </div>
+            {% endif %}
+
+            <div class="form-group">
+                {{ form.password.label }}
+                {{ form.password(class="form-input", placeholder="Dejar en blanco para no cambiar") }}
+            </div>
+            <div class="form-group">
+                {{ form.pin.label }}
+                {{ form.pin(class="form-input", placeholder="PIN de 4-10 dígitos") }}
+            </div>
+        </div>
+        
+        <div class="form-actions">
+            {{ form.submit(class="btn btn-gold btn-full") }}
+        </div>
+    </form>
+</div>
+
+<style>
+    .form-container { max-width: 800px; margin: 0 auto; }
+    .grid-2 {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 1.5rem;
+    }
+    .form-group {
+        margin-bottom: 1.5rem;
+        display: flex;
+        flex-direction: column;
+    }
+    .form-group label {
+        color: var(--accent-gold);
+        font-size: 0.8rem;
+        text-transform: uppercase;
+        margin-bottom: 0.5rem;
+    }
+    .form-input {
+        background: rgba(255,255,255,0.03);
+        border: 1px solid var(--ui-border);
+        border-radius: 6px;
+        padding: 0.8rem;
+        color: white;
+    }
+    .select-dark {
+        background: var(--primary-navy);
+        color: white;
+    }
+    .form-actions { margin-top: 2rem; }
+    .btn-back { color: var(--accent-slate); text-decoration: none; font-size: 0.9rem; }
+    .error { color: #f87171; font-size: 0.8rem; margin-top: 0.3rem; }
+</style>
+{% endblock %}

@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ title }} - Programa de Recompensas</title>
+    
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
+    
+    <!-- FontAwesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    
+    <style>
+        :root {
+            --primary-navy: #0a1128;
+            --accent-gold: #ffd700;
+            --accent-slate: #8e9aaf;
+            --text-white: #ffffff;
+            --ui-surface: rgba(255, 255, 255, 0.05);
+            --ui-border: rgba(255, 255, 255, 0.1);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            background-color: var(--primary-navy);
+            color: var(--text-white);
+            font-family: 'Inter', sans-serif;
+            line-height: 1.6;
+        }
+
+        .header {
+            background: rgba(10, 17, 40, 0.9);
+            backdrop-filter: blur(10px);
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid var(--ui-border);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .logo {
+            font-family: 'Montserrat', sans-serif;
+            font-weight: 700;
+            color: var(--accent-gold);
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        .main-content {
+            padding: 2rem;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .glass-card {
+            background: var(--ui-surface);
+            border: 1px solid var(--ui-border);
+            border-radius: 12px;
+            padding: 2rem;
+            backdrop-filter: blur(10px);
+        }
+
+        .btn {
+            padding: 0.8rem 1.5rem;
+            border-radius: 6px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .btn-gold {
+            background: var(--accent-gold);
+            color: var(--primary-navy);
+            border: none;
+        }
+
+        .btn-gold:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(255, 215, 0, 0.3);
+        }
+
+        .alert {
+            padding: 1rem;
+            border-radius: 8px;
+            margin-bottom: 1rem;
+        }
+
+        .alert-error {
+            background: rgba(255, 77, 77, 0.1);
+            color: #ff4d4d;
+            border: 1px solid rgba(255, 77, 77, 0.2);
+        }
+
+        .alert-success {
+            background: rgba(74, 222, 128, 0.1);
+            color: #4ade80;
+            border: 1px solid rgba(74, 222, 128, 0.2);
+        }
+
+        .nav-links a {
+            color: var(--text-white);
+            text-decoration: none;
+            margin-left: 1.5rem;
+            font-size: 0.9rem;
+            font-weight: 500;
+        }
+
+        .nav-links a:hover {
+            color: var(--accent-gold);
+        }
+    </style>
+    {% block extra_css %}{% endblock %}
+</head>
+<body>
+    <header class="header">
+        <div class="logo">RECOMPENSAS EDWARED</div>
+        <nav class="nav-links">
+            {% if current_user.is_authenticated %}
+                <a href="{{ url_for('main.index') }}">Inicio</a>
+                {% if current_user.nivel_numerico <= 30 %}
+                    <a href="{{ url_for('staff.list') }}">Gestión Staff</a>
+                {% endif %}
+                <a href="{{ url_for('auth.logout') }}">Salir</a>
+            {% endif %}
+        </nav>
+    </header>
+
+    <main class="main-content">
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                {% for category, message in messages %}
+                    <div class="alert alert-{{ category if category != 'message' else 'info' }}">
+                        {{ message }}
+                    </div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+        
+        {% block content %}{% endblock %}
+    </main>
+</body>
+</html>
