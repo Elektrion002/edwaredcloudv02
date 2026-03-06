@@ -1,10 +1,8 @@
 from flask import render_template, redirect, url_for, flash, request
 from app.admin import bp
 from app.models.user import StaffUser
-from app.admin.forms import StaffUserForm
-from app import db
-from flask_login import login_required, login_user, logout_user, current_user
-from app.admin.forms import StaffUserForm, LoginForm
+from app.models.customer import Customer
+from app.admin.forms import StaffUserForm, LoginForm, CustomerForm
 
 @bp.route('/profile', methods=['GET', 'POST'])
 @login_required
@@ -105,3 +103,71 @@ def staff_edit(id):
         flash('Staff actualizado.')
         return redirect(url_for('admin.staff_list'))
     return render_template('admin/staff_form.html', title='Editar Staff', form=form, user=user)
+
+# --- Customer Management Hub ---
+
+@bp.route('/customers')
+@login_required
+def customer_list():
+    customers = Customer.query.all()
+    return render_template('admin/customers.html', title='Cartera de Clientes', customers=customers)
+
+@bp.route('/customers/new', methods=['GET', 'POST'])
+@login_required
+def customer_new():
+    form = CustomerForm()
+    if form.validate_on_submit():
+        customer = Customer(
+            codigo_unico=form.codigo_unico.data,
+            rfc=form.rfc.data,
+            nombre_negocio=form.nombre_negocio.data,
+            nombres=form.nombres.data,
+            apellidos=form.apellidos.data,
+            whatsapp=form.whatsapp.data,
+            direccion=form.direccion.data,
+            ruta_asignada=form.ruta_asignada.data,
+            vendedor_asignado=form.vendedor_asignado.data,
+            credito_asignado=float(form.credito_asignado.data or 0),
+            deuda_acumulada=float(form.deuda_acumulada.data or 0),
+            activo=form.activo.data
+        )
+        if form.password.data:
+            customer.set_password(form.password.data)
+        if form.pin_rapido.data:
+            customer.pin_rapido = form.pin_rapido.data
+            
+        db.session.add(customer)
+        db.session.commit()
+        flash('Cliente registrado exitosamente.')
+        return redirect(url_for('admin.customer_list'))
+    return render_template('admin/customer_form.html', title='Nuevo Cliente', form=form)
+
+@bp.route('/customers/edit/<int:id>', methods=['GET', 'POST'])
+@login_required
+def customer_edit(id):
+    customer = Customer.query.get_or_404(id)
+    # Prepare form with current data
+    form = CustomerForm(obj=customer)
+    if form.validate_on_submit():
+        customer.codigo_unico = form.codigo_unico.data
+        customer.rfc = form.rfc.data
+        customer.nombre_negocio = form.nombre_negocio.data
+        customer.nombres = form.nombres.data
+        customer.apellidos = form.apellidos.data
+        customer.whatsapp = form.whatsapp.data
+        customer.direccion = form.direccion.data
+        customer.ruta_asignada = form.ruta_asignada.data
+        customer.vendedor_asignado = form.vendedor_asignado.data
+        customer.credito_asignado = float(form.credito_asignado.data or 0)
+        customer.deuda_acumulada = float(form.deuda_acumulada.data or 0)
+        customer.activo = form.activo.data
+        
+        if form.password.data:
+            customer.set_password(form.password.data)
+        if form.pin_rapido.data:
+            customer.pin_rapido = form.pin_rapido.data
+            
+        db.session.commit()
+        flash('Datos del cliente actualizados.')
+        return redirect(url_for('admin.customer_list'))
+    return render_template('admin/customer_form.html', title='Editar Cliente', form=form, customer=customer)

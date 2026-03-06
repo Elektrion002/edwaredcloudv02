@@ -26,6 +26,7 @@
             {% if current_user.is_authenticated %}
                 {% if current_user.nivel_numerico <= 20 %}
                     <a href="{{ url_for('admin.staff_list') }}">Gestión Staff</a>
+                    <a href="{{ url_for('admin.customer_list') }}">Gestión Clientes</a>
                 {% endif %}
                 <a href="{{ url_for('admin.profile') }}">Mi Perfil</a>
                 <a href="{{ url_for('admin.logout') }}" class="btn-logout">Salir</a>

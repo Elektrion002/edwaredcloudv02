@@ -75,11 +75,15 @@ Antigüedad
 Activación lógica
 
 Los usuarios pueden autogestionar sus contraseñas o pines dentro del mismo sistema sin importar su nivel.
+nos e deben mostrar datos sencibles en ningun formulario de gestion de usuarios delñ estaff en el modulo maestro, tomarlo como leecion aprendida para subsistemas o microservicios
 
-dime las diferencias y si cumplimos con el requerimiento
 
-Modulo 02 Gestion de Cartera de Clientes
+FASE 04
+Modulo 02 Gestion de Cartera de Clientes sistema maestro
+
+
 El administrador podrá agregar o editar clientes en este módulo en el sistema maestro
+
 
 ID
 Código Único 10 caracteres (CF00000001)
@@ -97,4 +101,19 @@ Crédito asignado
 Deuda Acumulada
 Activación lógica
 
-El cliente puede autogestionar su password y contraseña en la ruta de clientes.
+El cliente puede autogestionar su password y contraseña en la ruta de clientes. los datos sensibles no deben verse en ningun formulario.
+
+Modulo 03
+El administrador podrá agregar o editar items de la tabla de subsistemas o microservicios del modulo maestro
+
+crear la tabla de subsistemas o microservicios en la db del sistema maestro
+ID
+Nombre del subsistema
+Ruta del subsistema
+DB del subsistema
+Usuario admin del subsistema FkID Clientes
+Password admin del subsistema FkID Clientes password
+Puerto del subsistema
+tipo del susbsistema (web, api, etc)
+Descripción del subsistema
+Activación lógica

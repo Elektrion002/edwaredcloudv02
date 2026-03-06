@@ -1,0 +1,120 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="form-header">
+    <h1 class="page-title">{{ title }}</h1>
+    <a href="{{ url_for('admin.customer_list') }}" class="btn-back">← Volver a Cartera</a>
+</div>
+
+<div class="glass-form-container">
+    <form method="POST" class="cinematic-form">
+        {{ form.hidden_tag() }}
+        
+        <div class="form-section-title">Datos Fiscales y Negocio</div>
+        <div class="form-row grid-2">
+            <div class="form-group">
+                {{ form.codigo_unico.label }}
+                {{ form.codigo_unico(class="form-control", placeholder="CF00000001") }}
+                {% for error in form.codigo_unico.errors %}<span class="error">{{ error }}</span>{% endfor %}
+            </div>
+            <div class="form-group">
+                {{ form.rfc.label }}
+                {{ form.rfc(class="form-control", placeholder="XAXX010101000") }}
+                {% for error in form.rfc.errors %}<span class="error">{{ error }}</span>{% endfor %}
+            </div>
+        </div>
+
+        <div class="form-row">
+            <div class="form-group">
+                {{ form.nombre_negocio.label }}
+                {{ form.nombre_negocio(class="form-control", placeholder="Nombre del Establecimiento") }}
+                {% for error in form.nombre_negocio.errors %}<span class="error">{{ error }}</span>{% endfor %}
+            </div>
+        </div>
+
+        <div class="form-section-title">Representante y Contacto</div>
+        <div class="form-row grid-2">
+            <div class="form-group">
+                {{ form.nombres.label }}
+                {{ form.nombres(class="form-control", placeholder="Nombres") }}
+            </div>
+            <div class="form-group">
+                {{ form.apellidos.label }}
+                {{ form.apellidos(class="form-control", placeholder="Apellidos") }}
+            </div>
+        </div>
+
+        <div class="form-row grid-2">
+            <div class="form-group">
+                {{ form.whatsapp.label }}
+                {{ form.whatsapp(class="form-control", placeholder="+52 ...") }}
+            </div>
+            <div class="form-group">
+                {{ form.direccion.label }}
+                {{ form.direccion(class="form-control", placeholder="Calle, Número, Colonia, Ciudad") }}
+            </div>
+        </div>
+
+        <div class="form-section-title">Seguridad (Enmascarado)</div>
+        <div class="form-row grid-2">
+            <div class="form-group">
+                {{ form.password.label }}
+                {{ form.password(class="form-control", placeholder="Dejar en blanco para no cambiar") }}
+                {% for error in form.password.errors %}<span class="error">{{ error }}</span>{% endfor %}
+            </div>
+            <div class="form-group">
+                {{ form.pin_rapido.label }}
+                {{ form.pin_rapido(class="form-control", placeholder="4 a 10 dígitos") }}
+                {% for error in form.pin_rapido.errors %}<span class="error">{{ error }}</span>{% endfor %}
+            </div>
+        </div>
+
+        <div class="form-section-title">Logística y Finanzas</div>
+        <div class="form-row grid-2">
+            <div class="form-group">
+                {{ form.ruta_asignada.label }}
+                {{ form.ruta_asignada(class="form-control") }}
+            </div>
+            <div class="form-group">
+                {{ form.vendedor_asignado.label }}
+                {{ form.vendedor_asignado(class="form-control") }}
+            </div>
+        </div>
+
+        <div class="form-row grid-2">
+            <div class="form-group">
+                {{ form.credito_asignado.label }}
+                {{ form.credito_asignado(class="form-control", placeholder="0.00") }}
+            </div>
+            <div class="form-group">
+                {{ form.deuda_acumulada.label }}
+                {{ form.deuda_acumulada(class="form-control", placeholder="0.00") }}
+            </div>
+        </div>
+
+        <div class="form-group checkbox-group">
+            {{ form.activo() }} {{ form.activo.label }}
+        </div>
+
+        <div class="form-submit">
+            {{ form.submit(class="btn-gold-large") }}
+        </div>
+    </form>
+</div>
+
+<style>
+    .form-section-title {
+        color: var(--accent-gold);
+        font-family: 'Montserrat', sans-serif;
+        font-size: 0.9rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        margin: 2rem 0 1rem;
+        border-bottom: 1px solid var(--ui-border);
+        padding-bottom: 0.5rem;
+    }
+</style>
+
+<link rel="stylesheet" href="{{ url_for('static', filename='css/admin.css') }}">
+{% endblock %}

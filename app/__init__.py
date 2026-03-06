@@ -22,7 +22,7 @@ def create_app(config_class=Config):
     app.register_blueprint(admin_bp, url_prefix='/admin')
 
     with app.app_context():
-        from app.models import user
+        from app.models import user, customer
         db.create_all()
 
     return app

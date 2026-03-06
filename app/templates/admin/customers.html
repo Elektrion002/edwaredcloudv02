@@ -1,0 +1,65 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="header-actions">
+    <h1 class="page-title">Cartera de Clientes</h1>
+    <div class="header-buttons">
+        <a href="{{ url_for('admin.customer_new') }}" class="btn-gold">+ Registrar Cliente</a>
+    </div>
+</div>
+
+<div class="glass-container">
+    <table class="staff-table">
+        <thead>
+            <tr>
+                <th>Código</th>
+                <th>Negocio</th>
+                <th>Representante</th>
+                <th>WhatsApp</th>
+                <th>Deuda</th>
+                <th>Estado</th>
+                <th>Acciones</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for customer in customers %}
+            <tr>
+                <td><span class="badge">{{ customer.codigo_unico or '-' }}</span></td>
+                <td><strong>{{ customer.nombre_negocio }}</strong></td>
+                <td>{{ customer.nombres }} {{ customer.apellidos }}</td>
+                <td>{{ customer.whatsapp or '-' }}</td>
+                <td class="numeric-cell">${{ "%.2f"|format(customer.deuda_acumulada) }}</td>
+                <td>
+                    {% if customer.activo %}
+                        <span class="status-active">Activo</span>
+                    {% else %}
+                        <span class="status-inactive">Inactivo</span>
+                    {% endif %}
+                </td>
+                <td>
+                    <a href="{{ url_for('admin.customer_edit', id=customer.id) }}" class="btn-edit">Gestionar</a>
+                </td>
+            </tr>
+            {% else %}
+            <tr>
+                <td colspan="7" style="text-align: center; padding: 3rem;">No hay clientes registrados en la cartera.</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+<style>
+    .numeric-cell {
+        font-family: 'Montserrat', sans-serif;
+        font-weight: 600;
+        color: #ff4d4d; /* Red for debt by default */
+    }
+    .header-buttons {
+        display: flex;
+        gap: 1rem;
+    }
+</style>
+
+<link rel="stylesheet" href="{{ url_for('static', filename='css/admin.css') }}">
+{% endblock %}
