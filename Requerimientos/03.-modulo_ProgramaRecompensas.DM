@@ -21,20 +21,75 @@ Nivel de usuario Numérico (10, 20, 30, 50, 100 etc)
 Antigüedad
 Activación lógica
 
-Los usuarios pueden autogestionar sus contraseñas o pines dentro del mismo sistema sin importar su nivel.
+Los usuarios pueden autogestionar sus contraseñas o pines dentro del mismo sistema sin importar su nivel. 
+no mostrar informacion sensible como pines y contraseñas, evaluar simepre antes de sumitir un cambio, 
+enviar mensajes de error en lugar de matar la pagina
 
 Modulo 02 Gestion de Cartera de Clientes
 El administrador podrá agregar o editar clientes en este módulo en el sistema maestro
 
 ID
-cliente id (alfanumérico de 10 caracteres no repetible)RFCo
+cliente id (alfanumérico de 10 caracteres no repetible)
 Nombres
 Apellidos 
 celular whatsapp
 Password
 PIN Rápido 4-10 DÍGITOS
 Dirección Física para búsqueda en mapa google
-credencialID autogenerada unica irrepetible
+credencialID autogenerada unica irrepetible se usara para generar el codigo QR de la credencial.
 flag de pérdida de credencial on off
+puntos disponibles
+puntos canjeados
 Activación lógica
 Los clientes pueden autogestionar sus contraseñas o pines dentro del mismo sistema sin importar su nivel.
+
+si el cliente se olvida de su pin o contraseña podra autogestionar enviando por whats app
+una temporal desde el mismo subsistema usando su numero celular
+
+
+Modulo 03 Gestión de Puntos de Recompensa
+El cajero o usuarios del staff del subsistema o microservicio agregar o canjear puntos de recompensa 
+en este módulo en el subsistema o microservicio
+
+al hacer login en este modulo el personal del estaff del subisitema o microservisio sera guiado 
+a un panel de cange de puntos y tendra disponibles las siguientes caracteristicas:
+
+Campo de escanneo de la credencial mediente QR del usuario
+Campo de busqueda por numero telefonico del cliente o codigo de la credencial
+campo de asignar agregar puntos o cangear puntos al cliente podria abrirse un modal para ello
+Boton de registro de clientes te redigira a la gestion de clientes agregar nuevo
+
+modulo 04
+el administrador del subsistema podra tener accesos a los modulos de administracion de usuarios del staff y clientes asi como de paneles de estadisticas y tablas cardex del subsitema
+panel de estadisticas aqui aparecen las graficas de los top y kpi de los canges que se hacen
+top de cleintes puntos generados
+tops clientes que cambian puntos
+top de usuarios que asignan puntos
+top de usuarios que congean puntos
+tablas de cardex por tiempo hoy ayer semana Historico o tiempo definido por el usuarios
+filtros de cardex o busquedas en la tabla cardex
+targetas tipo kpi representando dinero cangeado compras que generan puntos.
+
+modulo 05
+Catalogo de productos 
+
+el subsistema o microservicio tendra una tabla donde gestionenen el catalogo de productos para saber cuantos puntos genera la compra d eun producto 
+y que cantidad de puntos se requieren para cangear alguno de ellos
+
+ID
+SKU
+descripcion
+Precio de venta
+precio costo
+precio en puntos cangeables
+bandera de si es cangeable o no
+puntos que genera su compra
+imagen se debe guardar en una carpeta en el vps
+desactivado logico
+
+
+
+
+
+
+

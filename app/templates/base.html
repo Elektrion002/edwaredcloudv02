@@ -23,6 +23,12 @@
         <div class="logo">EdwaredCloud v2</div>
         <button class="hamburger" id="hamburger">Menu</button>
         <nav class="nav-links" id="nav-links">
+            {% if current_user.is_authenticated %}
+                <span class="user-greeting">
+                    <i class="fas fa-user-circle gold-text"></i> 
+                    Hola, <span class="gold-text">{{ current_user.nombres }}</span>
+                </span>
+            {% endif %}
             <a href="{{ url_for('main.index') }}">Panel Principal</a>
             {% if current_user.is_authenticated %}
                 {% if current_user.is_staff %}
