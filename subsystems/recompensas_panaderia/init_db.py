@@ -1,5 +1,5 @@
-from app import create_app, db
-from app.models.staff import StaffUser
+from recompensas_app import create_app, db
+from recompensas_app.models.staff import StaffUser
 from datetime import date
 
 app = create_app()

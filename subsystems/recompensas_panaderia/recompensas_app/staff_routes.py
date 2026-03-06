@@ -1,8 +1,8 @@
 from flask import Blueprint, render_template, redirect, url_for, flash, request
 from flask_login import login_required, current_user
-from app import db
-from app.models.staff import StaffUser
-from app.auth_forms import StaffUserForm
+from recompensas_app import db
+from recompensas_app.models.staff import StaffUser
+from recompensas_app.auth_forms import StaffUserForm
 from datetime import datetime
 
 staff_bp = Blueprint('staff', __name__)

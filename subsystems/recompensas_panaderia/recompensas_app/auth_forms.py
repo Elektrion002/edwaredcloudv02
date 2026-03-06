@@ -1,7 +1,7 @@
 from flask_wtf import FlaskForm
 from wtforms import StringField, PasswordField, SubmitField, BooleanField, SelectField, DateField
 from wtforms.validators import DataRequired, Length, EqualTo, ValidationError, Optional
-from app.models.staff import StaffUser
+from recompensas_app.models.staff import StaffUser
 
 class StaffLoginForm(FlaskForm):
     username = StringField('Usuario', validators=[DataRequired()])

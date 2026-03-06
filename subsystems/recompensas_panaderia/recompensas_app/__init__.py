@@ -18,17 +18,17 @@ def create_app(config_class=Config):
     login_manager.init_app(app)
 
     # Register blueprints
-    from app.main import bp as main_bp
+    from recompensas_app.main import bp as main_bp
     app.register_blueprint(main_bp)
 
-    from app.auth_routes import bp as auth_bp
+    from recompensas_app.auth_routes import bp as auth_bp
     app.register_blueprint(auth_bp, url_prefix='/auth')
 
-    from app.staff_routes import staff_bp
+    from recompensas_app.staff_routes import staff_bp
     app.register_blueprint(staff_bp, url_prefix='/admin/staff')
 
     with app.app_context():
-        from app.models import staff
+        from recompensas_app.models import staff
         db.create_all()
 
     return app
