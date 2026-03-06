@@ -1,0 +1,94 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="form-header">
+    <h1 class="page-title">Gestión de Subsistema</h1>
+    <p class="subtitle-gold">Configure los parámetros técnicos del microservicio asociado al cliente.</p>
+</div>
+
+<div class="glass-form-container">
+    <form method="POST" class="cinematic-form">
+        {{ form.hidden_tag() }}
+        
+        <div class="form-section-title">Información General</div>
+        <div class="form-row grid-2">
+            <div class="form-group">
+                {{ form.nombre.label }}
+                {{ form.nombre(class="form-control", placeholder="Ej: Panadería Flores App") }}
+                {% for error in form.nombre.errors %}<span class="error">{{ error }}</span>{% endfor %}
+            </div>
+            <div class="form-group">
+                {{ form.usuario_admin_id.label }}
+                {{ form.usuario_admin_id(class="form-control") }}
+                {% for error in form.usuario_admin_id.errors %}<span class="error">{{ error }}</span>{% endfor %}
+            </div>
+        </div>
+
+        <div class="form-row grid-2">
+            <div class="form-group">
+                {{ form.ruta.label }}
+                {{ form.ruta(class="form-control", placeholder="https://cliente.edwared.cloud") }}
+                {% for error in form.ruta.errors %}<span class="error">{{ error }}</span>{% endfor %}
+            </div>
+            <div class="form-group">
+                {{ form.tipo.label }}
+                {{ form.tipo(class="form-control") }}
+            </div>
+        </div>
+
+        <div class="form-section-title">Parámetros Técnicos (Sensible)</div>
+        <div class="form-row grid-3">
+            <div class="form-group">
+                {{ form.db_name.label }}
+                {{ form.db_name(class="form-control", placeholder="db_cliente_01") }}
+            </div>
+            <div class="form-group">
+                {{ form.password_admin.label }}
+                {{ form.password_admin(class="form-control") }}
+                {% for error in form.password_admin.errors %}<span class="error">{{ error }}</span>{% endfor %}
+            </div>
+            <div class="form-group">
+                {{ form.puerto.label }}
+                {{ form.puerto(class="form-control", placeholder="5000") }}
+            </div>
+        </div>
+
+        <div class="form-group">
+            {{ form.descripcion.label }}
+            {{ form.descripcion(class="form-control", placeholder="Breve descripción del propósito del subsistema...") }}
+        </div>
+
+        <div class="form-check">
+            {{ form.activo() }} {{ form.activo.label }}
+        </div>
+
+        <div class="form-submit">
+            {{ form.submit(class="btn-gold-large", value="Guardar Subsistema") }}
+        </div>
+    </form>
+</div>
+
+<style>
+    .form-section-title {
+        color: var(--accent-gold);
+        font-family: 'Montserrat', sans-serif;
+        font-size: 0.9rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        margin: 2rem 0 1rem;
+        border-bottom: 1px solid var(--ui-border);
+        padding-bottom: 0.5rem;
+    }
+    .grid-3 {
+        display: grid;
+        grid-template-columns: 1fr 1fr 1fr;
+        gap: 1.5rem;
+    }
+    @media (max-width: 768px) {
+        .grid-3 { grid-template-columns: 1fr; }
+    }
+</style>
+
+<link rel="stylesheet" href="{{ url_for('static', filename='css/admin.css') }}">
+{% endblock %}

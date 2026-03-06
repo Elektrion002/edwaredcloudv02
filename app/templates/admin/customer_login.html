@@ -3,19 +3,25 @@
 {% block content %}
 <div class="login-container">
     <div class="glass-card login-card">
-        <h2 class="cinematic-title">Portal de Clientes</h2>
+        <h2 class="cinematic-title"><i class="fas fa-user-tag gold-icon"></i> Portal de Clientes</h2>
         <form action="" method="post" novalidate>
             {{ form.hidden_tag() }}
             <div class="form-group">
                 {{ form.codigo_unico.label(class="form-label") }}
-                {{ form.codigo_unico(class="form-input", placeholder="Ingrese su código de cliente") }}
+                <div class="input-with-icon">
+                    <i class="fas fa-id-card input-icon"></i>
+                    {{ form.codigo_unico(class="form-input", placeholder="Ingrese su código de cliente") }}
+                </div>
                 {% for error in form.codigo_unico.errors %}
                 <span class="error-text">[{{ error }}]</span>
                 {% endfor %}
             </div>
             <div class="form-group">
                 {{ form.password.label(class="form-label", text="Password o PIN") }}
-                {{ form.password(class="form-input", placeholder="Ingrese su clave") }}
+                <div class="input-with-icon">
+                    <i class="fas fa-key input-icon"></i>
+                    {{ form.password(class="form-input", placeholder="Ingrese su clave") }}
+                </div>
                 {% for error in form.password.errors %}
                 <span class="error-text">[{{ error }}]</span>
                 {% endfor %}
@@ -66,24 +72,44 @@
         margin-bottom: 1.5rem;
     }
 
-    .form-label {
-        display: block;
+    .gold-icon {
+        margin-right: 10px;
+        filter: drop-shadow(0 0 5px rgba(255, 215, 0, 0.5));
+    }
+
+    .input-with-icon {
+        position: relative;
+        display: flex;
+        align-items: center;
+    }
+
+    .input-icon {
+        position: absolute;
+        left: 15px;
         color: var(--accent-gold);
-        margin-bottom: 0.5rem;
-        font-size: 0.85rem;
-        text-transform: uppercase;
-        letter-spacing: 1px;
+        font-size: 1rem;
+        pointer-events: none;
     }
 
     .form-input {
         width: 100%;
-        padding: 1rem;
-        background: rgba(255, 255, 255, 0.03);
+        padding: 1rem 1rem 1rem 3rem !important; /* Extra padding for icon */
+        background: rgba(255, 255, 255, 0.05) !important;
         border: 1px solid var(--ui-border);
         border-radius: 8px;
         color: var(--text-white);
         font-family: inherit;
         transition: all 0.3s ease;
+    }
+
+    .form-label {
+        display: block;
+        color: #ffffff !important; /* Pure white for maximum contrast */
+        margin-bottom: 0.8rem;
+        font-size: 0.9rem;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 1.5px;
     }
 
     .form-input:focus {

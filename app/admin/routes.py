@@ -2,7 +2,8 @@ from flask import render_template, redirect, url_for, flash, request, session
 from app.admin import bp
 from app.models.user import StaffUser
 from app.models.customer import Customer
-from app.admin.forms import StaffUserForm, LoginForm, CustomerForm
+from app.models.subsystem import Subsystem
+from app.admin.forms import StaffUserForm, LoginForm, CustomerForm, SubsystemForm
 from app import db
 from flask_login import login_required, login_user, logout_user, current_user
 
@@ -184,5 +185,56 @@ def customer_edit(id):
             flash(f'Error al actualizar cliente: {str(e)}')
             return redirect(url_for('admin.customer_edit', id=id))
     return render_template('admin/customer_form.html', title='Editar Cliente', form=form, customer=customer)
+
+# --- Subsystem Management (Module 03) ---
+
+@bp.route('/subsystems')
+@login_required
+def subsystem_list():
+    subsystems = Subsystem.query.all()
+    return render_template('admin/subsystems.html', title='Gestión de Subsistemas', subsystems=subsystems)
+
+@bp.route('/subsystems/new', methods=['GET', 'POST'])
+@login_required
+def subsystem_new():
+    form = SubsystemForm()
+    if form.validate_on_submit():
+        subsystem = Subsystem(
+            nombre=form.nombre.data,
+            ruta=form.ruta.data,
+            db_name=form.db_name.data,
+            usuario_admin_id=form.usuario_admin_id.data,
+            password_admin=form.password_admin.data, # Enmascarada en BD
+            puerto=int(form.puerto.data) if form.puerto.data and form.puerto.data.isdigit() else None,
+            tipo=form.tipo.data,
+            descripcion=form.descripcion.data,
+            activo=form.activo.data
+        )
+        db.session.add(subsystem)
+        db.session.commit()
+        flash(f'Subsistema "{subsystem.nombre}" registrado exitosamente.')
+        return redirect(url_for('admin.subsystem_list'))
+    return render_template('admin/subsystem_form.html', title='Nuevo Subsistema', form=form)
+
+@bp.route('/subsystems/edit/<int:id>', methods=['GET', 'POST'])
+@login_required
+def subsystem_edit(id):
+    subsystem = Subsystem.query.get_or_404(id)
+    form = SubsystemForm(obj=subsystem)
+    if form.validate_on_submit():
+        subsystem.nombre = form.nombre.data
+        subsystem.ruta = form.ruta.data
+        subsystem.db_name = form.db_name.data
+        subsystem.usuario_admin_id = form.usuario_admin_id.data
+        subsystem.password_admin = form.password_admin.data
+        subsystem.puerto = int(form.puerto.data) if form.puerto.data and form.puerto.data.isdigit() else None
+        subsystem.tipo = form.tipo.data
+        subsystem.descripcion = form.descripcion.data
+        subsystem.activo = form.activo.data
+        
+        db.session.commit()
+        flash(f'Subsistema "{subsystem.nombre}" actualizado.')
+        return redirect(url_for('admin.subsystem_list'))
+    return render_template('admin/subsystem_form.html', title='Editar Subsistema', form=form, subsystem=subsystem)
 
 

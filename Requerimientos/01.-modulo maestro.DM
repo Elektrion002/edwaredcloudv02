@@ -131,3 +131,10 @@ Puerto del subsistema
 tipo del susbsistema (web, api, etc)
 Descripción del subsistema
 Activación lógica
+
+super importante, esta tabla nos dara pauta para dirigira a 
+la ruta administrativa del subsistema asociado a un cliente, 
+es decir su panel de administracion de su subsistema o microservicio, 
+que debe estar totalmente aislado del maestro, 
+toma las lecciones aprendidas y usa las reglas 
+para estar al 100 y reducir la posibilidad de errores

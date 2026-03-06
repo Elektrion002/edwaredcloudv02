@@ -1,0 +1,53 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="staff-header">
+    <h1 class="page-title">Gestión de Subsistemas</h1>
+    <a href="{{ url_for('admin.subsystem_new') }}" class="btn-gold">Registrar Nuevo Subsistema</a>
+</div>
+
+<div class="glass-table-container">
+    <table class="staff-table">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Nombre</th>
+                <th>Ruta / Dominio</th>
+                <th>Cliente Responsable</th>
+                <th>Tipo</th>
+                <th>Estado</th>
+                <th>Acciones</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for subsystem in subsystems %}
+            <tr>
+                <td>#{{ subsystem.id }}</td>
+                <td class="bold-white">{{ subsystem.nombre }}</td>
+                <td><a href="{{ subsystem.ruta }}" target="_blank" class="link-gold">{{ subsystem.ruta }}</a></td>
+                <td>
+                    {% if subsystem.admin_cliente %}
+                        {{ subsystem.admin_cliente.nombre_negocio }} ({{ subsystem.admin_cliente.codigo_unico }})
+                    {% else %}
+                        <span class="text-muted">No asignado</span>
+                    {% endif %}
+                </td>
+                <td><span class="badge-blue">{{ subsystem.tipo }}</span></td>
+                <td>
+                    {% if subsystem.activo %}
+                        <span class="status-active">● Activo</span>
+                    {% else %}
+                        <span class="status-inactive">● Inactivo</span>
+                    {% endif %}
+                </td>
+                <td>
+                    <a href="{{ url_for('admin.subsystem_edit', id=subsystem.id) }}" class="btn-edit-small">Editar</a>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+<link rel="stylesheet" href="{{ url_for('static', filename='css/admin.css') }}">
+{% endblock %}

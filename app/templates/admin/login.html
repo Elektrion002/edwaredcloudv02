@@ -3,19 +3,25 @@
 {% block content %}
 <div class="login-container">
     <div class="glass-card login-card">
-        <h2 class="cinematic-title">Acceso Administrativo</h2>
+        <h2 class="cinematic-title"><i class="fas fa-shield-halved gold-icon"></i> Acceso Administrativo</h2>
         <form action="" method="post" novalidate>
             {{ form.hidden_tag() }}
             <div class="form-group">
                 {{ form.username.label(class="form-label") }}
-                {{ form.username(class="form-input", placeholder="Ingrese su usuario") }}
+                <div class="input-with-icon">
+                    <i class="fas fa-user-tie input-icon"></i>
+                    {{ form.username(class="form-input", placeholder="Ingrese su usuario") }}
+                </div>
                 {% for error in form.username.errors %}
                 <span class="error-text">[{{ error }}]</span>
                 {% endfor %}
             </div>
             <div class="form-group">
                 {{ form.password.label(class="form-label", text="Contraseña o PIN") }}
-                {{ form.password(class="form-input", placeholder="Ingrese su clave o PIN") }}
+                <div class="input-with-icon">
+                    <i class="fas fa-lock input-icon"></i>
+                    {{ form.password(class="form-input", placeholder="Ingrese su clave o PIN") }}
+                </div>
                 {% for error in form.password.errors %}
                 <span class="error-text">[{{ error }}]</span>
                 {% endfor %}
@@ -63,24 +69,44 @@
         margin-bottom: 1.5rem;
     }
 
-    .form-label {
-        display: block;
-        color: var(--accent-slate);
-        margin-bottom: 0.5rem;
-        font-size: 0.85rem;
-        text-transform: uppercase;
-        letter-spacing: 1px;
+    .gold-icon {
+        margin-right: 10px;
+        filter: drop-shadow(0 0 5px rgba(255, 215, 0, 0.5));
+    }
+
+    .input-with-icon {
+        position: relative;
+        display: flex;
+        align-items: center;
+    }
+
+    .input-icon {
+        position: absolute;
+        left: 15px;
+        color: var(--accent-gold);
+        font-size: 1rem;
+        pointer-events: none;
     }
 
     .form-input {
         width: 100%;
-        padding: 1rem;
-        background: rgba(255, 255, 255, 0.03);
+        padding: 1rem 1rem 1rem 3rem !important;
+        background: rgba(255, 255, 255, 0.05) !important;
         border: 1px solid var(--ui-border);
         border-radius: 8px;
         color: var(--text-white);
         font-family: inherit;
         transition: all 0.3s ease;
+    }
+
+    .form-label {
+        display: block;
+        color: #ffffff !important;
+        margin-bottom: 0.8rem;
+        font-size: 0.9rem;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 1.5px;
     }
 
     .form-input:focus {
