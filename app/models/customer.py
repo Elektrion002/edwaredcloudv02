@@ -1,8 +1,9 @@
 from app import db
 from datetime import datetime
 from werkzeug.security import generate_password_hash, check_password_hash
+from flask_login import UserMixin
 
-class Customer(db.Model):
+class Customer(UserMixin, db.Model):
     __tablename__ = 'customers'
     
     id = db.Column(db.Integer, primary_key=True)
@@ -22,6 +23,10 @@ class Customer(db.Model):
     
     fecha_registro = db.Column(db.DateTime, default=datetime.utcnow)
     activo = db.Column(db.Boolean, default=True)
+    
+    @property
+    def is_staff(self):
+        return False
     
     def set_password(self, password):
         self.password_hash = generate_password_hash(password)

@@ -24,11 +24,15 @@
         <nav class="nav-links" id="nav-links">
             <a href="{{ url_for('main.index') }}">Panel Principal</a>
             {% if current_user.is_authenticated %}
-                {% if current_user.nivel_numerico <= 20 %}
-                    <a href="{{ url_for('admin.staff_list') }}">Gestión Staff</a>
-                    <a href="{{ url_for('admin.customer_list') }}">Gestión Clientes</a>
+                {% if getattr(current_user, 'is_staff', False) %}
+                    {% if current_user.nivel_numerico <= 20 %}
+                        <a href="{{ url_for('admin.staff_list') }}">Gestión Staff</a>
+                        <a href="{{ url_for('admin.customer_list') }}">Gestión Clientes</a>
+                    {% endif %}
+                    <a href="{{ url_for('admin.profile') }}">Mi Perfil</a>
+                {% else %}
+                    <a href="{{ url_for('admin.customer_profile') }}">Mi Perfil</a>
                 {% endif %}
-                <a href="{{ url_for('admin.profile') }}">Mi Perfil</a>
                 <a href="{{ url_for('admin.logout') }}" class="btn-logout">Salir</a>
             {% endif %}
         </nav>
@@ -50,6 +54,7 @@
     <footer>
         {% if not current_user.is_authenticated %}
         <div class="admin-access-discreet">
+            <a href="{{ url_for('admin.customer_login') }}" class="discreet-link">Portal Clientes</a> | 
             <a href="{{ url_for('admin.login') }}" class="discreet-link">Admin Access</a>
         </div>
         {% endif %}

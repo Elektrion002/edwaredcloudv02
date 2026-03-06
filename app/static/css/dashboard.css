@@ -28,3 +28,17 @@
         font-size: 1.1rem;
     }
 }
+
+.gold-text {
+    color: var(--accent-gold);
+}
+
+.portal-card {
+    border: 1px solid var(--accent-gold) !important;
+    background: rgba(255, 215, 0, 0.05) !important;
+}
+
+.portal-card:hover {
+    background: rgba(255, 215, 0, 0.1) !important;
+    box-shadow: 0 0 30px rgba(255, 215, 0, 0.15) !important;
+}

@@ -66,5 +66,13 @@ class CustomerForm(FlaskForm):
     def validate_rfc(self, rfc):
         from app.models.customer import Customer
         customer = Customer.query.filter_by(rfc=rfc.data).first()
-        if customer and (self.original_id is None or customer.id != self.original_id):
-            raise ValidationError('Este RFC ya está registrado en otro cliente.')
+
+class CustomerLoginForm(FlaskForm):
+    codigo_unico = StringField('Código Único', validators=[DataRequired()])
+    password = PasswordField('Password / PIN', validators=[DataRequired()])
+    remember_me = BooleanField('Recordarme')
+    submit = SubmitField('Iniciar Sesión Cliente')
+
+class ForgotPasswordForm(FlaskForm):
+    whatsapp = StringField('Número de WhatsApp/Celular', validators=[DataRequired(), Length(max=20)])
+    submit = SubmitField('Recuperar Acceso')

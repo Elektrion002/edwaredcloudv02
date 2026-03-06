@@ -24,6 +24,10 @@ class StaffUser(UserMixin, db.Model):
     antiguedad = db.Column(db.DateTime, default=datetime.utcnow)
     activo = db.Column(db.Boolean, default=True)
     
+    @property
+    def is_staff(self):
+        return True
+    
     def set_password(self, password):
         self.password_hash = generate_password_hash(password)
         
@@ -36,4 +40,10 @@ class StaffUser(UserMixin, db.Model):
 
 @login_manager.user_loader
 def load_user(id):
+    from flask import session
+    from app.models.customer import Customer
+    
+    user_type = session.get('user_type')
+    if user_type == 'customer':
+        return Customer.query.get(int(id))
     return StaffUser.query.get(int(id))
