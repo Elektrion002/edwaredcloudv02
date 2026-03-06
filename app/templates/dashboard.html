@@ -17,7 +17,7 @@
     {% endfor %}
     
     {% if not current_user.is_authenticated or not getattr(current_user, 'is_staff', False) %}
-    <div class="card portal-card" onclick="location.href='{{ url_for('admin.customer_login') }}'">
+    <div class="card portal-card" onclick="location.href='{{ url_for('main.customer_login') }}'">
         <h3 class="gold-text">Portal Clientes</h3>
         <p>Autogestione su cuenta, consulte saldos y acceda a sus beneficios exclusivos.</p>
     </div>

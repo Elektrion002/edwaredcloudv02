@@ -31,7 +31,7 @@
                     {% endif %}
                     <a href="{{ url_for('admin.profile') }}">Mi Perfil</a>
                 {% else %}
-                    <a href="{{ url_for('admin.customer_profile') }}">Mi Perfil</a>
+                    <a href="{{ url_for('main.customer_profile') }}">Mi Perfil</a>
                 {% endif %}
                 <a href="{{ url_for('admin.logout') }}" class="btn-logout">Salir</a>
             {% endif %}
@@ -54,7 +54,7 @@
     <footer>
         {% if not current_user.is_authenticated %}
         <div class="admin-access-discreet">
-            <a href="{{ url_for('admin.customer_login') }}" class="discreet-link">Portal Clientes</a> | 
+            <a href="{{ url_for('main.customer_login') }}" class="discreet-link">Portal Clientes</a> | 
             <a href="{{ url_for('admin.login') }}" class="discreet-link">Admin Access</a>
         </div>
         {% endif %}
