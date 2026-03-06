@@ -3,11 +3,30 @@ from app.admin import bp
 from app.models.user import StaffUser
 from app.admin.forms import StaffUserForm
 from app import db
-from flask_login import login_required
+from flask_login import login_required, login_user, logout_user, current_user
+from app.admin.forms import StaffUserForm, LoginForm
 
-@bp.route('/login')
+@bp.route('/login', methods=['GET', 'POST'])
 def login():
-    return render_template('admin/login.html', title='Admin Login')
+    if current_user.is_authenticated:
+        return redirect(url_for('main.index'))
+    form = LoginForm()
+    if form.validate_on_submit():
+        user = StaffUser.query.filter_by(username=form.username.data).first()
+        if user is None or not user.check_password(form.password.data):
+            flash('Usuario o contraseña inválidos.')
+            return redirect(url_for('admin.login'))
+        login_user(user, remember=form.remember_me.data)
+        next_page = request.args.get('next')
+        if not next_page or not next_page.startswith('/'):
+            next_page = url_for('main.index')
+        return redirect(next_page)
+    return render_template('admin/login.html', title='Admin Login', form=form)
+
+@bp.route('/logout')
+def logout():
+    logout_user()
+    return redirect(url_for('main.index'))
 
 @bp.route('/staff')
 @login_required

@@ -29,3 +29,9 @@ class StaffUserForm(FlaskForm):
     
     activo = BooleanField('Activo', default=True)
     submit = SubmitField('Guardar Usuario')
+
+class LoginForm(FlaskForm):
+    username = StringField('Username', validators=[DataRequired()])
+    password = PasswordField('Password', validators=[DataRequired()])
+    remember_me = BooleanField('Recordarme')
+    submit = SubmitField('Iniciar Sesión')

@@ -2,18 +2,30 @@
 
 {% block content %}
 <div class="login-container">
-    <div class="login-card">
-        <h2>Acceso Administrativo</h2>
-        <form>
+    <div class="glass-card login-card">
+        <h2 class="cinematic-title">Acceso Administrativo</h2>
+        <form action="" method="post" novalidate>
+            {{ form.hidden_tag() }}
             <div class="form-group">
-                <label for="username">Usuario</label>
-                <input type="text" id="username" name="username" placeholder="Ingrese su usuario">
+                {{ form.username.label(class="form-label") }}
+                {{ form.username(class="form-input", placeholder="Ingrese su usuario") }}
+                {% for error in form.username.errors %}
+                <span class="error-text">[{{ error }}]</span>
+                {% endfor %}
             </div>
             <div class="form-group">
-                <label for="password">Contraseña</label>
-                <input type="password" id="password" name="password" placeholder="Ingrese su contraseña">
+                {{ form.password.label(class="form-label") }}
+                {{ form.password(class="form-input", placeholder="Ingrese su contraseña") }}
+                {% for error in form.password.errors %}
+                <span class="error-text">[{{ error }}]</span>
+                {% endfor %}
             </div>
-            <button type="submit" class="btn-login-submit">Entrar</button>
+            <div class="form-check">
+                {{ form.remember_me() }} {{ form.remember_me.label }}
+            </div>
+            <div class="form-actions">
+                {{ form.submit(class="btn-gold-submit") }}
+            </div>
         </form>
     </div>
 </div>
@@ -23,54 +35,95 @@
         display: flex;
         justify-content: center;
         align-items: center;
-        height: 60vh;
+        min-height: 80vh;
+        padding: 2rem;
     }
+    
     .login-card {
-        background: var(--color-card-bg);
-        border: 1px solid var(--color-card-border);
-        padding: 3rem;
-        border-radius: 12px;
         width: 100%;
-        max-width: 400px;
-        backdrop-filter: blur(10px);
+        max-width: 450px;
+        padding: 3rem;
+        background: var(--ui-surface);
+        border: 1px solid var(--ui-border);
+        border-radius: 15px;
+        box-shadow: 0 20px 40px rgba(0,0,0,0.4);
     }
-    .login-card h2 {
+
+    .cinematic-title {
+        color: var(--accent-gold);
         text-align: center;
-        margin-bottom: 2rem;
+        font-family: 'Montserrat', sans-serif;
+        font-weight: 700;
+        letter-spacing: 2px;
+        text-transform: uppercase;
+        margin-bottom: 2.5rem;
     }
+
     .form-group {
         margin-bottom: 1.5rem;
     }
-    .form-group label {
+
+    .form-label {
         display: block;
+        color: var(--accent-slate);
         margin-bottom: 0.5rem;
-        font-size: 0.9rem;
+        font-size: 0.85rem;
+        text-transform: uppercase;
+        letter-spacing: 1px;
     }
-    .form-group input {
-        width: 100%;
-        padding: 0.8rem;
-        background: rgba(255, 255, 255, 0.05);
-        border: 1px solid var(--color-card-border);
-        border-radius: 5px;
-        color: var(--color-text-main);
-        outline: none;
-    }
-    .form-group input:focus {
-        border-color: var(--color-primary-light);
-    }
-    .btn-login-submit {
+
+    .form-input {
         width: 100%;
         padding: 1rem;
-        background: var(--color-primary);
-        border: none;
-        color: var(--color-text-main);
-        border-radius: 5px;
-        cursor: pointer;
-        font-size: 1rem;
-        transition: background 0.3s;
+        background: rgba(255, 255, 255, 0.03);
+        border: 1px solid var(--ui-border);
+        border-radius: 8px;
+        color: var(--text-white);
+        font-family: inherit;
+        transition: all 0.3s ease;
     }
-    .btn-login-submit:hover {
-        background: var(--color-primary-light);
+
+    .form-input:focus {
+        outline: none;
+        border-color: var(--accent-gold);
+        background: rgba(255, 255, 255, 0.07);
+        box-shadow: 0 0 15px rgba(255, 215, 0, 0.1);
+    }
+
+    .form-check {
+        margin-bottom: 2rem;
+        color: var(--accent-slate);
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        font-size: 0.9rem;
+    }
+
+    .error-text {
+        color: #ff4d4d;
+        font-size: 0.8rem;
+        margin-top: 0.4rem;
+        display: block;
+    }
+
+    .btn-gold-submit {
+        width: 100%;
+        padding: 1.2rem;
+        background: linear-gradient(135deg, var(--accent-gold) 0%, #b8860b 100%);
+        border: none;
+        border-radius: 8px;
+        color: var(--primary-navy);
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 2px;
+        cursor: pointer;
+        transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    }
+
+    .btn-gold-submit:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 10px 20px rgba(255, 215, 0, 0.2);
+        filter: brightness(1.1);
     }
 </style>
 {% endblock %}
