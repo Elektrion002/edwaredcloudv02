@@ -32,7 +32,7 @@ def profile():
 
 @bp.route('/login', methods=['GET', 'POST'])
 def login():
-    if current_user.is_authenticated:
+    if current_user.is_authenticated and getattr(current_user, 'is_staff', False):
         return redirect(url_for('main.index'))
     form = LoginForm()
     if form.validate_on_submit():

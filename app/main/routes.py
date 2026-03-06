@@ -20,7 +20,7 @@ def index():
 @bp.route('/customer/login', methods=['GET', 'POST'])
 def customer_login():
     from app.admin.forms import CustomerLoginForm
-    if current_user.is_authenticated:
+    if current_user.is_authenticated and not getattr(current_user, 'is_staff', False):
         return redirect(url_for('main.index'))
     form = CustomerLoginForm()
     if form.validate_on_submit():

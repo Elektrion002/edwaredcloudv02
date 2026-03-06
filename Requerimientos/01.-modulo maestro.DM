@@ -102,6 +102,20 @@ Deuda Acumulada
 Activación lógica
 
 El cliente puede autogestionar su password y contraseña en la ruta de clientes. los datos sensibles no deben verse en ningun formulario.
+tubimos un detalle la base de datos pedia items unicos pero nunca visamos al usuario que deberian ser unicos ni validamos, se iva a error el sistema por esa razon, 
+se controlo pidiendo datos forzados y unicos en el formulario, ademas se valida la informacion antes de guardar y se emiten mensajes de fallo al usuario en todos los aspectos de validacion.
+
+Recuperación por WhatsApp:
+Si alguien (Staff o Cliente) olvida su clave, puede ir a "Recuperar Acceso".
+El sistema genera una clave temporal de 8 caracteres y te da un botón de WhatsApp para enviársela directamente con un mensaje personalizado.
+Portal Clientes:
+He añadido una tarjeta dorada en el Dashboard principal que dice "Portal Clientes".
+Los clientes entran con su Código Único y su Password/PIN.
+Mi Perfil (Autogestión):
+Una vez dentro, el cliente tiene su propia sección de "Mi Perfil" donde puede actualizar sus nombres, dirección y, lo más importante, cambiar su Password y su PIN sin molestarte a ti.
+Doble Identidad: El sistema ahora es inteligente y sabe distinguir si quien entra es un Administrador o un Cliente, mostrando el menú que le corresponde a cada uno.
+
+Fase 05
 
 Modulo 03
 El administrador podrá agregar o editar items de la tabla de subsistemas o microservicios del modulo maestro
