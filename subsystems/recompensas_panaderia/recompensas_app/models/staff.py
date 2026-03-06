@@ -1,7 +1,7 @@
 from datetime import datetime
 from flask_login import UserMixin
 from werkzeug.security import generate_password_hash, check_password_hash
-from app import db, login_manager
+from recompensas_app import db, login_manager
 
 class StaffUser(UserMixin, db.Model):
     __tablename__ = 'staff_users'
