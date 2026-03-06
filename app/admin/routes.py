@@ -120,8 +120,8 @@ def customer_new():
     form = CustomerForm()
     if form.validate_on_submit():
         customer = Customer(
-            codigo_unico=form.codigo_unico.data,
-            rfc=form.rfc.data,
+            codigo_unico=form.codigo_unico.data.strip() if form.codigo_unico.data else None,
+            rfc=form.rfc.data.strip() if form.rfc.data else None,
             nombre_negocio=form.nombre_negocio.data,
             nombres=form.nombres.data,
             apellidos=form.apellidos.data,
@@ -129,8 +129,8 @@ def customer_new():
             direccion=form.direccion.data,
             ruta_asignada=form.ruta_asignada.data,
             vendedor_asignado=form.vendedor_asignado.data,
-            credito_asignado=float(form.credito_asignado.data or 0),
-            deuda_acumulada=float(form.deuda_acumulada.data or 0),
+            credito_asignado=float(form.credito_asignado.data.replace(',', '')) if form.credito_asignado.data and form.credito_asignado.data.strip() else 0.0,
+            deuda_acumulada=float(form.deuda_acumulada.data.replace(',', '')) if form.deuda_acumulada.data and form.deuda_acumulada.data.strip() else 0.0,
             activo=form.activo.data
         )
         if form.password.data:
@@ -138,10 +138,15 @@ def customer_new():
         if form.pin_rapido.data:
             customer.pin_rapido = form.pin_rapido.data
             
-        db.session.add(customer)
-        db.session.commit()
-        flash('Cliente registrado exitosamente.')
-        return redirect(url_for('admin.customer_list'))
+        try:
+            db.session.add(customer)
+            db.session.commit()
+            flash('Cliente registrado exitosamente.')
+            return redirect(url_for('admin.customer_list'))
+        except Exception as e:
+            db.session.rollback()
+            flash(f'Error al guardar cliente: {str(e)}')
+            return redirect(url_for('admin.customer_new'))
     return render_template('admin/customer_form.html', title='Nuevo Cliente', form=form)
 
 @bp.route('/customers/edit/<int:id>', methods=['GET', 'POST'])
@@ -151,8 +156,8 @@ def customer_edit(id):
     # Prepare form with current data
     form = CustomerForm(obj=customer)
     if form.validate_on_submit():
-        customer.codigo_unico = form.codigo_unico.data
-        customer.rfc = form.rfc.data
+        customer.codigo_unico = form.codigo_unico.data.strip() if form.codigo_unico.data else None
+        customer.rfc = form.rfc.data.strip() if form.rfc.data else None
         customer.nombre_negocio = form.nombre_negocio.data
         customer.nombres = form.nombres.data
         customer.apellidos = form.apellidos.data
@@ -160,8 +165,8 @@ def customer_edit(id):
         customer.direccion = form.direccion.data
         customer.ruta_asignada = form.ruta_asignada.data
         customer.vendedor_asignado = form.vendedor_asignado.data
-        customer.credito_asignado = float(form.credito_asignado.data or 0)
-        customer.deuda_acumulada = float(form.deuda_acumulada.data or 0)
+        customer.credito_asignado = float(form.credito_asignado.data.replace(',', '')) if form.credito_asignado.data and form.credito_asignado.data.strip() else 0.0
+        customer.deuda_acumulada = float(form.deuda_acumulada.data.replace(',', '')) if form.deuda_acumulada.data and form.deuda_acumulada.data.strip() else 0.0
         customer.activo = form.activo.data
         
         if form.password.data:
@@ -169,7 +174,12 @@ def customer_edit(id):
         if form.pin_rapido.data:
             customer.pin_rapido = form.pin_rapido.data
             
-        db.session.commit()
-        flash('Datos del cliente actualizados.')
-        return redirect(url_for('admin.customer_list'))
+        try:
+            db.session.commit()
+            flash('Datos del cliente actualizados.')
+            return redirect(url_for('admin.customer_list'))
+        except Exception as e:
+            db.session.rollback()
+            flash(f'Error al actualizar cliente: {str(e)}')
+            return redirect(url_for('admin.customer_edit', id=id))
     return render_template('admin/customer_form.html', title='Editar Cliente', form=form, customer=customer)
