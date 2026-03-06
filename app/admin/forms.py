@@ -1,6 +1,6 @@
 from flask_wtf import FlaskForm
 from wtforms import StringField, PasswordField, SubmitField, SelectField, DateField, BooleanField
-from wtforms.validators import DataRequired, Length, Optional, EqualTo
+from wtforms.validators import DataRequired, Length, Optional, EqualTo, ValidationError
 
 class StaffUserForm(FlaskForm):
     username = StringField('Username', validators=[DataRequired(), Length(min=3, max=64)])
@@ -37,8 +37,8 @@ class LoginForm(FlaskForm):
     submit = SubmitField('Iniciar Sesión')
 
 class CustomerForm(FlaskForm):
-    codigo_unico = StringField('Código Único (CF00000001)', validators=[Optional(), Length(max=20)])
-    rfc = StringField('RFC', validators=[Optional(), Length(max=20)])
+    codigo_unico = StringField('Código Único (CF00000001) *', validators=[DataRequired('El código único es obligatorio'), Length(max=20)])
+    rfc = StringField('RFC *', validators=[DataRequired('El RFC es obligatorio'), Length(max=20)])
     nombre_negocio = StringField('Nombre de Negocio', validators=[DataRequired(), Length(max=150)])
     nombres = StringField('Nombres (Representante)', validators=[Optional(), Length(max=100)])
     apellidos = StringField('Apellidos (Representante)', validators=[Optional(), Length(max=100)])
@@ -52,3 +52,19 @@ class CustomerForm(FlaskForm):
     deuda_acumulada = StringField('Deuda Acumulada', validators=[Optional()])
     activo = BooleanField('Activo', default=True)
     submit = SubmitField('Guardar Cliente')
+
+    def __init__(self, *args, **kwargs):
+        self.original_id = kwargs.get('obj').id if kwargs.get('obj') else None
+        super(CustomerForm, self).__init__(*args, **kwargs)
+
+    def validate_codigo_unico(self, codigo_unico):
+        from app.models.customer import Customer
+        customer = Customer.query.filter_by(codigo_unico=codigo_unico.data).first()
+        if customer and (self.original_id is None or customer.id != self.original_id):
+            raise ValidationError('Este Código Único ya está registrado en otro cliente.')
+
+    def validate_rfc(self, rfc):
+        from app.models.customer import Customer
+        customer = Customer.query.filter_by(rfc=rfc.data).first()
+        if customer and (self.original_id is None or customer.id != self.original_id):
+            raise ValidationError('Este RFC ya está registrado en otro cliente.')
