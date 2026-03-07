@@ -9,5 +9,5 @@ class Config:
     DEBUG = True
     # PostgreSQL Configuration
     SQLALCHEMY_DATABASE_URI = os.environ.get('DATABASE_URL') or \
-        'postgresql://edwared_admin:MEwar3x4-12VpS@localhost:5433/edwared_master'
+        'postgresql://edwared_admin:MEwar3x4-12VpS@localhost:5432/edwared_master'
     SQLALCHEMY_TRACK_MODIFICATIONS = False
