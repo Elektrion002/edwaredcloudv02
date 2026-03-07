@@ -1,0 +1,80 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="glass-card welcome-card">
+    <div class="welcome-header">
+        <h1 class="title"><i class="fas fa-crown gold-icon"></i> Panel de Control</h1>
+        <p class="subtitle">Programa de Recompensas - Panadería Demo</p>
+    </div>
+    
+    <div class="dashboard-grid">
+        <div class="stat-card">
+            <i class="fas fa-users icon"></i>
+            <div class="stat-info">
+                <span class="label">Operación Activa</span>
+                <span class="value">Bienvenido, {{ current_user.nombres }}</span>
+            </div>
+        </div>
+    </div>
+
+    <div class="action-summary">
+        <p>Has iniciado sesión con éxito en el subsistema. Aquí podrás gestionar los puntos de fidelidad, clientes y staff.</p>
+        <div class="buttons">
+            <a href="{{ url_for('staff.list') }}" class="btn btn-gold">Gestionar Staff</a>
+        </div>
+    </div>
+</div>
+
+<style>
+    .welcome-card {
+        text-align: center;
+        padding: 4rem 2rem;
+        margin-top: 2rem;
+    }
+    .gold-icon {
+        color: var(--accent-gold);
+        margin-right: 15px;
+    }
+    .subtitle {
+        color: var(--accent-slate);
+        font-size: 1.1rem;
+        margin-bottom: 2rem;
+    }
+    .dashboard-grid {
+        display: flex;
+        justify-content: center;
+        gap: 2rem;
+        margin-bottom: 3rem;
+    }
+    .stat-card {
+        background: rgba(255, 255, 255, 0.03);
+        padding: 1.5rem 2.5rem;
+        border-radius: 12px;
+        display: flex;
+        align-items: center;
+        border: 1px solid var(--ui-border);
+    }
+    .stat-card .icon {
+        font-size: 2rem;
+        color: var(--accent-gold);
+        margin-right: 1.5rem;
+    }
+    .stat-card .label {
+        display: block;
+        font-size: 0.8rem;
+        color: var(--accent-slate);
+    }
+    .stat-card .value {
+        font-size: 1.2rem;
+        font-weight: 600;
+    }
+    .action-summary {
+        max-width: 600px;
+        margin: 0 auto;
+    }
+    .action-summary p {
+        margin-bottom: 2rem;
+        color: var(--accent-slate);
+    }
+</style>
+{% endblock %}

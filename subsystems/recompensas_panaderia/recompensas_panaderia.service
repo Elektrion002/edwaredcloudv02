@@ -1,0 +1,14 @@
+[Unit]
+Description=Gunicorn instance to serve Recompensas Panaderia (Subsistema 01)
+After=network.target
+
+[Service]
+User=root
+Group=www-data
+WorkingDirectory=/var/www/edwared_cloud_v2/subsystems/recompensas_panaderia
+Environment="PATH=/var/www/edwared_cloud_v2/venv/bin"
+Environment="DATABASE_URL=postgresql://edwared_admin:MEwar3x4-12VpS@localhost:5432/db_rpanaderia001"
+ExecStart=/var/www/edwared_cloud_v2/venv/bin/gunicorn --workers 3 --bind 127.0.0.1:5001 --access-logfile - run:app
+
+[Install]
+WantedBy=multi-user.target
