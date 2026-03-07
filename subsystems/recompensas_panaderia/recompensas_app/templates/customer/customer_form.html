@@ -1,0 +1,112 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="glass-card mb-4">
+    <h1 class="title"><i class="fas fa-user-edit gold-icon"></i> {{ title }}</h1>
+    <p class="text-muted">Asegúrese de que todos los campos obligatorios estén completos para evitar errores.</p>
+</div>
+
+<div class="row justify-content-center">
+    <div class="col-md-8">
+        <div class="glass-card shadow-lg">
+            <form method="POST">
+                {{ form.hidden_tag() }}
+                
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label text-gold"><i class="fas fa-id-card"></i> ID Cliente</label>
+                        {{ form.cliente_id(class="form-control", placeholder="EDW-XXXXXX", maxlength="10") }}
+                        {% if form.cliente_id.errors %}
+                            {% for error in form.cliente_id.errors %}<div class="text-danger small">{{ error }}</div>{% endfor %}
+                        {% endif %}
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label text-gold"><i class="fab fa-whatsapp"></i> WhatsApp</label>
+                        {{ form.celular_whatsapp(class="form-control", placeholder="52...") }}
+                        {% if form.celular_whatsapp.errors %}
+                            {% for error in form.celular_whatsapp.errors %}<div class="text-danger small">{{ error }}</div>{% endfor %}
+                        {% endif %}
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label text-gold">Nombres</label>
+                        {{ form.nombres(class="form-control") }}
+                        {% if form.nombres.errors %}
+                            {% for error in form.nombres.errors %}<div class="text-danger small">{{ error }}</div>{% endfor %}
+                        {% endif %}
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label text-gold">Apellidos</label>
+                        {{ form.apellidos(class="form-control") }}
+                        {% if form.apellidos.errors %}
+                            {% for error in form.apellidos.errors %}<div class="text-danger small">{{ error }}</div>{% endfor %}
+                        {% endif %}
+                    </div>
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label text-gold">Dirección (Ubicación Google Maps)</label>
+                    {{ form.direccion_fisica(class="form-control", rows="2") }}
+                </div>
+
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label text-gold">Password</label>
+                        <div class="input-group">
+                            {{ form.password(class="form-control", type="password", id="passInput") }}
+                            <button class="btn btn-outline-gold" type="button" onclick="toggleVisibility('passInput')">
+                                <i class="fas fa-eye"></i>
+                            </button>
+                        </div>
+                        <small class="text-muted">Dejar en blanco para no cambiar.</small>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label text-gold">PIN Rápido</label>
+                        <div class="input-group">
+                            {{ form.pin(class="form-control", type="password", id="pinInput", placeholder="4-10 dígitos") }}
+                            <button class="btn btn-outline-gold" type="button" onclick="toggleVisibility('pinInput')">
+                                <i class="fas fa-eye"></i>
+                            </button>
+                        </div>
+                        <small class="text-muted">4 a 10 dígitos numéricos.</small>
+                    </div>
+                </div>
+
+                <div class="mb-4">
+                    <div class="form-check form-switch">
+                        {{ form.activo(class="form-check-input", role="switch") }}
+                        <label class="form-check-label text-light">Activación Lógica (Permitir acceso al cliente)</label>
+                    </div>
+                </div>
+
+                <div class="d-grid gap-2">
+                    {{ form.submit(class="btn btn-gold btn-lg") }}
+                    <a href="{{ url_for('customer.list') }}" class="btn btn-outline-light">Cancelar</a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script>
+function toggleVisibility(id) {
+    var input = document.getElementById(id);
+    if (input.type === "password") {
+        input.type = "text";
+    } else {
+        input.type = "password";
+    }
+}
+</script>
+
+<style>
+    .gold-icon { color: var(--accent-gold); margin-right: 10px; }
+    .text-gold { color: var(--accent-gold); font-weight: 500; }
+    .btn-outline-gold { color: var(--accent-gold); border-color: var(--accent-gold); }
+    .btn-outline-gold:hover { background: var(--accent-gold); color: #000; }
+    .form-control { background: rgba(255, 255, 255, 0.05); border: 1px solid var(--ui-border); color: #fff; }
+    .form-control:focus { background: rgba(255, 255, 255, 0.1); border-color: var(--accent-gold); color: #fff; box-shadow: none; }
+</style>
+{% endblock %}
