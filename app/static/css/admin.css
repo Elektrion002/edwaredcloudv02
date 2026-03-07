@@ -243,3 +243,31 @@ select.form-control option {
   font-size: 0.75rem;
   font-weight: 600;
 }
+
+/* Password Toggle Group */
+.password-toggle-group {
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+
+.password-toggle-group .form-control {
+    width: 100%;
+    padding-right: 40px;
+}
+
+.btn-toggle-visibility {
+    position: absolute;
+    right: 10px;
+    background: none;
+    border: none;
+    color: var(--accent-slate);
+    cursor: pointer;
+    padding: 5px;
+    font-size: 1rem;
+    transition: color 0.2s;
+}
+
+.btn-toggle-visibility:hover {
+    color: var(--accent-gold);
+}

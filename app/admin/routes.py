@@ -202,9 +202,9 @@ def subsystem_new():
         subsystem = Subsystem(
             nombre=form.nombre.data,
             ruta=form.ruta.data,
-            db_name=form.db_name.data,
-            usuario_admin_id=form.usuario_admin_id.data,
-            password_admin=form.password_admin.data, # Enmascarada en BD
+            db_nombre=form.db_nombre.data,
+            cliente_admin_id=form.cliente_admin_id.data,
+            admin_password=form.admin_password.data, # Enmascarada en BD
             puerto=int(form.puerto.data) if form.puerto.data and form.puerto.data.isdigit() else None,
             tipo=form.tipo.data,
             descripcion=form.descripcion.data,
@@ -224,9 +224,9 @@ def subsystem_edit(id):
     if form.validate_on_submit():
         subsystem.nombre = form.nombre.data
         subsystem.ruta = form.ruta.data
-        subsystem.db_name = form.db_name.data
-        subsystem.usuario_admin_id = form.usuario_admin_id.data
-        subsystem.password_admin = form.password_admin.data
+        subsystem.db_nombre = form.db_nombre.data
+        subsystem.cliente_admin_id = form.cliente_admin_id.data
+        subsystem.admin_password = form.admin_password.data
         subsystem.puerto = int(form.puerto.data) if form.puerto.data and form.puerto.data.isdigit() else None
         subsystem.tipo = form.tipo.data
         subsystem.descripcion = form.descripcion.data

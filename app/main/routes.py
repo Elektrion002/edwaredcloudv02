@@ -5,14 +5,27 @@ from app.models.customer import Customer
 from app.admin.forms import CustomerForm
 from app import db
 from flask_login import login_required, login_user, logout_user, current_user
+from app.models.subsystem import Subsystem
 
 @bp.route('/')
 @bp.route('/index')
 def index():
+    # Fetch active subsystems from database
+    db_subsystems = Subsystem.query.filter_by(activo=True).all()
+    
+    # Base modules (can also be moved to DB eventually)
     modules = [
         {'title': 'Control de Negocios', 'description': 'Gestión integral de inventarios, ventas y proveedores.', 'route': '/negocios'},
-        {'title': 'Programa de Recompensas', 'description': 'Sistema de fidelización y puntos para clientes.', 'route': '/recompensas'}
     ]
+    
+    # Append dynamic subsystems
+    for sub in db_subsystems:
+        modules.append({
+            'title': sub.nombre,
+            'description': sub.descripcion or f"Subsistema activo en {sub.ruta}",
+            'route': sub.ruta
+        })
+        
     return render_template('dashboard.html', title='Inicio', modules=modules)
 
 # --- Authentication & Self-Management (Customers) ---

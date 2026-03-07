@@ -26,11 +26,11 @@
                 <td class="bold-white">{{ subsystem.nombre }}</td>
                 <td><a href="{{ subsystem.ruta }}" target="_blank" class="link-gold">{{ subsystem.ruta }}</a></td>
                 <td>
-                    {% if subsystem.admin_cliente %}
+                    {% if subsystem.cliente_admin %}
                         <div class="customer-info-box">
-                            <span class="bold-white">{{ subsystem.admin_cliente.nombre_negocio }}</span><br>
-                            <span class="badge-gold-small">{{ subsystem.admin_cliente.codigo_unico }}</span>
-                            <a href="{{ url_for('admin.customer_edit', id=subsystem.admin_cliente.id) }}" class="link-mini" title="Ir a Cliente">
+                            <span class="bold-white">{{ subsystem.cliente_admin.nombre_negocio }}</span><br>
+                            <span class="badge-gold-small">{{ subsystem.cliente_admin.codigo_unico }}</span>
+                            <a href="{{ url_for('admin.customer_edit', id=subsystem.cliente_admin.id) }}" class="link-mini" title="Ir a Cliente">
                                 <i class="fas fa-external-link-alt"></i>
                             </a>
                         </div>

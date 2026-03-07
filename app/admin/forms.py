@@ -79,14 +79,14 @@ class ForgotPasswordForm(FlaskForm):
 
 class SubsystemForm(FlaskForm):
     nombre = StringField('Nombre del Subsistema *', validators=[DataRequired(), Length(max=100)])
-    ruta = StringField('Ruta / Dominio *', validators=[DataRequired(), Length(max=255)])
-    db_name = StringField('Nombre de BD', validators=[Optional(), Length(max=100)])
+    ruta = StringField('Ruta / Dominio *', validators=[DataRequired(), Length(max=200)])
+    db_nombre = StringField('Nombre de BD', validators=[Optional(), Length(max=100)])
     
     # Campo para seleccionar el Cliente responsable
-    usuario_admin_id = SelectField('Cliente Administrador *', coerce=int, validators=[DataRequired()])
+    cliente_admin_id = SelectField('Cliente Administrador *', coerce=int, validators=[DataRequired()])
     
-    password_admin = PasswordField('Password Admin Subsistema', validators=[Optional(), Length(max=256)])
-    puerto = StringField('Puerto', validators=[Optional()])
+    admin_password = PasswordField('Password Admin Subsistema', validators=[Optional(), Length(max=200)])
+    puerto = StringField('Puerto', validators=[DataRequired()])
     
     tipo = SelectField('Tipo de Subsistema', choices=[
         ('web', 'Web Application'),
@@ -104,7 +104,7 @@ class SubsystemForm(FlaskForm):
         from app.models.customer import Customer
         # Cargar clientes activos para el selector
         try:
-            self.usuario_admin_id.choices = [(c.id, f"{c.codigo_unico} - {c.nombre_negocio}") 
+            self.cliente_admin_id.choices = [(c.id, f"{c.codigo_unico} - {c.nombre_negocio}") 
                                            for c in Customer.query.filter_by(activo=True).all()]
-        except:
-            self.usuario_admin_id.choices = []
+        except Exception:
+            self.cliente_admin_id.choices = []
