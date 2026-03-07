@@ -30,6 +30,9 @@ def create_app(config_class=Config):
     from recompensas_app.customer_routes import bp as customer_bp
     app.register_blueprint(customer_bp)
 
+    from recompensas_app.counter_routes import bp as counter_bp
+    app.register_blueprint(counter_bp)
+
     with app.app_context():
         from recompensas_app.models import staff, customer, movement
         db.create_all()

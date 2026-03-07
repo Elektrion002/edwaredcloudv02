@@ -1,0 +1,318 @@
+{% extends "base.html" %}
+
+{% block extra_css %}
+<style>
+    .counter-container {
+        max-width: 900px;
+        margin: 0 auto;
+    }
+    
+    .search-section {
+        margin-bottom: 2rem;
+        display: flex;
+        gap: 1rem;
+    }
+    
+    .search-box {
+        flex-grow: 1;
+        position: relative;
+    }
+    
+    .search-box input {
+        width: 100%;
+        padding: 1.2rem 1rem 1.2rem 3rem;
+        background: rgba(255, 255, 255, 0.05);
+        border: 2px solid var(--ui-border);
+        border-radius: 8px;
+        color: white;
+        font-size: 1.1rem;
+        transition: all 0.3s ease;
+    }
+    
+    .search-box input:focus {
+        outline: none;
+        border-color: var(--accent-gold);
+        background: rgba(255, 255, 255, 0.1);
+        box-shadow: 0 0 15px rgba(255, 215, 0, 0.2);
+    }
+    
+    .search-box i {
+        position: absolute;
+        left: 1rem;
+        top: 50%;
+        transform: translateY(-50%);
+        color: var(--accent-gold);
+    }
+    
+    .results-table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 1rem;
+    }
+    
+    .results-table th {
+        text-align: left;
+        padding: 1rem;
+        color: var(--accent-gold);
+        font-size: 0.8rem;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        border-bottom: 1px solid var(--ui-border);
+    }
+    
+    .results-table td {
+        padding: 1rem;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    }
+    
+    .badge-points {
+        background: rgba(255, 215, 0, 0.1);
+        color: var(--accent-gold);
+        padding: 0.3rem 0.6rem;
+        border-radius: 4px;
+        font-weight: 700;
+    }
+    
+    /* Modals */
+    .modal {
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.8);
+        backdrop-filter: blur(5px);
+        z-index: 2000;
+        align-items: center;
+        justify-content: center;
+    }
+    
+    .modal-content {
+        background: var(--primary-navy);
+        border: 1px solid var(--accent-gold);
+        border-radius: 12px;
+        padding: 2.5rem;
+        width: 90%;
+        max-width: 500px;
+        position: relative;
+    }
+    
+    .modal-header {
+        margin-bottom: 1.5rem;
+        text-align: center;
+    }
+    
+    .modal-header h2 {
+        color: var(--accent-gold);
+        font-family: 'Montserrat', sans-serif;
+    }
+    
+    .form-group {
+        margin-bottom: 1.5rem;
+    }
+    
+    .form-group label {
+        display: block;
+        margin-bottom: 0.5rem;
+        color: var(--accent-slate);
+        font-size: 0.9rem;
+    }
+    
+    .form-control {
+        width: 100%;
+        padding: 0.8rem;
+        background: rgba(255, 255, 255, 0.05);
+        border: 1px solid var(--ui-border);
+        border-radius: 4px;
+        color: white;
+    }
+
+    .btn-close {
+        position: absolute;
+        top: 1rem;
+        right: 1rem;
+        background: none;
+        border: none;
+        color: white;
+        font-size: 1.5rem;
+        cursor: pointer;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="counter-container">
+    <div class="header-actions" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem;">
+        <h1 class="page-title">Mostrador de Recompensas</h1>
+        <a href="{{ url_for('customer_routes.list') }}" class="btn btn-gold"><i class="fas fa-user-plus"></i> Registro de Clientes</a>
+    </div>
+
+    <div class="glass-card">
+        <div class="search-section">
+            <div class="search-box">
+                <i class="fas fa-qrcode"></i>
+                <input type="text" id="mainSearch" placeholder="Escanear QR o buscar por Teléfono / Nombre" autofocus>
+            </div>
+        </div>
+
+        <div id="resultsContainer" style="display: none;">
+            <table class="results-table">
+                <thead>
+                    <tr>
+                        <th>Cliente</th>
+                        <th>WhatsApp</th>
+                        <th>Saldo</th>
+                        <th>Acción</th>
+                    </tr>
+                </thead>
+                <tbody id="resultsBody">
+                    <!-- Dynamic Content -->
+                </tbody>
+            </table>
+        </div>
+        
+        <div id="noResults" class="alert alert-info" style="display: none; margin-top: 1rem;">
+            No se encontraron clientes con esa búsqueda.
+        </div>
+    </div>
+</div>
+
+<!-- Operation Modal -->
+<div id="operationModal" class="modal">
+    <div class="modal-content">
+        <button class="btn-close" onclick="closeModal()">&times;</button>
+        <div class="modal-header">
+            <h2 id="modalTitle">Operación de Puntos</h2>
+            <p id="customerNameDisp" style="color: var(--accent-slate);"></p>
+        </div>
+        
+        <form id="operationForm">
+            <input type="hidden" id="opCustomerId" name="customer_id">
+            <input type="hidden" id="opTipo" name="tipo">
+            
+            <div class="form-group">
+                <label>Monto de Puntos</label>
+                <input type="number" name="puntos" class="form-control" required min="1" id="opPuntos">
+            </div>
+            
+            <div class="form-group">
+                <label>Concepto (Opcional)</label>
+                <input type="text" name="concepto" class="form-control" placeholder="Ej: Compra de pan, Canje de postre">
+            </div>
+            
+            <div class="alert alert-error" id="opError" style="display: none;"></div>
+            
+            <button type="submit" class="btn btn-gold" style="width: 100%;">Confirmar Operación</button>
+        </form>
+    </div>
+</div>
+
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    const mainSearch = document.getElementById('mainSearch');
+    const resultsContainer = document.getElementById('resultsContainer');
+    const resultsBody = document.getElementById('resultsBody');
+    const noResults = document.getElementById('noResults');
+    const operationModal = document.getElementById('operationModal');
+    
+    let searchTimeout;
+
+    mainSearch.addEventListener('input', (e) => {
+        clearTimeout(searchTimeout);
+        const query = e.target.value;
+        
+        if (query.length < 3) {
+            resultsContainer.style.display = 'none';
+            noResults.style.display = 'none';
+            return;
+        }
+
+        searchTimeout = setTimeout(() => {
+            fetch(`{{ url_for('counter.search') }}?q=${query}`)
+                .then(r => r.json())
+                .then(data => {
+                    resultsBody.innerHTML = '';
+                    if (data.length > 0) {
+                        data.forEach(c => {
+                            const tr = document.createElement('tr');
+                            tr.innerHTML = `
+                                <td>
+                                    <div style="font-weight: 700;">${c.nombre_completo}</div>
+                                    <div style="font-size: 0.8rem; color: var(--accent-slate);">ID: ${c.cliente_id}</div>
+                                </td>
+                                <td>${c.celular}</td>
+                                <td><span class="badge-points">${c.puntos}</span></td>
+                                <td>
+                                    <button class="btn btn-gold" onclick="openOperation(${c.id}, 'acumulacion', '${c.nombre_completo}')" style="padding: 0.4rem 0.8rem; font-size: 0.8rem; margin-right: 5px;">
+                                        <i class="fas fa-plus"></i> Sumar
+                                    </button>
+                                    <button class="btn btn-gold" onclick="openOperation(${c.id}, 'canje', '${c.nombre_completo}')" style="padding: 0.4rem 0.8rem; font-size: 0.8rem; background: transparent; border: 1px solid var(--accent-gold); color: var(--accent-gold);">
+                                        <i class="fas fa-gift"></i> Canjear
+                                    </button>
+                                </td>
+                            `;
+                            resultsBody.appendChild(tr);
+                        });
+                        resultsContainer.style.display = 'block';
+                        noResults.style.display = 'none';
+                    } else {
+                        resultsContainer.style.display = 'none';
+                        noResults.style.display = 'block';
+                    }
+                });
+        }, 300);
+    });
+
+    function openOperation(id, tipo, name) {
+        document.getElementById('opCustomerId').value = id;
+        document.getElementById('opTipo').value = tipo;
+        document.getElementById('modalTitle').innerText = tipo === 'acumulacion' ? 'Sumar Puntos' : 'Canjear Puntos';
+        document.getElementById('customerNameDisp').innerText = name;
+        document.getElementById('opError').style.display = 'none';
+        operationModal.style.display = 'flex';
+        document.getElementById('opPuntos').focus();
+    }
+
+    function closeModal() {
+        operationModal.style.display = 'none';
+    }
+
+    document.getElementById('operationForm').addEventListener('submit', (e) => {
+        e.preventDefault();
+        const formData = new FormData(e.target);
+        const opError = document.getElementById('opError');
+        
+        fetch(`{{ url_for('counter.operate') }}`, {
+            method: 'POST',
+            body: formData
+        })
+        .then(r => r.json())
+        .then(data => {
+            if (data.success) {
+                alert(data.message);
+                closeModal();
+                mainSearch.value = '';
+                resultsContainer.style.display = 'none';
+                mainSearch.focus();
+            } else {
+                opError.innerText = data.message;
+                opError.style.display = 'block';
+            }
+        })
+        .catch(err => {
+            opError.innerText = "Error de conexión";
+            opError.style.display = 'block';
+        });
+    });
+
+    // Close on outside click
+    window.onclick = function(event) {
+        if (event.target == operationModal) {
+            closeModal();
+        }
+    }
+</script>
+{% endblock %}
