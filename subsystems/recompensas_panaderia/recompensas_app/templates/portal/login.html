@@ -5,13 +5,13 @@
     <div class="glass-card auth-card">
         <h2 class="title"><i class="fas fa-user-circle gold-icon"></i> Mi Portal</h2>
         
-        <form action="{{ url_for('portal.login') }}" method="post" novalidate {% if blocked %}style="opacity: 0.5; pointer-events: none;"{% endif %}>
+        <form action="{{ url_for('portal.login') }}" method="post" novalidate>
             {{ form.hidden_tag() }}
             <div class="form-group">
                 <label class="form-label">ID de Credencial (10 caracteres)</label>
                 <div class="input-with-icon">
                     <i class="fas fa-id-card input-icon"></i>
-                    {{ form.cliente_id(class="form-input", placeholder="Ej: EDW-XXXXXX", disabled=blocked) }}
+                    {{ form.cliente_id(class="form-input", placeholder="Ej: EDW-XXXXXX") }}
                 </div>
                 {% if form.cliente_id.errors %}
                     {% for error in form.cliente_id.errors %}<div class="text-danger small" style="margin-top: 5px;">{{ error }}</div>{% endfor %}
@@ -21,14 +21,14 @@
                 <label class="form-label">Contraseña o PIN</label>
                 <div class="input-with-icon">
                     <i class="fas fa-key input-icon"></i>
-                    {{ form.secret(class="form-input", placeholder="********", disabled=blocked) }}
+                    {{ form.secret(class="form-input", placeholder="********") }}
                 </div>
                 {% if form.secret.errors %}
                     {% for error in form.secret.errors %}<div class="text-danger small" style="margin-top: 5px;">{{ error }}</div>{% endfor %}
                 {% endif %}
             </div>
             <div class="form-check" style="margin-top: 1rem; display: flex; align-items: center; gap: 0.5rem;">
-                {{ form.remember_me(disabled=blocked) }} <span style="font-size: 0.9rem; color: var(--accent-slate);">Recordarme</span>
+                {{ form.remember_me() }} <span style="font-size: 0.9rem; color: var(--accent-slate);">Recordarme</span>
             </div>
             <button type="submit" class="btn btn-gold btn-full" {% if blocked %}disabled{% endif %}>
                 {% if blocked %}ACCESO BLOQUEADO TEMPORALMENTE{% else %}ENTRAR A MI PORTAL{% endif %}

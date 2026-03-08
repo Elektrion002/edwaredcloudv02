@@ -7,19 +7,20 @@ from flask import request, flash
 _failed_attempts = {}
 
 def get_remote_address():
-    """Obtiene la IP real del usuario, manejando el proxy de Nginx."""
-    if request.headers.getlist("X-Forwarded-For"):
-        ip = request.headers.getlist("X-Forwarded-For")[0].split(',')[0].strip()
-    else:
-        ip = request.remote_addr
-    return ip
+    """Obtiene la IP real del usuario. ProxyFix en __init__.py ya la procesa."""
+    return request.remote_addr
 
-def check_rate_limit(max_attempts=5, block_minutes=5):
+def check_rate_limit(max_attempts=10, block_minutes=3):
     """
     Verifica si la IP actual está bloqueada.
-    Retorna (is_allowed, remaining_minutes)
+    Se aumentó a 10 intentos y bajó a 3 minutos para mayor fluidez.
     """
     key = get_remote_address()
+    
+    # NUNCA bloquear localhost o la IP de loopback (evita bloqueos generales por proxy)
+    if key in ['127.0.0.1', '::1']:
+        return True, 0
+
     now = datetime.now()
     
     if key in _failed_attempts:
