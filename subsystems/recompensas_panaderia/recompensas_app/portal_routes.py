@@ -5,37 +5,9 @@ from recompensas_app.models.customer import Customer
 from recompensas_app.models.movement import Movement
 from recompensas_app.portal_forms import CustomerPortalLoginForm, CustomerUpdateSecretForm, CustomerRecoveryForm
 
-from datetime import datetime, timedelta
+from recompensas_app.utils.security import check_rate_limit, record_auth_fail, clear_auth_history
 
 portal_bp = Blueprint('portal', __name__, url_prefix='/portal')
-
-# Simple in-memory Rate Limiting (Brute Force Protection)
-# En una app de mayor escala usaríamos Redis. Para este VPS, un dict global es eficiente.
-failed_attempts = {}
-
-def check_rate_limit(key, max_attempts=5, block_minutes=5):
-    now = datetime.now()
-    if key in failed_attempts:
-        attempts, first_fail_time, last_fail_time = failed_attempts[key]
-        # Si ya pasó el tiempo de bloqueo, resetear
-        if now > last_fail_time + timedelta(minutes=block_minutes):
-            del failed_attempts[key]
-            return True, 0
-        
-        if attempts >= max_attempts:
-            remaining = (last_fail_time + timedelta(minutes=block_minutes)) - now
-            return False, int(remaining.total_seconds() / 60)
-            
-        return True, attempts
-    return True, 0
-
-def record_fail(key):
-    now = datetime.now()
-    if key in failed_attempts:
-        attempts, first_fail_time, _ = failed_attempts[key]
-        failed_attempts[key] = (attempts + 1, first_fail_time, now)
-    else:
-        failed_attempts[key] = (1, now, now)
 
 @portal_bp.route('/login', methods=['GET', 'POST'])
 def login():
@@ -46,9 +18,8 @@ def login():
 
     form = CustomerPortalLoginForm()
     
-    # Check Rate Limit by IP
-    user_ip = request.remote_addr
-    is_allowed, info = check_rate_limit(user_ip)
+    # Check Rate Limit
+    is_allowed, info = check_rate_limit()
     
     if not is_allowed:
         flash(f'Demasiados intentos fallidos. Por seguridad, tu acceso está bloqueado por {info} minutos más.', 'danger')
@@ -67,15 +38,11 @@ def login():
                     is_valid = True
             
             if is_valid:
-                # Éxito: Limpiar intentos fallidos
-                if user_ip in failed_attempts:
-                    del failed_attempts[user_ip]
-                
+                clear_auth_history()
                 login_user(customer, remember=form.remember_me.data)
                 return redirect(url_for('portal.dashboard'))
         
-        # Fallo: Registrar intento
-        record_fail(user_ip)
+        record_auth_fail()
         flash('Credenciales inválidas. Verifica tu ID y clave/PIN.', 'danger')
     
     return render_template('portal/login.html', title='Portal del Cliente', form=form)
