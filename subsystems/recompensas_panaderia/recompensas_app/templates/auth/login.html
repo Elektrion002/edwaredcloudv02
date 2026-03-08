@@ -2,16 +2,10 @@
 
 {% block content %}
 <div class="login-container">
-    <div class="glass-card auth-card" id="login-switcher">
+    <div class="glass-card auth-card">
         <h2 class="title"><i class="fas fa-shield-halved gold-icon"></i> Acceso Staff</h2>
         
-        <div class="tabs">
-            <button class="tab-btn active" onclick="switchTab('pass')">Password</button>
-            <button class="tab-btn" onclick="switchTab('pin')">PIN Rápido</button>
-        </div>
-
-        <!-- Password Login Form -->
-        <form id="pass-form" action="{{ url_for('auth.login') }}" method="post" novalidate>
+        <form action="{{ url_for('auth.login') }}" method="post" novalidate>
             {{ form.hidden_tag() }}
             <div class="form-group">
                 {{ form.username.label(class="form-label") }}
@@ -21,36 +15,16 @@
                 </div>
             </div>
             <div class="form-group">
-                {{ form.password.label(class="form-label") }}
-                <div class="input-with-icon">
-                    <i class="fas fa-lock input-icon"></i>
-                    {{ form.password(class="form-input", placeholder="Contraseña") }}
-                </div>
-            </div>
-            <div class="form-check">
-                {{ form.remember_me() }} {{ form.remember_me.label }}
-            </div>
-            <button type="submit" class="btn btn-gold btn-full">ENTRAR</button>
-        </form>
-
-        <!-- PIN Login Form (Hidden by default) -->
-        <form id="pin-form" action="{{ url_for('auth.login_pin') }}" method="post" style="display: none;" novalidate>
-            {{ pin_form.hidden_tag() }}
-            <div class="form-group">
-                {{ pin_form.username.label(class="form-label") }}
-                <div class="input-with-icon">
-                    <i class="fas fa-user input-icon"></i>
-                    {{ pin_form.username(class="form-input", placeholder="Usuario") }}
-                </div>
-            </div>
-            <div class="form-group">
-                {{ pin_form.pin.label(class="form-label") }}
+                {{ form.secret.label(class="form-label") }}
                 <div class="input-with-icon">
                     <i class="fas fa-key input-icon"></i>
-                    {{ pin_form.pin(class="form-input", placeholder="PIN Numérico") }}
+                    {{ form.secret(class="form-input", placeholder="Contraseña o PIN") }}
                 </div>
             </div>
-            <button type="submit" class="btn btn-gold btn-full">ENTRAR CON PIN</button>
+            <div class="form-check" style="margin-top: 1rem; display: flex; align-items: center; gap: 0.5rem;">
+                {{ form.remember_me() }} <span style="font-size: 0.9rem; color: var(--accent-slate);">{{ form.remember_me.label.text }}</span>
+            </div>
+            <button type="submit" class="btn btn-gold btn-full">ENTRAR</button>
         </form>
     </div>
 </div>
@@ -80,77 +54,6 @@
         padding: 0.3rem;
         border-radius: 8px;
     }
-    .tab-btn {
-        flex: 1;
-        background: transparent;
-        border: none;
-        color: var(--accent-slate);
-        padding: 0.6rem;
-        border-radius: 6px;
-        cursor: pointer;
-        font-weight: 600;
-        transition: all 0.3s;
-    }
-    .tab-btn.active {
-        background: var(--accent-gold);
-        color: var(--primary-navy);
-    }
-    .form-group {
-        margin-bottom: 1.2rem;
-    }
-    .form-label {
-        display: block;
-        margin-bottom: 0.5rem;
-        font-size: 0.8rem;
-        text-transform: uppercase;
-        color: var(--accent-slate);
-    }
-    .input-with-icon {
-        position: relative;
-    }
-    .input-icon {
-        position: absolute;
-        left: 12px;
-        top: 50%;
-        transform: translateY(-50%);
-        color: var(--accent-gold);
-    }
-    .form-input {
-        width: 100%;
-        background: rgba(255,255,255,0.03);
-        border: 1px solid var(--ui-border);
-        border-radius: 6px;
-        padding: 0.8rem 0.8rem 0.8rem 2.5rem;
-        color: white;
-    }
-    .form-input:focus {
-        border-color: var(--accent-gold);
-        outline: none;
-    }
-    .btn-full {
-        width: 100%;
-        margin-top: 1rem;
-    }
     .gold-icon { margin-right: 10px; }
 </style>
-
-<script>
-    function switchTab(type) {
-        const passForm = document.getElementById('pass-form');
-        const pinForm = document.getElementById('pin-form');
-        const btns = document.querySelectorAll('.tab-btn');
-        
-        if (type === 'pass') {
-            passForm.style.display = 'block';
-            pin_form.style.display = 'none';
-            btns[0].classList.add('active');
-            btns[1].classList.remove('active');
-        } else {
-            passForm.style.display = 'none';
-            pinForm.style.display = 'block';
-            btns[0].classList.remove('active');
-            btns[1].classList.add('active');
-        }
-    }
-</script>
 {% endblock %}

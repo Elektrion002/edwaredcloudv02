@@ -3,16 +3,11 @@ from wtforms import StringField, PasswordField, SubmitField, BooleanField, Selec
 from wtforms.validators import DataRequired, Length, EqualTo, ValidationError, Optional
 from recompensas_app.models.staff import StaffUser
 
-class StaffLoginForm(FlaskForm):
+class StaffUnifiedLoginForm(FlaskForm):
     username = StringField('Usuario', validators=[DataRequired()])
-    password = PasswordField('Contraseña', validators=[DataRequired()])
+    secret = PasswordField('Contraseña o PIN', validators=[DataRequired()])
     remember_me = BooleanField('Recordarme')
-    submit = SubmitField('Iniciar Sesión')
-
-class QuickPinLoginForm(FlaskForm):
-    username = StringField('Usuario', validators=[DataRequired()])
-    pin = PasswordField('PIN Rápido', validators=[DataRequired(), Length(min=4, max=10)])
-    submit = SubmitField('Entrar con PIN')
+    submit = SubmitField('ENTRAR')
 
 class StaffUserForm(FlaskForm):
     username = StringField('Username', validators=[DataRequired(), Length(min=4, max=64)])
