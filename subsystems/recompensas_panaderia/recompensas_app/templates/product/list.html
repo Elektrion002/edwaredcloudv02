@@ -34,11 +34,14 @@
                 <tr {% if not product.activo %}style="opacity: 0.5;"{% endif %}>
                     <td>
                         {% if product.imagen_path %}
-                            <img src="{{ url_for('static', filename=product.imagen_path) }}" alt="Product" class="rounded shadow-sm" style="width: 40px; height: 40px; object-fit: cover; border: 1px solid var(--accent-gold);">
+                            <img src="{{ url_for('static', filename=product.imagen_path) }}" 
+                                 alt="Product" class="rounded shadow-sm" 
+                                 style="width: 40px; height: 40px; object-fit: cover; border: 1px solid var(--accent-gold);"
+                                 onerror="this.src='{{ url_for('static', filename='products/default_product.png') }}'; this.onerror=null;">
                         {% else %}
-                            <div class="rounded d-flex align-items-center justify-content-center bg-dark border-gold" style="width: 40px; height: 40px;">
-                                <i class="fas fa-image text-gold opacity-50"></i>
-                            </div>
+                            <img src="{{ url_for('static', filename='products/default_product.png') }}" 
+                                 class="rounded border-gold" 
+                                 style="width: 40px; height: 40px; object-fit: cover;">
                         {% endif %}
                     </td>
                     <td><span class="badge bg-dark border-gold">{{ product.sku }}</span></td>

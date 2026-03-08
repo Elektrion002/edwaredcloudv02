@@ -19,11 +19,14 @@
         <div class="glass-card h-100 product-card d-flex flex-column">
             <div class="product-visual-header">
                 {% if product.imagen_path %}
-                    <img src="{{ url_for('static', filename=product.imagen_path) }}" alt="{{ product.descripcion }}" class="product-main-img">
+                    <img src="{{ url_for('static', filename=product.imagen_path) }}" 
+                         alt="{{ product.descripcion }}" 
+                         class="product-main-img"
+                         onerror="this.src='{{ url_for('static', filename='products/default_product.png') }}'; this.onerror=null;">
                 {% else %}
-                    <div class="product-main-img placeholder-bg d-flex align-items-center justify-content-center">
-                        <i class="fas fa-box-open fa-3x opacity-25"></i>
-                    </div>
+                    <img src="{{ url_for('static', filename='products/default_product.png') }}" 
+                         alt="Proximamente" 
+                         class="product-main-img placeholder-img">
                 {% endif %}
                 
                 <div class="product-badges">
