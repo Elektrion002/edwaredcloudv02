@@ -3,6 +3,7 @@ from flask_login import login_user, logout_user, login_required, current_user
 from recompensas_app import db
 from recompensas_app.models.customer import Customer
 from recompensas_app.models.movement import Movement
+from recompensas_app.models.product import Product
 from recompensas_app.portal_forms import CustomerPortalLoginForm, CustomerUpdateSecretForm, CustomerRecoveryForm
 
 from recompensas_app.utils.security import check_rate_limit, record_auth_fail, clear_auth_history
