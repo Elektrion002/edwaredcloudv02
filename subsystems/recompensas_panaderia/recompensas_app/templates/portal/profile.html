@@ -39,10 +39,33 @@
 
             <button type="submit" class="btn btn-gold btn-full">ACTUALIZAR SEGURIDAD</button>
         </form>
+
+        <div class="security-advisory" style="margin-top: 2rem;">
+            <i class="fas fa-shield-alt"></i>
+            <div>
+                <strong>Consejo de Seguridad:</strong> Un PIN seguro no debe ser predecible. Evita secuencias como 1234 o números repetidos. El sistema rechazará PINs triviales por tu seguridad.
+            </div>
+        </div>
     </div>
 </div>
 
 <style>
+    .security-advisory {
+        background: rgba(255, 215, 0, 0.05);
+        border: 1px solid rgba(255, 215, 0, 0.2);
+        border-radius: 8px;
+        padding: 1rem;
+        display: flex;
+        align-items: flex-start;
+        gap: 1rem;
+        font-size: 0.85rem;
+        color: var(--accent-slate);
+    }
+    .security-advisory i {
+        color: var(--accent-gold);
+        font-size: 1.2rem;
+        margin-top: 2px;
+    }
     .profile-container {
         max-width: 500px;
         margin: 0 auto;

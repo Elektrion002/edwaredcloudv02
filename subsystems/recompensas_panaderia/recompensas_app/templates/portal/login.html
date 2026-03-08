@@ -5,27 +5,37 @@
     <div class="glass-card auth-card">
         <h2 class="title"><i class="fas fa-user-circle gold-icon"></i> Mi Portal</h2>
         
-        <form action="{{ url_for('portal.login') }}" method="post" novalidate>
+        <form action="{{ url_for('portal.login') }}" method="post" novalidate {% if blocked %}style="opacity: 0.5; pointer-events: none;"{% endif %}>
             {{ form.hidden_tag() }}
             <div class="form-group">
                 <label class="form-label">ID de Credencial (10 caracteres)</label>
                 <div class="input-with-icon">
                     <i class="fas fa-id-card input-icon"></i>
-                    {{ form.cliente_id(class="form-input", placeholder="Ej: EDW-XXXXXX") }}
+                    {{ form.cliente_id(class="form-input", placeholder="Ej: EDW-XXXXXX", disabled=blocked) }}
                 </div>
             </div>
             <div class="form-group">
                 <label class="form-label">Contraseña o PIN</label>
                 <div class="input-with-icon">
                     <i class="fas fa-key input-icon"></i>
-                    {{ form.secret(class="form-input", placeholder="********") }}
+                    {{ form.secret(class="form-input", placeholder="********", disabled=blocked) }}
                 </div>
             </div>
             <div class="form-check" style="margin-top: 1rem; display: flex; align-items: center; gap: 0.5rem;">
-                {{ form.remember_me() }} <span style="font-size: 0.9rem; color: var(--accent-slate);">Recordarme</span>
+                {{ form.remember_me(disabled=blocked) }} <span style="font-size: 0.9rem; color: var(--accent-slate);">Recordarme</span>
             </div>
-            <button type="submit" class="btn btn-gold btn-full">ENTRAR A MI PORTAL</button>
+            <button type="submit" class="btn btn-gold btn-full" {% if blocked %}disabled{% endif %}>
+                {% if blocked %}ACCESO BLOQUEADO TEMPORALMENTE{% else %}ENTRAR A MI PORTAL{% endif %}
+            </button>
         </form>
+
+        <!-- Security Advisory -->
+        <div class="security-advisory">
+            <i class="fas fa-shield-alt"></i>
+            <div>
+                <strong>Seguridad:</strong> Usa PINs difíciles de adivinar. Evita 1234, 0000 o tu fecha de nacimiento para proteger tus puntos.
+            </div>
+        </div>
         
         <div style="margin-top: 1.5rem; text-align: center;">
             <a href="{{ url_for('portal.recovery') }}" style="color: var(--accent-gold); font-size: 0.85rem; text-decoration: none;">
@@ -85,5 +95,23 @@
         margin-top: 1rem;
     }
     .gold-icon { margin-right: 10px; }
+
+    .security-advisory {
+        margin-top: 2rem;
+        background: rgba(255, 215, 0, 0.05);
+        border: 1px solid rgba(255, 215, 0, 0.2);
+        border-radius: 8px;
+        padding: 1rem;
+        display: flex;
+        align-items: flex-start;
+        gap: 1rem;
+        font-size: 0.85rem;
+        color: var(--accent-slate);
+    }
+    .security-advisory i {
+        color: var(--accent-gold);
+        font-size: 1.2rem;
+        margin-top: 2px;
+    }
 </style>
 {% endblock %}

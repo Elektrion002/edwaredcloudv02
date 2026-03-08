@@ -21,6 +21,21 @@ class CustomerForm(FlaskForm):
         self.original_cliente_id = original_cliente_id
         self.original_whatsapp = original_whatsapp
 
+    def validate_pin(self, field):
+        if field.data:
+            pin = str(field.data)
+            weak_pins = ['0000', '1111', '2222', '3333', '4444', '5555', '6666', '7774', '8888', '9999', '1234', '4321', '2580']
+            if pin in weak_pins:
+                raise ValidationError('Este PIN es demasiado común (débil). El sistema no permite guardarlo por seguridad.')
+            if not pin.isdigit():
+                raise ValidationError('El PIN debe contener solo números.')
+
+    def validate_password(self, field):
+        if field.data:
+            password = field.data
+            if password.isdigit() or password.isalpha():
+                raise ValidationError('La contraseña es demasiado simple. Debe combinar letras y números.')
+
     def validate_cliente_id(self, cliente_id):
         if cliente_id.data != self.original_cliente_id:
             customer = Customer.query.filter_by(cliente_id=cliente_id.data).first()

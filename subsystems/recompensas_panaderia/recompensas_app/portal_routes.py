@@ -5,37 +5,77 @@ from recompensas_app.models.customer import Customer
 from recompensas_app.models.movement import Movement
 from recompensas_app.portal_forms import CustomerPortalLoginForm, CustomerUpdateSecretForm, CustomerRecoveryForm
 
+from datetime import datetime, timedelta
+
 portal_bp = Blueprint('portal', __name__, url_prefix='/portal')
+
+# Simple in-memory Rate Limiting (Brute Force Protection)
+# En una app de mayor escala usaríamos Redis. Para este VPS, un dict global es eficiente.
+failed_attempts = {}
+
+def check_rate_limit(key, max_attempts=5, block_minutes=5):
+    now = datetime.now()
+    if key in failed_attempts:
+        attempts, first_fail_time, last_fail_time = failed_attempts[key]
+        # Si ya pasó el tiempo de bloqueo, resetear
+        if now > last_fail_time + timedelta(minutes=block_minutes):
+            del failed_attempts[key]
+            return True, 0
+        
+        if attempts >= max_attempts:
+            remaining = (last_fail_time + timedelta(minutes=block_minutes)) - now
+            return False, int(remaining.total_seconds() / 60)
+            
+        return True, attempts
+    return True, 0
+
+def record_fail(key):
+    now = datetime.now()
+    if key in failed_attempts:
+        attempts, first_fail_time, _ = failed_attempts[key]
+        failed_attempts[key] = (attempts + 1, first_fail_time, now)
+    else:
+        failed_attempts[key] = (1, now, now)
 
 @portal_bp.route('/login', methods=['GET', 'POST'])
 def login():
     if current_user.is_authenticated:
-        # Si ya está autenticado como cliente, al dashboard
         if hasattr(current_user, 'cliente_id'):
             return redirect(url_for('portal.dashboard'))
-        # Si es staff, cerramos sesión para entrar como cliente
         logout_user()
 
     form = CustomerPortalLoginForm()
+    
+    # Check Rate Limit by IP
+    user_ip = request.remote_addr
+    is_allowed, info = check_rate_limit(user_ip)
+    
+    if not is_allowed:
+        flash(f'Demasiados intentos fallidos. Por seguridad, tu acceso está bloqueado por {info} minutos más.', 'danger')
+        return render_template('portal/login.html', title='Portal Bloqueado', form=form, blocked=True)
+
     if form.validate_on_submit():
         customer = Customer.query.filter_by(cliente_id=form.cliente_id.data).first()
         if customer:
-            # Intento de Auth Dual (Password o PIN)
             secret = form.secret.data
             is_valid = False
             
-            # 1. Intentar como Password
             if customer.password_hash and customer.check_password(secret):
                 is_valid = True
-            # 2. Intentar como PIN (si el input parece PIN: 4-10 dígitos)
             elif secret.isdigit() and 4 <= len(secret) <= 10:
                 if customer.pin_hash and customer.check_pin(secret):
                     is_valid = True
             
             if is_valid:
+                # Éxito: Limpiar intentos fallidos
+                if user_ip in failed_attempts:
+                    del failed_attempts[user_ip]
+                
                 login_user(customer, remember=form.remember_me.data)
                 return redirect(url_for('portal.dashboard'))
         
+        # Fallo: Registrar intento
+        record_fail(user_ip)
         flash('Credenciales inválidas. Verifica tu ID y clave/PIN.', 'danger')
     
     return render_template('portal/login.html', title='Portal del Cliente', form=form)
