@@ -9,25 +9,26 @@
 </div>
 
 <div class="glass-card mt-2">
-    <table class="data-table">
-        <thead>
-            <tr>
-                <th>ID</th>
-                <th>Usuario</th>
-                <th>Nombre</th>
-                <th>Cargo</th>
-                <th>Nivel</th>
-                <th>Estado</th>
-                <th>Acciones</th>
-            </tr>
-        </thead>
+    <div class="table-responsive">
+        <table class="data-table">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Usuario</th>
+                    <th class="d-none-mobile">Nombre</th>
+                    <th class="d-none-mobile">Cargo</th>
+                    <th>Nivel</th>
+                    <th>Estado</th>
+                    <th>Acción</th>
+                </tr>
+            </thead>
         <tbody>
             {% for user in users %}
             <tr>
                 <td>#{{ user.id }}</td>
                 <td><span class="bold-white">{{ user.username }}</span></td>
-                <td>{{ user.nombres }} {{ user.apellidos }}</td>
-                <td>{{ user.cargo }}</td>
+                <td class="d-none-mobile">{{ user.nombres }} {{ user.apellidos }}</td>
+                <td class="d-none-mobile">{{ user.cargo }}</td>
                 <td><span class="badge">{{ user.nivel_usuario }}</span></td>
                 <td>
                     <span class="status {{ 'active' if user.activo else 'inactive' }}">
@@ -84,5 +85,24 @@
     }
     .edit-link:hover { color: var(--accent-gold); }
     .mt-2 { margin-top: 1rem; }
+
+    @media (max-width: 768px) {
+        .header-actions {
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 1rem;
+        }
+        .header-actions .btn {
+            width: 100%;
+            text-align: center;
+        }
+        .d-none-mobile {
+            display: none;
+        }
+        .data-table th, .data-table td {
+            padding: 0.7rem 0.5rem;
+            font-size: 0.85rem;
+        }
+    }
 </style>
 {% endblock %}
