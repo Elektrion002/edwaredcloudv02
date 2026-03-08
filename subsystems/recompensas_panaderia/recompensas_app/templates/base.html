@@ -166,6 +166,7 @@
                 {% if current_user.cliente_id is defined %}
                     <!-- Navegación Cliente -->
                     <a href="{{ url_for('portal.dashboard') }}"><i class="fas fa-qrcode"></i> Credencial</a>
+                    <a href="{{ url_for('portal.catalog') }}"><i class="fas fa-shopping-bag"></i> Catálogo</a>
                     <a href="{{ url_for('portal.history') }}"><i class="fas fa-history"></i> Puntos</a>
                     <a href="{{ url_for('portal.profile') }}"><i class="fas fa-user-gear"></i> Perfil</a>
                     <a href="{{ url_for('portal.logout') }}">Salir</a>
@@ -173,6 +174,7 @@
                     <!-- Navegación Staff -->
                     <a href="{{ url_for('counter.index') }}" class="bold-gold"><i class="fas fa-cash-register"></i> Mostrador</a>
                     <a href="{{ url_for('customer.list') }}">Clientes</a>
+                    <a href="{{ url_for('product.list') }}">Catálogo</a>
                     {% if current_user.nivel_numerico <= 30 %}
                         <a href="{{ url_for('staff.list') }}">Gestión Staff</a>
                     {% endif %}

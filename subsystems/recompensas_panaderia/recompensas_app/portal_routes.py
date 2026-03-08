@@ -68,6 +68,16 @@ def history():
     movements = current_user.movements.order_by(Movement.created_at.desc()).all()
     return render_template('portal/history.html', title='Mis Movimientos', movements=movements)
 
+@portal_bp.route('/catalog')
+@login_required
+def catalog():
+    if not hasattr(current_user, 'cliente_id'):
+        return redirect(url_for('main.index'))
+    
+    # Solo productos activos y ordenados por tipo/categoría
+    products = Product.query.filter_by(activo=True).order_by(Product.tipo_producto, Product.descripcion).all()
+    return render_template('portal/catalog.html', title='Catálogo de Recompensas', products=products)
+
 @portal_bp.route('/profile', methods=['GET', 'POST'])
 @login_required
 def profile():

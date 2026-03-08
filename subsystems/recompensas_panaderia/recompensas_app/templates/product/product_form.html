@@ -1,0 +1,107 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="glass-card mb-4">
+    <h1 class="title"><i class="fas fa-edit gold-icon"></i> {{ title }}</h1>
+    <p class="text-muted">Complete los detalles del producto. El SKU debe ser único e irrepetible.</p>
+</div>
+
+<div class="row justify-content-center">
+    <div class="col-md-8">
+        <div class="glass-card shadow-lg">
+            <form method="POST" novalidate>
+                {{ form.hidden_tag() }}
+                
+                <div class="row">
+                    <div class="col-md-4 mb-3">
+                        <label class="form-label text-gold">SKU (Fijo o Auto)</label>
+                        {{ form.sku(class="form-control", placeholder="PROD-001") }}
+                        {% if form.sku.errors %}
+                            {% for error in form.sku.errors %}<div class="text-danger small">{{ error }}</div>{% endfor %}
+                        {% endif %}
+                    </div>
+                    <div class="col-md-8 mb-3">
+                        <label class="form-label text-gold">Descripción del Producto</label>
+                        {{ form.descripcion(class="form-control", placeholder="Ej: Pan Dulce Especial") }}
+                        {% if form.descripcion.errors %}
+                            {% for error in form.descripcion.errors %}<div class="text-danger small">{{ error }}</div>{% endfor %}
+                        {% endif %}
+                    </div>
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label text-gold">Categoría / Tipo de Producto</label>
+                    {{ form.tipo_producto(class="form-control", placeholder="Panadería, Repostería, etc.") }}
+                </div>
+
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label text-gold"><i class="fas fa-tags"></i> Precio de Venta ($)</label>
+                        {{ form.precio_venta(class="form-control", step="0.01") }}
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label text-muted"><i class="fas fa-file-invoice-dollar"></i> Precio de Costo ($)</label>
+                        {{ form.precio_costo(class="form-control", step="0.01") }}
+                        <small class="text-muted">Solo visible para el Staff.</small>
+                    </div>
+                </div>
+
+                <hr class="border-gold opacity-25 my-4">
+
+                <div class="row align-items-center">
+                    <div class="col-md-6 mb-3">
+                        <div class="form-check form-switch mb-2">
+                            {{ form.es_canjeable(class="form-check-input", role="switch") }}
+                            <label class="form-check-label text-gold">¿Se puede canjear con puntos?</label>
+                        </div>
+                        <div id="puntos-canje-div">
+                            <label class="form-label text-gold">Costo en Puntos</label>
+                            {{ form.precio_puntos(class="form-control") }}
+                        </div>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label text-success"><i class="fas fa-plus-circle"></i> Puntos Generados al Comprar</label>
+                        {{ form.puntos_generados(class="form-control") }}
+                        <small class="text-muted">Puntos que recibe el cliente por llevar este producto.</small>
+                    </div>
+                </div>
+
+                <div class="mb-4">
+                    <div class="form-check form-switch">
+                        {{ form.activo(class="form-check-input", role="switch") }}
+                        <label class="form-check-label text-light">Producto Activo (Visible en catálogos)</label>
+                    </div>
+                </div>
+
+                <div class="d-grid gap-2">
+                    {{ form.submit(class="btn btn-gold btn-lg") }}
+                    <a href="{{ url_for('product.list') }}" class="btn btn-outline-light">Cancelar</a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<style>
+    .gold-icon { color: var(--accent-gold); margin-right: 10px; }
+    .text-gold { color: var(--accent-gold); font-weight: 500; }
+    .border-gold { border-top: 1px solid var(--accent-gold); }
+    .btn-gold { background: var(--accent-gold); color: #000; font-weight: 600; }
+    .form-control { background: rgba(255, 255, 255, 0.05); border: 1px solid var(--ui-border); color: #fff; }
+    .form-control:focus { background: rgba(255, 255, 255, 0.1); border-color: var(--accent-gold); color: #fff; box-shadow: none; }
+</style>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const checkCanjeable = document.getElementById('es_canjeable');
+    const divPuntosCanje = document.getElementById('puntos-canje-div');
+    
+    function toggleCanje() {
+        divPuntosCanje.style.display = checkCanjeable.checked ? 'block' : 'none';
+    }
+    
+    checkCanjeable.addEventListener('change', toggleCanje);
+    toggleCanje(); // Initial state
+});
+</script>
+{% endblock %}

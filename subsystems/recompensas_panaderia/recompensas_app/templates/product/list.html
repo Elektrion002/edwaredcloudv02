@@ -1,0 +1,83 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="glass-card mb-4">
+    <div class="d-flex justify-content-between align-items-center">
+        <div>
+            <h1 class="title"><i class="fas fa-boxes gold-icon"></i> {{ title }}</h1>
+            <p class="text-muted">Gestione los productos, sus precios y la configuración de puntos de recompensa.</p>
+        </div>
+        <a href="{{ url_for('product.add') }}" class="btn btn-gold">
+            <i class="fas fa-plus"></i> AGREGAR PRODUCTO
+        </a>
+    </div>
+</div>
+
+<div class="glass-card shadow-lg">
+    <div class="table-responsive">
+        <table class="table table-hover align-middle" style="color: #fff;">
+            <thead class="text-gold">
+                <tr>
+                    <th>SKU</th>
+                    <th>Descripción</th>
+                    <th>Venta</th>
+                    <th>Costo</th>
+                    <th>Puntos Canje</th>
+                    <th>Genera</th>
+                    <th>Estado</th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for product in products %}
+                <tr {% if not product.activo %}style="opacity: 0.5;"{% endif %}>
+                    <td><span class="badge bg-dark border-gold">{{ product.sku }}</span></td>
+                    <td>{{ product.descripcion }}</td>
+                    <td>${{ "%.2f"|format(product.precio_venta) }}</td>
+                    <td class="text-muted small">${{ "%.2f"|format(product.precio_costo) }}</td>
+                    <td>
+                        {% if product.es_canjeable %}
+                            <span class="text-gold"><i class="fas fa-star"></i> {{ product.precio_puntos }} pts</span>
+                        {% else %}
+                            <span class="text-muted">No canjeable</span>
+                        {% endif %}
+                    </td>
+                    <td><span class="text-success">+{{ product.puntos_generados }} pts</span></td>
+                    <td>
+                        {% if product.activo %}
+                            <span class="badge bg-success">Activo</span>
+                        {% else %}
+                            <span class="badge bg-danger">Inactivo</span>
+                        {% endif %}
+                    </td>
+                    <td>
+                        <div class="btn-group btn-group-sm">
+                            <a href="{{ url_for('product.edit', id=product.id) }}" class="btn btn-outline-gold" title="Editar">
+                                <i class="fas fa-edit"></i>
+                            </a>
+                            <a href="{{ url_for('product.toggle', id=product.id) }}" class="btn btn-outline-light" title="{{ 'Desactivar' if product.activo else 'Activar' }}">
+                                <i class="fas fa-power-off"></i>
+                            </a>
+                        </div>
+                    </td>
+                </tr>
+                {% else %}
+                <tr>
+                    <td colspan="8" class="text-center py-4">No hay productos registrados en el catálogo.</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<style>
+    .gold-icon { color: var(--accent-gold); margin-right: 10px; }
+    .text-gold { color: var(--accent-gold); }
+    .border-gold { border: 1px solid var(--accent-gold); color: var(--accent-gold); }
+    .bg-dark { background-color: rgba(0,0,0,0.5) !important; }
+    .table-hover tbody tr:hover { background-color: rgba(255,215,0,0.05); }
+    .btn-outline-gold { border-color: var(--accent-gold); color: var(--accent-gold); }
+    .btn-outline-gold:hover { background: var(--accent-gold); color: #000; }
+</style>
+{% endblock %}

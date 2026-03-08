@@ -1,0 +1,102 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="portal-header mb-4">
+    <a href="{{ url_for('portal.dashboard') }}" class="back-link"><i class="fas fa-arrow-left"></i> Volver</a>
+    <h2 class="title">MI CATÁLOGO</h2>
+    <p class="text-muted">Descubre qué productos puedes llevar con tus puntos acumulados.</p>
+</div>
+
+<!-- Filtros Rápidos -->
+<div class="catalog-filters mb-4">
+    <button class="filter-btn active" data-filter="all">Todos</button>
+    <button class="filter-btn" data-filter="canjeable">Solo Canjeables</button>
+</div>
+
+<div class="row row-cols-1 row-cols-md-3 g-4" id="catalog-grid">
+    {% for product in products %}
+    <div class="col product-card-wrapper" data-canjeable="{{ 'true' if product.es_canjeable else 'false' }}">
+        <div class="glass-card h-100 product-card">
+            <div class="product-badge-container">
+                {% if product.es_canjeable %}
+                    <span class="badge bg-gold text-navy">CANJEABLE</span>
+                {% endif %}
+                <span class="badge bg-dark border-gold small">{{ product.tipo_producto or 'General' }}</span>
+            </div>
+            
+            <div class="product-info mt-3">
+                <h4 class="product-title">{{ product.descripcion }}</h4>
+                <div class="d-flex justify-content-between align-items-center mt-3">
+                    <div class="price-tag">
+                        <span class="label">Precio Venta</span>
+                        <span class="value">${{ "%.2f"|format(product.precio_venta) }}</span>
+                    </div>
+                    {% if product.es_canjeable %}
+                    <div class="points-tag text-gold">
+                        <span class="label">Puntos Requeridos</span>
+                        <span class="value"><i class="fas fa-star"></i> {{ product.precio_puntos }}</span>
+                    </div>
+                    {% endif %}
+                </div>
+                
+                <hr class="border-gold opacity-10 my-3">
+                
+                <div class="points-gain">
+                    <i class="fas fa-plus-circle text-success"></i> Sumas <strong>{{ product.puntos_generados }} puntos</strong> en cada compra.
+                </div>
+            </div>
+        </div>
+    </div>
+    {% else %}
+    <div class="col-12 text-center py-5">
+        <p class="text-muted">Próximamente tendremos productos disponibles para ti.</p>
+    </div>
+    {% endfor %}
+</div>
+
+<style>
+    .portal-header .back-link { color: var(--accent-gold); text-decoration: none; font-size: 0.9rem; margin-bottom: 0.5rem; display: block; }
+    .product-card { transition: all 0.3s ease; border: 1px solid var(--ui-border); position: relative; overflow: hidden; }
+    .product-card:hover { transform: translateY(-5px); border-color: var(--accent-gold); box-shadow: 0 10px 20px rgba(0,0,0,0.5); }
+    
+    .product-badge-container { display: flex; gap: 0.5rem; position: absolute; top: 1rem; right: 1rem; }
+    .bg-gold { background-color: var(--accent-gold); }
+    .text-navy { color: var(--primary-navy); }
+    .border-gold { border: 1px solid var(--accent-gold); color: var(--accent-gold); }
+    
+    .product-title { font-family: 'Montserrat', sans-serif; font-weight: 600; font-size: 1.1rem; color: #fff; margin: 0; }
+    
+    .price-tag, .points-tag { display: flex; flex-direction: column; }
+    .price-tag .label, .points-tag .label { font-size: 0.7rem; text-transform: uppercase; color: var(--accent-slate); letter-spacing: 1px; }
+    .price-tag .value { font-size: 1.2rem; font-weight: 700; color: #fff; }
+    .points-tag .value { font-size: 1.2rem; font-weight: 700; }
+    
+    .points-gain { font-size: 0.85rem; color: var(--accent-slate); }
+    
+    .filter-btn { background: transparent; border: 1px solid var(--ui-border); color: #fff; padding: 0.5rem 1.2rem; border-radius: 20px; font-size: 0.85rem; cursor: pointer; transition: 0.3s; }
+    .filter-btn.active { background: var(--accent-gold); color: #000; border-color: var(--accent-gold); }
+    
+    .border-gold.opacity-10 { border-top: 1px solid rgba(255, 215, 0, 0.1); }
+</style>
+
+<script>
+document.querySelectorAll('.filter-btn').forEach(btn => {
+    btn.addEventListener('click', function() {
+        // Toggle active class
+        document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+        this.classList.add('active');
+        
+        const filter = this.dataset.filter;
+        const products = document.querySelectorAll('.product-card-wrapper');
+        
+        products.forEach(p => {
+            if (filter === 'all') {
+                p.style.display = 'block';
+            } else if (filter === 'canjeable') {
+                p.style.display = p.dataset.canjeable === 'true' ? 'block' : 'none';
+            }
+        });
+    });
+});
+</script>
+{% endblock %}
