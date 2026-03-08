@@ -9,8 +9,17 @@
 <div class="row justify-content-center">
     <div class="col-md-8">
         <div class="glass-card shadow-lg">
-            <form method="POST" novalidate>
+            <form method="POST" enctype="multipart/form-data" novalidate>
                 {{ form.hidden_tag() }}
+                
+                <div class="mb-4">
+                    <label class="form-label text-gold"><i class="fas fa-image"></i> Imagen del Producto</label>
+                    {{ form.imagen(class="form-control") }}
+                    <small class="text-muted">Formatos permitidos: JPG, PNG, JPEG.</small>
+                    {% if product and product.imagen_path %}
+                        <div class="mt-2 text-info small">Imagen actual: {{ product.imagen_path }}</div>
+                    {% endif %}
+                </div>
                 
                 <div class="row">
                     <div class="col-md-4 mb-3">

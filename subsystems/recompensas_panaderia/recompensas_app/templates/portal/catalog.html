@@ -17,6 +17,14 @@
     {% for product in products %}
     <div class="col product-card-wrapper" data-canjeable="{{ 'true' if product.es_canjeable else 'false' }}">
         <div class="glass-card h-100 product-card">
+            {% if product.imagen_path %}
+                <div class="product-header-img" style="background-image: url('{{ url_for('static', filename=product.imagen_path) }}');"></div>
+            {% else %}
+                <div class="product-header-img placeholder-img">
+                    <i class="fas fa-box-open"></i>
+                </div>
+            {% endif %}
+            
             <div class="product-badge-container">
                 {% if product.es_canjeable %}
                     <span class="badge bg-gold text-navy">CANJEABLE</span>
@@ -25,6 +33,7 @@
             </div>
             
             <div class="product-info mt-3">
+                <div class="sku-label text-gold small mb-1">SKU: {{ product.sku }}</div>
                 <h4 class="product-title">{{ product.descripcion }}</h4>
                 <div class="d-flex justify-content-between align-items-center mt-3">
                     <div class="price-tag">
@@ -56,10 +65,13 @@
 
 <style>
     .portal-header .back-link { color: var(--accent-gold); text-decoration: none; font-size: 0.9rem; margin-bottom: 0.5rem; display: block; }
-    .product-card { transition: all 0.3s ease; border: 1px solid var(--ui-border); position: relative; overflow: hidden; }
+    .product-card { transition: all 0.3s ease; border: 1px solid var(--ui-border); position: relative; overflow: hidden; padding: 0 !important; }
     .product-card:hover { transform: translateY(-5px); border-color: var(--accent-gold); box-shadow: 0 10px 20px rgba(0,0,0,0.5); }
     
-    .product-badge-container { display: flex; gap: 0.5rem; position: absolute; top: 1rem; right: 1rem; }
+    .product-header-img { height: 180px; background-size: cover; background-position: center; width: 100%; border-bottom: 1px solid rgba(255, 215, 0, 0.2); }
+    .placeholder-img { display: flex; align-items: center; justify-content: center; background: rgba(255, 255, 255, 0.05); font-size: 3rem; color: var(--accent-gold); opacity: 0.2; }
+    
+    .product-badge-container { display: flex; gap: 0.5rem; position: absolute; top: 0.75rem; right: 0.75rem; z-index: 10; }
     .bg-gold { background-color: var(--accent-gold); }
     .text-navy { color: var(--primary-navy); }
     .border-gold { border: 1px solid var(--accent-gold); color: var(--accent-gold); }

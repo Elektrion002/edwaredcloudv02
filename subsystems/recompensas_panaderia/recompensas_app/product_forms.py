@@ -1,4 +1,5 @@
 from flask_wtf import FlaskForm
+from flask_wtf.file import FileField, FileAllowed
 from wtforms import StringField, TextAreaField, FloatField, IntegerField, BooleanField, SubmitField
 from wtforms.validators import DataRequired, Length, ValidationError
 from recompensas_app.models.product import Product
@@ -14,6 +15,8 @@ class ProductForm(FlaskForm):
     precio_puntos = IntegerField('Precio en Puntos (Canje)', default=0)
     es_canjeable = BooleanField('¿Es Canjeable con Puntos?')
     puntos_generados = IntegerField('Puntos que Genera la Compra', default=0)
+    
+    imagen = FileField('Imagen del Producto', validators=[FileAllowed(['jpg', 'png', 'jpeg'], 'Solo imágenes!')])
     
     activo = BooleanField('Producto Activo', default=True)
     submit = SubmitField('Guardar Producto')

@@ -1,5 +1,6 @@
-from flask import Blueprint, render_template, redirect, url_for, flash, request
+from flask import Blueprint, render_template, redirect, url_for, flash, request, current_app
 from flask_login import login_required, current_user
+from werkzeug.utils import secure_filename
 from recompensas_app import db
 from recompensas_app.models.product import Product
 from recompensas_app.product_forms import ProductForm
@@ -34,6 +35,14 @@ def add():
             puntos_generados=form.puntos_generados.data,
             activo=form.activo.data
         )
+        # Manejo de imagen
+        if form.imagen.data:
+            filename = secure_filename(f"{product.sku}_{form.imagen.data.filename}")
+            upload_folder = os.path.join(current_app.root_path, 'static', 'products')
+            os.makedirs(upload_folder, exist_ok=True)
+            form.imagen.data.save(os.path.join(upload_folder, filename))
+            product.imagen_path = f"products/{filename}"
+
         db.session.add(product)
         db.session.commit()
         flash(f'Producto {product.sku} agregado exitosamente.', 'success')
@@ -61,6 +70,14 @@ def edit(id):
         product.puntos_generados = form.puntos_generados.data
         product.activo = form.activo.data
         
+        # Manejo de imagen
+        if form.imagen.data:
+            filename = secure_filename(f"{product.sku}_{form.imagen.data.filename}")
+            upload_folder = os.path.join(current_app.root_path, 'static', 'products')
+            os.makedirs(upload_folder, exist_ok=True)
+            form.imagen.data.save(os.path.join(upload_folder, filename))
+            product.imagen_path = f"products/{filename}"
+            
         db.session.commit()
         flash(f'Producto {product.sku} actualizado.', 'success')
         return redirect(url_for('product.list'))
