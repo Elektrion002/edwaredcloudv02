@@ -160,9 +160,27 @@
         box-shadow: 0 4px 15px rgba(212, 175, 55, 0.3);
     }
     
-    .filter-btn:hover:not(.active) {
+    .filter_btn:hover:not(.active) {
         background: rgba(255, 255, 255, 0.1);
         color: #fff;
+    }
+
+    /* Responsive Adjustments */
+    @media (max-width: 576px) {
+        .product-visual-header { height: 160px; }
+        .product-name { font-size: 1rem; }
+        .metric-value { font-size: 1.15rem; }
+        .badge-premium { padding: 3px 8px; font-size: 0.6rem; }
+        .reward-footer { font-size: 0.75rem; }
+        .catalog-filters { display: flex; overflow-x: auto; gap: 0.5rem; padding-bottom: 0.5rem; scrollbar-width: none; }
+        .catalog-filters::-webkit-scrollbar { display: none; }
+        .filter-btn { white-space: nowrap; padding: 6px 14px; }
+    }
+
+    @media (max-width: 380px) {
+        .product-metrics { flex-direction: column; align-items: flex-start; gap: 8px; }
+        .metric-item.text-end { text-align: left !important; }
+        .product-badges { flex-direction: column; gap: 4px; align-items: flex-start; }
     }
 </style>
 
