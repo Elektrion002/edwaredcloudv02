@@ -16,42 +16,43 @@
 <div class="row row-cols-1 row-cols-md-3 g-4" id="catalog-grid">
     {% for product in products %}
     <div class="col product-card-wrapper" data-canjeable="{{ 'true' if product.es_canjeable else 'false' }}">
-        <div class="glass-card h-100 product-card">
-            {% if product.imagen_path %}
-                <div class="product-header-img" style="background-image: url('{{ url_for('static', filename=product.imagen_path) }}');"></div>
-            {% else %}
-                <div class="product-header-img placeholder-img">
-                    <i class="fas fa-box-open"></i>
-                </div>
-            {% endif %}
-            
-            <div class="product-badge-container">
-                {% if product.es_canjeable %}
-                    <span class="badge bg-gold text-navy">CANJEABLE</span>
+        <div class="glass-card h-100 product-card d-flex flex-column">
+            <div class="product-visual-header">
+                {% if product.imagen_path %}
+                    <img src="{{ url_for('static', filename=product.imagen_path) }}" alt="{{ product.descripcion }}" class="product-main-img">
+                {% else %}
+                    <div class="product-main-img placeholder-bg d-flex align-items-center justify-content-center">
+                        <i class="fas fa-box-open fa-3x opacity-25"></i>
+                    </div>
                 {% endif %}
-                <span class="badge bg-dark border-gold small">{{ product.tipo_producto or 'General' }}</span>
+                
+                <div class="product-badges">
+                    {% if product.es_canjeable %}
+                        <span class="badge-premium bg-gold">CANJEABLE</span>
+                    {% endif %}
+                    <span class="badge-premium bg-blur">{{ product.tipo_producto or 'General' }}</span>
+                </div>
             </div>
             
-            <div class="product-info mt-3">
-                <div class="sku-label text-gold small mb-1">SKU: {{ product.sku }}</div>
-                <h4 class="product-title">{{ product.descripcion }}</h4>
-                <div class="d-flex justify-content-between align-items-center mt-3">
-                    <div class="price-tag">
-                        <span class="label">Precio Venta</span>
-                        <span class="value">${{ "%.2f"|format(product.precio_venta or 0.0) }}</span>
+            <div class="product-body p-3 flex-grow-1 d-flex flex-column">
+                <div class="sku-tag mb-2">SKU: {{ product.sku }}</div>
+                <h4 class="product-name mb-3">{{ product.descripcion }}</h4>
+                
+                <div class="product-metrics mt-auto">
+                    <div class="metric-item">
+                        <span class="metric-label">Precio</span>
+                        <span class="metric-value">${{ "%.2f"|format(product.precio_venta or 0.0) }}</span>
                     </div>
                     {% if product.es_canjeable %}
-                    <div class="points-tag text-gold">
-                        <span class="label">Puntos Requeridos</span>
-                        <span class="value"><i class="fas fa-star"></i> {{ product.precio_puntos or 0 }}</span>
+                    <div class="metric-item highlight-gold text-end">
+                        <span class="metric-label">Canje</span>
+                        <span class="metric-value"><i class="fas fa-star"></i> {{ product.precio_puntos or 0 }}</span>
                     </div>
                     {% endif %}
                 </div>
                 
-                <hr class="border-gold opacity-10 my-3">
-                
-                <div class="points-gain">
-                    <i class="fas fa-plus-circle text-success"></i> Sumas <strong>{{ product.puntos_generados }} puntos</strong> en cada compra.
+                <div class="reward-footer mt-3 pt-2 border-top border-gold border-opacity-10">
+                    <i class="fas fa-plus-circle text-success me-1"></i> Sumas <strong>{{ product.puntos_generados }} pts</strong>
                 </div>
             </div>
         </div>
@@ -65,30 +66,104 @@
 
 <style>
     .portal-header .back-link { color: var(--accent-gold); text-decoration: none; font-size: 0.9rem; margin-bottom: 0.5rem; display: block; }
-    .product-card { transition: all 0.3s ease; border: 1px solid var(--ui-border); position: relative; overflow: hidden; padding: 0 !important; }
-    .product-card:hover { transform: translateY(-5px); border-color: var(--accent-gold); box-shadow: 0 10px 20px rgba(0,0,0,0.5); }
     
-    .product-header-img { height: 180px; background-size: cover; background-position: center; width: 100%; border-bottom: 1px solid rgba(255, 215, 0, 0.2); }
-    .placeholder-img { display: flex; align-items: center; justify-content: center; background: rgba(255, 255, 255, 0.05); font-size: 3rem; color: var(--accent-gold); opacity: 0.2; }
+    /* Product Card Redesign */
+    .product-card { 
+        background: rgba(255, 255, 255, 0.03);
+        border: 1px solid rgba(255, 215, 0, 0.1);
+        border-radius: 16px;
+        transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
+        overflow: hidden;
+    }
     
-    .product-badge-container { display: flex; gap: 0.5rem; position: absolute; top: 0.75rem; right: 0.75rem; z-index: 10; }
-    .bg-gold { background-color: var(--accent-gold); }
-    .text-navy { color: var(--primary-navy); }
-    .border-gold { border: 1px solid var(--accent-gold); color: var(--accent-gold); }
+    .product-card:hover {
+        transform: translateY(-8px);
+        border-color: var(--accent-gold);
+        box-shadow: 0 20px 40px rgba(0,0,0,0.6);
+        background: rgba(255, 255, 255, 0.05);
+    }
     
-    .product-title { font-family: 'Montserrat', sans-serif; font-weight: 600; font-size: 1.1rem; color: #fff; margin: 0; }
+    .product-visual-header {
+        position: relative;
+        height: 200px;
+        width: 100%;
+        overflow: hidden;
+        background: #000;
+    }
     
-    .price-tag, .points-tag { display: flex; flex-direction: column; }
-    .price-tag .label, .points-tag .label { font-size: 0.7rem; text-transform: uppercase; color: var(--accent-slate); letter-spacing: 1px; }
-    .price-tag .value { font-size: 1.2rem; font-weight: 700; color: #fff; }
-    .points-tag .value { font-size: 1.2rem; font-weight: 700; }
+    .product-main-img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        transition: transform 0.6s ease;
+    }
     
-    .points-gain { font-size: 0.85rem; color: var(--accent-slate); }
+    .product-card:hover .product-main-img {
+        transform: scale(1.1);
+    }
     
-    .filter-btn { background: transparent; border: 1px solid var(--ui-border); color: #fff; padding: 0.5rem 1.2rem; border-radius: 20px; font-size: 0.85rem; cursor: pointer; transition: 0.3s; }
-    .filter-btn.active { background: var(--accent-gold); color: #000; border-color: var(--accent-gold); }
+    .placeholder-bg {
+        background: linear-gradient(135deg, #1a1a1a 0%, #0d0d0d 100%);
+        color: var(--accent-gold);
+    }
     
-    .border-gold.opacity-10 { border-top: 1px solid rgba(255, 215, 0, 0.1); }
+    .product-badges {
+        position: absolute;
+        top: 12px;
+        left: 12px;
+        right: 12px;
+        display: flex;
+        justify-content: space-between;
+        pointer-events: none;
+    }
+    
+    .badge-premium {
+        padding: 4px 10px;
+        border-radius: 8px;
+        font-size: 0.65rem;
+        font-weight: 700;
+        letter-spacing: 1px;
+        text-transform: uppercase;
+    }
+    
+    .bg-gold { background: var(--accent-gold); color: #000; }
+    .bg-blur { background: rgba(0, 0, 0, 0.6); backdrop-filter: blur(8px); color: #fff; border: 1px solid rgba(255,255,255,0.1); }
+    
+    .sku-tag { font-size: 0.65rem; color: var(--accent-gold); opacity: 0.7; letter-spacing: 1.5px; }
+    .product-name { font-family: 'Montserrat', sans-serif; font-weight: 600; font-size: 1.15rem; line-height: 1.3; color: #fff; }
+    
+    .product-metrics { display: flex; justify-content: space-between; align-items: flex-end; }
+    .metric-item { display: flex; flex-direction: column; }
+    .metric-label { font-size: 0.6rem; text-transform: uppercase; color: var(--accent-slate); margin-bottom: 2px; }
+    .metric-value { font-size: 1.3rem; font-weight: 800; color: #fff; }
+    
+    .highlight-gold .metric-value { color: var(--accent-gold); }
+    
+    .reward-footer { font-size: 0.8rem; color: var(--accent-slate); }
+    
+    /* Filters */
+    .filter-btn { 
+        background: rgba(255, 255, 255, 0.05); 
+        border: 1px solid rgba(255, 255, 255, 0.1); 
+        color: rgba(255, 255, 255, 0.6); 
+        padding: 8px 18px; 
+        border-radius: 30px; 
+        font-size: 0.85rem; 
+        font-weight: 500;
+        transition: 0.3s; 
+    }
+    
+    .filter-btn.active { 
+        background: var(--accent-gold); 
+        color: #000; 
+        border-color: var(--accent-gold); 
+        box-shadow: 0 4px 15px rgba(212, 175, 55, 0.3);
+    }
+    
+    .filter-btn:hover:not(.active) {
+        background: rgba(255, 255, 255, 0.1);
+        color: #fff;
+    }
 </style>
 
 <script>
