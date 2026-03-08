@@ -20,6 +20,9 @@ class StaffUser(UserMixin, db.Model):
     antiguedad = db.Column(db.Date, default=datetime.utcnow)
     activo = db.Column(db.Boolean, default=True)
 
+    def get_id(self):
+        return f'staff_{self.id}'
+
     def set_password(self, password):
         self.password_hash = generate_password_hash(password)
 
@@ -36,6 +39,3 @@ class StaffUser(UserMixin, db.Model):
     def check_pin(self, pin):
         return check_password_hash(self.pin_hash, str(pin))
 
-@login_manager.user_loader
-def load_user(id):
-    return StaffUser.query.get(int(id))

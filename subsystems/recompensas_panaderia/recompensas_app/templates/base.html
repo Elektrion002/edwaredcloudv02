@@ -162,11 +162,25 @@
         <nav class="nav-links">
             {% if current_user.is_authenticated %}
                 <a href="{{ url_for('main.index') }}">Inicio</a>
-                <a href="{{ url_for('counter.index') }}" class="bold-gold"><i class="fas fa-cash-register"></i> Mostrador</a>
-                {% if current_user.nivel_numerico <= 30 %}
-                    <a href="{{ url_for('staff.list') }}">Gestión Staff</a>
+                
+                {% if current_user.cliente_id is defined %}
+                    <!-- Navegación Cliente -->
+                    <a href="{{ url_for('portal.dashboard') }}"><i class="fas fa-qrcode"></i> Credencial</a>
+                    <a href="{{ url_for('portal.history') }}"><i class="fas fa-history"></i> Puntos</a>
+                    <a href="{{ url_for('portal.profile') }}"><i class="fas fa-user-gear"></i> Perfil</a>
+                    <a href="{{ url_for('portal.logout') }}">Salir</a>
+                {% else %}
+                    <!-- Navegación Staff -->
+                    <a href="{{ url_for('counter.index') }}" class="bold-gold"><i class="fas fa-cash-register"></i> Mostrador</a>
+                    <a href="{{ url_for('customer.list') }}">Clientes</a>
+                    {% if current_user.nivel_numerico <= 30 %}
+                        <a href="{{ url_for('staff.list') }}">Gestión Staff</a>
+                    {% endif %}
+                    <a href="{{ url_for('auth.logout') }}">Salir</a>
                 {% endif %}
-                <a href="{{ url_for('auth.logout') }}">Salir</a>
+            {% else %}
+                <a href="{{ url_for('portal.login') }}">Mi Portal</a>
+                <a href="{{ url_for('auth.login') }}">Staff</a>
             {% endif %}
         </nav>
     </header>

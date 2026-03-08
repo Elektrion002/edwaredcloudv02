@@ -1,0 +1,165 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="portal-container">
+    <!-- Balance Card -->
+    <div class="glass-card balance-card">
+        <div class="points-label">PUNTOS DISPONIBLES</div>
+        <div class="points-value">{{ current_user.puntos_disponibles }}</div>
+        <div class="customer-info">{{ current_user.nombres }} {{ current_user.apellidos }}</div>
+    </div>
+
+    <!-- QR Card -->
+    <div class="glass-card qr-card">
+        <h3 class="qr-title">MI CREDENCIAL DIGITAL</h3>
+        <p class="qr-subtitle">Presenta este código en caja para sumar o canjear puntos</p>
+        
+        <div class="qr-wrapper">
+            <img src="{{ qr_url }}" alt="Código QR de Credencial" class="qr-image">
+            <div class="qr-id">{{ current_user.cliente_id }}</div>
+        </div>
+        
+        <div class="status-badge">
+            <i class="fas fa-check-circle"></i> Cuenta Activa
+        </div>
+    </div>
+
+    <div class="actions-grid">
+        <a href="{{ url_for('portal.history') }}" class="action-btn">
+            <i class="fas fa-history"></i>
+            <span>Movimientos</span>
+        </a>
+        <a href="{{ url_for('portal.profile') }}" class="action-btn">
+            <i class="fas fa-user-shield"></i>
+            <span>Seguridad</span>
+        </a>
+    </div>
+</div>
+
+<style>
+    .portal-container {
+        display: flex;
+        flex-direction: column;
+        gap: 1.5rem;
+        max-width: 500px;
+        margin: 0 auto;
+    }
+    
+    .balance-card {
+        text-align: center;
+        background: linear-gradient(135deg, rgba(255, 215, 0, 0.1) 0%, rgba(10, 17, 40, 0.4) 100%);
+        border-color: rgba(255, 215, 0, 0.2);
+    }
+    
+    .points-label {
+        font-size: 0.75rem;
+        letter-spacing: 2px;
+        color: var(--accent-gold);
+        margin-bottom: 0.5rem;
+    }
+    
+    .points-value {
+        font-size: 3.5rem;
+        font-weight: 700;
+        font-family: 'Montserrat', sans-serif;
+        line-height: 1;
+        margin-bottom: 0.5rem;
+    }
+    
+    .customer-info {
+        font-size: 1.1rem;
+        font-weight: 500;
+        color: var(--accent-slate);
+    }
+    
+    .qr-card {
+        text-align: center;
+        padding: 2rem 1.5rem;
+    }
+    
+    .qr-title {
+        font-size: 1rem;
+        letter-spacing: 1px;
+        margin-bottom: 0.5rem;
+    }
+    
+    .qr-subtitle {
+        font-size: 0.85rem;
+        color: var(--accent-slate);
+        margin-bottom: 1.5rem;
+    }
+    
+    .qr-wrapper {
+        background: white;
+        padding: 1.5rem;
+        border-radius: 12px;
+        display: inline-block;
+        margin-bottom: 1rem;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+    }
+    
+    .qr-image {
+        width: 200px;
+        height: 200px;
+        display: block;
+    }
+    
+    .qr-id {
+        color: #333;
+        font-family: monospace;
+        font-weight: 700;
+        margin-top: 0.8rem;
+        font-size: 1.1rem;
+    }
+    
+    .status-badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        background: rgba(74, 222, 128, 0.1);
+        color: #4ade80;
+        padding: 0.4rem 1rem;
+        border-radius: 20px;
+        font-size: 0.85rem;
+        font-weight: 600;
+    }
+    
+    .actions-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 1rem;
+    }
+    
+    .action-btn {
+        background: var(--ui-surface);
+        border: 1px solid var(--ui-border);
+        border-radius: 12px;
+        padding: 1.2rem;
+        text-align: center;
+        text-decoration: none;
+        color: white;
+        transition: all 0.3s;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 0.5rem;
+    }
+    
+    .action-btn i {
+        font-size: 1.5rem;
+        color: var(--accent-gold);
+    }
+    
+    .action-btn:hover {
+        background: rgba(255, 255, 255, 0.1);
+        transform: translateY(-3px);
+    }
+
+    @media (max-width: 480px) {
+        .qr-image {
+            width: 160px;
+            height: 160px;
+        }
+    }
+</style>
+{% endblock %}

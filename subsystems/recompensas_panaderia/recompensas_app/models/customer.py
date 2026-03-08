@@ -3,7 +3,9 @@ import secrets
 from recompensas_app import db
 from werkzeug.security import generate_password_hash, check_password_hash
 
-class Customer(db.Model):
+from flask_login import UserMixin
+
+class Customer(UserMixin, db.Model):
     __tablename__ = 'customers'
     
     id = db.Column(db.Integer, primary_key=True)
@@ -47,6 +49,9 @@ class Customer(db.Model):
     @staticmethod
     def generate_credencial_id():
         return secrets.token_urlsafe(32)
+
+    def get_id(self):
+        return f'cust_{self.id}'
 
     def __repr__(self):
         return f'<Customer {self.cliente_id} - {self.nombres}>'

@@ -1,0 +1,89 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="login-container">
+    <div class="glass-card auth-card">
+        <h2 class="title"><i class="fas fa-user-circle gold-icon"></i> Mi Portal</h2>
+        
+        <form action="{{ url_for('portal.login') }}" method="post" novalidate>
+            {{ form.hidden_tag() }}
+            <div class="form-group">
+                <label class="form-label">ID de Credencial (10 caracteres)</label>
+                <div class="input-with-icon">
+                    <i class="fas fa-id-card input-icon"></i>
+                    {{ form.cliente_id(class="form-input", placeholder="Ej: EDW-XXXXXX") }}
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="form-label">Contraseña o PIN</label>
+                <div class="input-with-icon">
+                    <i class="fas fa-key input-icon"></i>
+                    {{ form.secret(class="form-input", placeholder="********") }}
+                </div>
+            </div>
+            <div class="form-check" style="margin-top: 1rem; display: flex; align-items: center; gap: 0.5rem;">
+                {{ form.remember_me() }} <span style="font-size: 0.9rem; color: var(--accent-slate);">Recordarme</span>
+            </div>
+            <button type="submit" class="btn btn-gold btn-full">ENTRAR A MI PORTAL</button>
+        </form>
+        
+        <div style="margin-top: 1.5rem; text-align: center;">
+            <a href="{{ url_for('portal.recovery') }}" style="color: var(--accent-gold); font-size: 0.85rem; text-decoration: none;">
+                ¿Olvidaste tu clave o PIN? Solicita ayuda aquí
+            </a>
+        </div>
+    </div>
+</div>
+
+<style>
+    .login-container {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        min-height: 60vh;
+    }
+    .auth-card {
+        width: 100%;
+        max-width: 400px;
+    }
+    .title {
+        text-align: center;
+        margin-bottom: 2rem;
+        color: var(--accent-gold);
+        letter-spacing: 1px;
+    }
+    .form-group {
+        margin-bottom: 1.2rem;
+    }
+    .form-label {
+        display: block;
+        margin-bottom: 0.5rem;
+        font-size: 0.8rem;
+        text-transform: uppercase;
+        color: var(--accent-slate);
+    }
+    .input-with-icon {
+        position: relative;
+    }
+    .input-icon {
+        position: absolute;
+        left: 12px;
+        top: 50%;
+        transform: translateY(-50%);
+        color: var(--accent-gold);
+    }
+    .form-input {
+        width: 100%;
+        background: rgba(255,255,255,0.03);
+        border: 1px solid var(--ui-border);
+        border-radius: 6px;
+        padding: 0.8rem 0.8rem 0.8rem 2.5rem;
+        color: white;
+    }
+    .btn-full {
+        width: 100%;
+        margin-top: 1rem;
+    }
+    .gold-icon { margin-right: 10px; }
+</style>
+{% endblock %}

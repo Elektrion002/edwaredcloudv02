@@ -1,0 +1,82 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="recovery-container">
+    <div class="glass-card auth-card">
+        <h2 class="title"><i class="fab fa-whatsapp gold-icon"></i> Recuperar Acceso</h2>
+        
+        <p style="color: var(--accent-slate); text-align: center; margin-bottom: 2rem; font-size: 0.9rem;">
+            Si olvidaste tu clave o PIN, ingresa tu número de WhatsApp registrado y te enviaremos un enlace de recuperación.
+        </p>
+
+        <form action="{{ url_for('portal.recovery') }}" method="post">
+            {{ form.hidden_tag() }}
+            <div class="form-group">
+                <label class="form-label">WhatsApp Registrado</label>
+                <div class="input-with-icon">
+                    <i class="fas fa-mobile-alt input-icon"></i>
+                    {{ form.celular_whatsapp(class="form-input", placeholder="Ej: 3121550543") }}
+                </div>
+            </div>
+            <button type="submit" class="btn btn-gold btn-full">SOLICITAR RECUPERACIÓN</button>
+        </form>
+        
+        <div style="margin-top: 1.5rem; text-align: center;">
+            <a href="{{ url_for('portal.login') }}" style="color: var(--accent-slate); font-size: 0.85rem; text-decoration: none;">
+                Volver al inicio de sesión
+            </a>
+        </div>
+    </div>
+</div>
+
+<style>
+    .recovery-container {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        min-height: 60vh;
+    }
+    .auth-card {
+        width: 100%;
+        max-width: 400px;
+    }
+    .title {
+        text-align: center;
+        margin-bottom: 1rem;
+        color: var(--accent-gold);
+    }
+    .form-group {
+        margin-bottom: 1.5rem;
+    }
+    .form-label {
+        display: block;
+        margin-bottom: 0.5rem;
+        font-size: 0.8rem;
+        text-transform: uppercase;
+        color: var(--accent-slate);
+    }
+    .input-with-icon {
+        position: relative;
+    }
+    .input-icon {
+        position: absolute;
+        left: 12px;
+        top: 50%;
+        transform: translateY(-50%);
+        color: var(--accent-gold);
+    }
+    .form-input {
+        width: 100%;
+        background: rgba(255,255,255,0.03);
+        border: 1px solid var(--ui-border);
+        border-radius: 6px;
+        padding: 0.8rem 0.8rem 0.8rem 2.5rem;
+        color: white;
+    }
+    .btn-full {
+        width: 100%;
+        margin-top: 1rem;
+    }
+    .gold-icon { margin-right: 10px; }
+</style>
+{% endblock %}

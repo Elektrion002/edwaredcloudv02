@@ -17,6 +17,16 @@ def create_app(config_class=Config):
     db.init_app(app)
     login_manager.init_app(app)
 
+    @login_manager.user_loader
+    def load_user(user_id):
+        if user_id.startswith('staff_'):
+            from recompensas_app.models.staff import StaffUser
+            return StaffUser.query.get(int(user_id.split('_')[1]))
+        elif user_id.startswith('cust_'):
+            from recompensas_app.models.customer import Customer
+            return Customer.query.get(int(user_id.split('_')[1]))
+        return None
+
     # Register blueprints
     from recompensas_app.main import bp as main_bp
     app.register_blueprint(main_bp)
@@ -32,6 +42,9 @@ def create_app(config_class=Config):
 
     from recompensas_app.counter_routes import bp as counter_bp
     app.register_blueprint(counter_bp)
+
+    from recompensas_app.portal_routes import portal_bp
+    app.register_blueprint(portal_bp)
 
     with app.app_context():
         from recompensas_app.models import staff, customer, movement
