@@ -231,11 +231,16 @@
         }
 
         searchTimeout = setTimeout(() => {
+            console.log("Buscando:", query);
             fetch(`{{ url_for('counter.search') }}?q=${query}`)
-                .then(r => r.json())
+                .then(r => {
+                    if (!r.ok) throw new Error("Error en servidor");
+                    return r.json();
+                })
                 .then(data => {
+                    console.log("Resultados recibidos:", data);
                     resultsBody.innerHTML = '';
-                    if (data.length > 0) {
+                    if (data && data.length > 0) {
                         data.forEach(c => {
                             const tr = document.createElement('tr');
                             tr.innerHTML = `
@@ -246,22 +251,33 @@
                                 <td>${c.celular}</td>
                                 <td><span class="badge-points">${c.puntos}</span></td>
                                 <td>
-                                    <button class="btn btn-gold" onclick="openOperation(${c.id}, 'acumulacion', '${c.nombre_completo}')" style="padding: 0.4rem 0.8rem; font-size: 0.8rem; margin-right: 5px;">
+                                    <button class="btn btn-gold op-btn" data-id="${c.id}" data-tipo="acumulacion" data-name="${c.nombre_completo}" style="padding: 0.4rem 0.8rem; font-size: 0.8rem; margin-right: 5px;">
                                         <i class="fas fa-plus"></i> Sumar
                                     </button>
-                                    <button class="btn btn-gold" onclick="openOperation(${c.id}, 'canje', '${c.nombre_completo}')" style="padding: 0.4rem 0.8rem; font-size: 0.8rem; background: transparent; border: 1px solid var(--accent-gold); color: var(--accent-gold);">
+                                    <button class="btn btn-gold op-btn" data-id="${c.id}" data-tipo="canje" data-name="${c.nombre_completo}" style="padding: 0.4rem 0.8rem; font-size: 0.8rem; background: transparent; border: 1px solid var(--accent-gold); color: var(--accent-gold);">
                                         <i class="fas fa-gift"></i> Canjear
                                     </button>
                                 </td>
                             `;
                             resultsBody.appendChild(tr);
                         });
+                        
+                        // Attach listeners to new buttons
+                        document.querySelectorAll('.op-btn').forEach(btn => {
+                            btn.addEventListener('click', function() {
+                                openOperation(this.dataset.id, this.dataset.tipo, this.dataset.name);
+                            });
+                        });
+                        
                         resultsContainer.style.display = 'block';
                         noResults.style.display = 'none';
                     } else {
                         resultsContainer.style.display = 'none';
                         noResults.style.display = 'block';
                     }
+                })
+                .catch(err => {
+                    console.error("Error en búsqueda:", err);
                 });
         }, 300);
     });
