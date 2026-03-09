@@ -3,17 +3,20 @@ from flask_login import login_required, current_user
 from recompensas_app import db
 from recompensas_app.models.customer import Customer
 from recompensas_app.models.movement import Movement
+from recompensas_app.decorators import staff_required
 from datetime import datetime
 
 bp = Blueprint('counter', __name__, url_prefix='/admin/counter')
 
 @bp.route('/')
 @login_required
+@staff_required
 def index():
     return render_template('admin/counter.html', title='Mostrador de Recompensas')
 
 @bp.route('/search')
 @login_required
+@staff_required
 def search():
     query = request.args.get('q', '').strip()
     if not query:
@@ -42,6 +45,7 @@ def search():
 
 @bp.route('/operate', methods=['POST'])
 @login_required
+@staff_required
 def operate():
     customer_id = request.form.get('customer_id')
     tipo = request.form.get('tipo') # 'acumulacion' or 'canje'

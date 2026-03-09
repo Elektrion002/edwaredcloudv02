@@ -3,24 +3,24 @@ from flask_login import login_required, current_user
 from recompensas_app import db
 from recompensas_app.models.staff import StaffUser
 from recompensas_app.auth_forms import StaffUserForm
+from recompensas_app.decorators import staff_required, admin_required
 from datetime import datetime
 
 staff_bp = Blueprint('staff', __name__)
 
 @staff_bp.route('/list')
 @login_required
+@admin_required
 def list():
-    if current_user.nivel_numerico > 30: # Solo Admin o superior
-        flash('No tienes permisos para acceder a esta sección.', 'error')
-        return redirect(url_for('main.index'))
-    
     users = StaffUser.query.all()
     return render_template('staff/list.html', users=users)
 
 @staff_bp.route('/new', methods=['GET', 'POST'])
 @login_required
+@admin_required
 def new():
-    if current_user.nivel_numerico > 20: # Solo Super Admin o Admin
+    # Solo Super Admin (10) o Admin (20) pueden crear
+    if current_user.nivel_numerico > 20:
         flash('No tienes permisos para crear usuarios.', 'error')
         return redirect(url_for('staff.list'))
     
@@ -47,6 +47,7 @@ def new():
 
 @staff_bp.route('/edit/<int:id>', methods=['GET', 'POST'])
 @login_required
+@staff_required
 def edit(id):
     user = StaffUser.query.get_or_404(id)
     

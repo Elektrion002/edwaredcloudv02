@@ -3,17 +3,20 @@ from flask_login import login_required, current_user
 from recompensas_app import db
 from recompensas_app.models.customer import Customer
 from recompensas_app.customer_forms import CustomerForm
+from recompensas_app.decorators import staff_required
 
 bp = Blueprint('customer', __name__, url_prefix='/admin/customer')
 
 @bp.route('/list')
 @login_required
+@staff_required
 def list():
     customers = Customer.query.all()
     return render_template('customer/list.html', title='Gestión de Clientes', customers=customers)
 
 @bp.route('/register', methods=['GET', 'POST'])
 @login_required
+@staff_required
 def register():
     form = CustomerForm()
     if form.validate_on_submit():
@@ -40,6 +43,7 @@ def register():
 
 @bp.route('/edit/<int:id>', methods=['GET', 'POST'])
 @login_required
+@staff_required
 def edit(id):
     customer = Customer.query.get_or_404(id)
     form = CustomerForm(original_cliente_id=customer.cliente_id, original_whatsapp=customer.celular_whatsapp)

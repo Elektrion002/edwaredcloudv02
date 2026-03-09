@@ -4,23 +4,22 @@ from werkzeug.utils import secure_filename
 from recompensas_app import db
 from recompensas_app.models.product import Product
 from recompensas_app.product_forms import ProductForm
+from recompensas_app.decorators import staff_required
 import os
 
 bp = Blueprint('product', __name__, url_prefix='/admin/catalog')
 
 @bp.route('/')
 @login_required
+@staff_required
 def list():
-    if not hasattr(current_user, 'username'): # Solo Staff
-        return redirect(url_for('main.index'))
     products = Product.query.order_by(Product.sku).all()
     return render_template('product/list.html', title='Gestión de Catálogo', products=products)
 
 @bp.route('/add', methods=['GET', 'POST'])
 @login_required
+@staff_required
 def add():
-    if not hasattr(current_user, 'username'):
-        return redirect(url_for('main.index'))
     
     form = ProductForm()
     if form.validate_on_submit():
@@ -52,9 +51,8 @@ def add():
 
 @bp.route('/edit/<int:id>', methods=['GET', 'POST'])
 @login_required
+@staff_required
 def edit(id):
-    if not hasattr(current_user, 'username'):
-        return redirect(url_for('main.index'))
     
     product = Product.query.get_or_404(id)
     form = ProductForm(original_sku=product.sku)
@@ -96,9 +94,8 @@ def edit(id):
 
 @bp.route('/toggle/<int:id>')
 @login_required
+@staff_required
 def toggle(id):
-    if not hasattr(current_user, 'username'):
-        return redirect(url_for('main.index'))
     
     product = Product.query.get_or_404(id)
     product.activo = not product.activo
