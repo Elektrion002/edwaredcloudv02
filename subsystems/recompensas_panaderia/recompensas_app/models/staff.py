@@ -19,6 +19,14 @@ class StaffUser(UserMixin, db.Model):
     nivel_numerico = db.Column(db.Integer, default=50) # 10, 20, 30, 50, 100
     antiguedad = db.Column(db.Date, default=datetime.utcnow)
     activo = db.Column(db.Boolean, default=True)
+    
+    @property
+    def is_staff(self):
+        return True
+
+    @property
+    def is_customer(self):
+        return False
 
     def get_id(self):
         return f'staff_{self.id}'

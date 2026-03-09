@@ -27,6 +27,14 @@ class Customer(UserMixin, db.Model):
     activo = db.Column(db.Boolean, default=True)
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
     
+    @property
+    def is_staff(self):
+        return False
+
+    @property
+    def is_customer(self):
+        return True
+    
     # Relación con movimientos
     movements = db.relationship('Movement', backref='customer', lazy='dynamic', cascade="all, delete-orphan")
 
