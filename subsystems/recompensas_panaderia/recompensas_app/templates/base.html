@@ -120,29 +120,60 @@
             color: var(--accent-gold);
         }
 
-        /* Mobile Adjustments */
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: var(--primary-navy);
+        }
+        ::-webkit-scrollbar-thumb {
+            background: var(--accent-gold);
+            border-radius: 10px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #bfa030;
+        }
+
+        /* Mobile Icon Menu */
         @media (max-width: 768px) {
             .header {
-                padding: 1rem;
-                flex-direction: column;
-                gap: 0.8rem;
-                text-align: center;
+                padding: 0.5rem 1rem;
+                flex-direction: row; /* Mantener horizontal en mobile para el logo */
+                justify-content: center;
+                border-bottom: 2px solid var(--accent-gold);
+            }
+            .logo {
+                font-size: 0.8rem;
+                margin-bottom: 0;
             }
             .nav-links {
+                position: fixed;
+                bottom: 0;
+                left: 0;
+                width: 100%;
+                background: rgba(10, 17, 40, 0.95);
+                backdrop-filter: blur(15px);
                 display: flex;
-                flex-wrap: wrap;
-                justify-content: center;
-                gap: 0.5rem;
+                justify-content: space-around;
+                padding: 0.8rem 0;
+                margin-left: 0;
+                border-top: 1px solid var(--accent-gold);
+                z-index: 2000;
             }
             .nav-links a {
-                margin: 0 0.5rem;
-                font-size: 0.8rem;
+                margin: 0;
+                font-size: 1.2rem;
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                gap: 4px;
+            }
+            .nav-links a span {
+                display: none; /* Ocultar texto en mobile */
             }
             .main-content {
-                padding: 1rem;
-            }
-            .glass-card {
-                padding: 1.2rem;
+                padding-bottom: 5rem; /* Espacio para el menu inferior */
             }
         }
 
@@ -161,29 +192,29 @@
         <div class="logo">RECOMPENSAS EDWARED</div>
         <nav class="nav-links">
             {% if current_user.is_authenticated %}
-                <a href="{{ url_for('main.index') }}">Inicio</a>
+                <a href="{{ url_for('main.index') }}"><i class="fas fa-home"></i> <span>Inicio</span></a>
                 
                 {% if current_user.is_customer %}
                     <!-- Navegación Cliente -->
-                    <a href="{{ url_for('portal.dashboard') }}"><i class="fas fa-qrcode"></i> Credencial</a>
-                    <a href="{{ url_for('portal.catalog') }}"><i class="fas fa-shopping-bag"></i> Catálogo</a>
-                    <a href="{{ url_for('portal.history') }}"><i class="fas fa-history"></i> Puntos</a>
-                    <a href="{{ url_for('portal.profile') }}"><i class="fas fa-user-gear"></i> Perfil</a>
-                    <a href="{{ url_for('portal.logout') }}">Salir</a>
+                    <a href="{{ url_for('portal.dashboard') }}"><i class="fas fa-qrcode"></i> <span>Credencial</span></a>
+                    <a href="{{ url_for('portal.catalog') }}"><i class="fas fa-shopping-bag"></i> <span>Catálogo</span></a>
+                    <a href="{{ url_for('portal.history') }}"><i class="fas fa-history"></i> <span>Puntos</span></a>
+                    <a href="{{ url_for('portal.profile') }}"><i class="fas fa-user-gear"></i> <span>Perfil</span></a>
+                    <a href="{{ url_for('portal.logout') }}"><i class="fas fa-sign-out-alt"></i> <span>Salir</span></a>
                 {% elif current_user.is_staff %}
                     <!-- Navegación Staff -->
-                    <a href="{{ url_for('counter.index') }}" class="bold-gold"><i class="fas fa-cash-register"></i> Mostrador</a>
-                    <a href="{{ url_for('admin.dashboard') }}">Stats</a>
-                    <a href="{{ url_for('customer.list') }}">Clientes</a>
-                    <a href="{{ url_for('product.list') }}">Catálogo</a>
+                    <a href="{{ url_for('counter.index') }}"><i class="fas fa-cash-register"></i> <span>Mostrador</span></a>
+                    <a href="{{ url_for('admin.dashboard') }}"><i class="fas fa-chart-line"></i> <span>Stats</span></a>
+                    <a href="{{ url_for('customer.list') }}"><i class="fas fa-users"></i> <span>Clientes</span></a>
+                    <a href="{{ url_for('product.list') }}"><i class="fas fa-box"></i> <span>Catálogo</span></a>
                     {% if current_user.nivel_numerico <= 30 %}
-                        <a href="{{ url_for('staff.list') }}">Gestión Staff</a>
+                        <a href="{{ url_for('staff.list') }}"><i class="fas fa-id-badge"></i> <span>Staff</span></a>
                     {% endif %}
-                    <a href="{{ url_for('auth.logout') }}">Salir</a>
+                    <a href="{{ url_for('auth.logout') }}"><i class="fas fa-sign-out-alt"></i> <span>Salir</span></a>
                 {% endif %}
             {% else %}
-                <a href="{{ url_for('portal.login') }}">Mi Portal</a>
-                <a href="{{ url_for('auth.login') }}">Staff</a>
+                <a href="{{ url_for('portal.login') }}"><i class="fas fa-user"></i> <span>Mi Portal</span></a>
+                <a href="{{ url_for('auth.login') }}"><i class="fas fa-user-tie"></i> <span>Staff</span></a>
             {% endif %}
         </nav>
     </header>

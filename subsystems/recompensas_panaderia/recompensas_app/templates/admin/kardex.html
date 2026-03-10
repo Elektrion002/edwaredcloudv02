@@ -9,73 +9,73 @@
         </a>
     </div>
 
-    <!-- Filters Row -->
-    <div class="card bg-navy border-gold mb-4">
-        <div class="card-body">
-            <form method="GET" action="{{ url_for('admin.kardex') }}" class="row g-3 align-items-end">
-                <div class="col-md-4">
-                    <label class="text-white-50 small d-block mb-1">Buscar Cliente</label>
-                    <input type="text" name="q" value="{{ search }}" class="form-control bg-dark text-white border-gold-soft" placeholder="Nombre o ID...">
+    <!-- Filters Row Premium -->
+    <div class="card glass-card mb-4 p-3 shadow-lg" style="border-left: 5px solid var(--accent-gold);">
+        <form method="GET" action="{{ url_for('admin.kardex') }}" class="row g-3 align-items-center">
+            <div class="col-md-4">
+                <div class="input-group">
+                    <span class="input-group-text bg-transparent border-gold text-gold"><i class="fas fa-search"></i></span>
+                    <input type="text" name="q" value="{{ search }}" class="form-control bg-dark text-white border-gold no-focus-outline" placeholder="Buscar cliente por nombre o ID...">
                 </div>
-                <div class="col-md-5">
-                    <label class="text-white-50 small d-block mb-1">Periodo</label>
-                    <div class="btn-group w-100" role="group">
-                        <a href="{{ url_for('admin.kardex', periodo='hoy', q=search) }}" class="btn btn-sm {% if periodo == 'hoy' %}btn-gold{% else %}btn-outline-gold{% endif %}">Hoy</a>
-                        <a href="{{ url_for('admin.kardex', periodo='ayer', q=search) }}" class="btn btn-sm {% if periodo == 'ayer' %}btn-gold{% else %}btn-outline-gold{% endif %}">Ayer</a>
-                        <a href="{{ url_for('admin.kardex', periodo='semana', q=search) }}" class="btn btn-sm {% if periodo == 'semana' %}btn-gold{% else %}btn-outline-gold{% endif %}">Semana</a>
-                        <a href="{{ url_for('admin.kardex', periodo='historico', q=search) }}" class="btn btn-sm {% if periodo == 'historico' %}btn-gold{% else %}btn-outline-gold{% endif %}">Histórico</a>
-                    </div>
-                    <input type="hidden" name="periodo" value="{{ periodo }}">
+            </div>
+            <div class="col-md-5">
+                <div class="d-flex gap-1 justify-content-center">
+                    <a href="{{ url_for('admin.kardex', periodo='hoy', q=search) }}" class="btn btn-pill-gold {% if periodo == 'hoy' %}active{% endif %}">Hoy</a>
+                    <a href="{{ url_for('admin.kardex', periodo='ayer', q=search) }}" class="btn btn-pill-gold {% if periodo == 'ayer' %}active{% endif %}">Ayer</a>
+                    <a href="{{ url_for('admin.kardex', periodo='semana', q=search) }}" class="btn btn-pill-gold {% if periodo == 'semana' %}active{% endif %}">Semana</a>
+                    <a href="{{ url_for('admin.kardex', periodo='historico', q=search) }}" class="btn btn-pill-gold {% if periodo == 'historico' %}active{% endif %}">Todo</a>
                 </div>
-                <div class="col-md-3">
-                    <button type="submit" class="btn btn-gold w-100">
-                        <i class="fas fa-filter me-1"></i>Filtrar
-                    </button>
-                </div>
-            </form>
-        </div>
+                <input type="hidden" name="periodo" value="{{ periodo }}">
+            </div>
+            <div class="col-md-3">
+                <button type="submit" class="btn btn-gold w-100 fw-bold">
+                    APLICAR FILTROS
+                </button>
+            </div>
+        </form>
     </div>
 
     <!-- Movements Table -->
-    <div class="card bg-navy border-gold overflow-hidden">
+    <div class="card glass-card overflow-hidden shadow-2xl">
         <div class="table-responsive">
-            <table class="table table-dark table-hover mb-0">
+            <table class="table table-hover mb-0" id="kardexTable">
                 <thead>
-                    <tr class="text-white-50 small border-bottom border-gold">
-                        <th>Fecha</th>
-                        <th>Cliente</th>
-                        <th>Tipo</th>
+                    <tr class="text-gold-soft small text-uppercase">
+                        <th class="sortable" onclick="sortTable(0)">Fecha <i class="fas fa-sort float-end"></i></th>
+                        <th class="sortable" onclick="sortTable(1)">Cliente <i class="fas fa-sort float-end"></i></th>
+                        <th class="sortable" onclick="sortTable(2)">Tipo <i class="fas fa-sort float-end"></i></th>
                         <th>Concepto</th>
-                        <th class="text-center">Puntos</th>
-                        <th>Operado por</th>
+                        <th class="text-center sortable" onclick="sortTable(4)">Puntos <i class="fas fa-sort float-end"></i></th>
+                        <th>Staff</th>
                     </tr>
                 </thead>
                 <tbody>
                     {% for m in movements %}
-                    <tr>
-                        <td class="small">{{ m.created_at.strftime('%d/%m/%Y %H:%M') }}</td>
+                    <tr class="align-middle">
+                        <td class="small opacity-75">{{ m.created_at.strftime('%d/%m/%Y %H:%M') }}</td>
                         <td>
-                            <div class="fw-bold text-white small">{{ m.customer_id }}</div>
+                            <div class="text-white fw-bold mb-0">{{ m.customer.nombres }} {{ m.customer.apellidos }}</div>
+                            <div class="small text-gold opacity-50">{{ m.customer.cliente_id }}</div>
                         </td>
                         <td>
                             {% if m.tipo == 'acumulacion' %}
-                            <span class="badge bg-success-soft text-success">Acumulación</span>
+                            <div class="type-badge success"><i class="fas fa-arrow-up me-1"></i>ACUMULA</div>
                             {% elif m.tipo == 'canje' %}
-                            <span class="badge bg-danger-soft text-danger">Canje</span>
+                            <div class="type-badge danger"><i class="fas fa-arrow-down me-1"></i>CANJE</div>
                             {% else %}
-                            <span class="badge bg-info-soft text-info">Ajuste</span>
+                            <div class="type-badge info"><i class="fas fa-cog me-1"></i>AJUSTE</div>
                             {% endif %}
                         </td>
-                        <td class="small">{{ m.concepto }}</td>
-                        <td class="text-center fw-bold {% if m.tipo == 'canje' %}text-danger{% else %}text-success{% endif %}">
+                        <td class="small text-white-50">{{ m.concepto }}</td>
+                        <td class="text-center fw-bold fs-5 {% if m.tipo == 'canje' %}text-danger{% else %}text-success{% endif %}">
                             {{ "+" if m.tipo != 'canje' else "-" }}{{ m.puntos }}
                         </td>
                         <td class="small text-white-50">
-                            {{ staff_map.get(m.staff_id, 'Sistema') }}
+                            <span class="badge rounded-pill bg-dark border border-gold-soft">{{ staff_map.get(m.staff_id, 'Sistema') }}</span>
                         </td>
                     </tr>
                     {% else %}
-                    <tr><td colspan="6" class="text-center py-5 text-white-50">No se encontraron movimientos con estos filtros.</td></tr>
+                    <tr><td colspan="6" class="text-center py-5 text-gold opacity-50"><i>Sin registros coincidentes</i></td></tr>
                     {% endfor %}
                 </tbody>
             </table>
@@ -83,20 +83,69 @@
     </div>
 </div>
 
+<script>
+function sortTable(n) {
+  var table, rows, switching, i, x, y, shouldSwitch, dir, switchcount = 0;
+  table = document.getElementById("kardexTable");
+  switching = true;
+  dir = "asc";
+  while (switching) {
+    switching = false;
+    rows = table.rows;
+    for (i = 1; i < (rows.length - 1); i++) {
+      shouldSwitch = false;
+      x = rows[i].getElementsByTagName("TD")[n];
+      y = rows[i + 1].getElementsByTagName("TD")[n];
+      if (dir == "asc") {
+        if (x.innerHTML.toLowerCase() > y.innerHTML.toLowerCase()) {
+          shouldSwitch = true;
+          break;
+        }
+      } else if (dir == "desc") {
+        if (x.innerHTML.toLowerCase() < y.innerHTML.toLowerCase()) {
+          shouldSwitch = true;
+          break;
+        }
+      }
+    }
+    if (shouldSwitch) {
+      rows[i].parentNode.insertBefore(rows[i + 1], rows[i]);
+      switching = true;
+      switchcount ++;
+    } else {
+      if (switchcount == 0 && dir == "asc") {
+        dir = "desc";
+        switching = true;
+      }
+    }
+  }
+}
+</script>
+</div>
+
 <style>
-    .bg-navy { background-color: #0a192f !important; }
+    .glass-card { background: rgba(255, 255, 255, 0.03); backdrop-filter: blur(10px); border: 1px solid rgba(212, 175, 55, 0.2); border-radius: 15px; }
     .border-gold { border: 1px solid #d4af37 !important; }
     .border-gold-soft { border: 1px solid rgba(212, 175, 55, 0.3) !important; }
     .text-gold { color: #d4af37 !important; }
-    .btn-gold { background-color: #d4af37; color: #0a192f; border: none; }
-    .btn-gold:hover { background-color: #bfa030; }
-    .btn-outline-gold { color: #d4af37; border-color: #d4af37; }
-    .btn-outline-gold:hover { background-color: #d4af37; color: #0a192f; }
+    .text-gold-soft { color: rgba(212, 175, 55, 0.6); }
+    .btn-gold { background: #d4af37; color: #0a1128; border: none; border-radius: 8px; transition: all 0.3s ease; }
+    .btn-gold:hover { transform: scale(1.02); background: #bfa030; }
     
-    .bg-success-soft { background-color: rgba(25, 135, 84, 0.2); border: 1px solid rgba(25, 135, 84, 0.4); }
-    .bg-danger-soft { background-color: rgba(220, 53, 69, 0.2); border: 1px solid rgba(220, 53, 69, 0.4); }
-    .bg-info-soft { background-color: rgba(13, 110, 253, 0.2); border: 1px solid rgba(13, 110, 253, 0.4); }
+    .btn-pill-gold { color: #d4af37; border: 1px solid #d4af37; border-radius: 20px; padding: 0.3rem 0.8rem; font-size: 0.8rem; font-weight: 600; text-decoration: none; transition: all 0.2s; }
+    .btn-pill-gold:hover, .btn-pill-gold.active { background: #d4af37; color: #0a1128; }
     
-    .table-hover tbody tr:hover { background-color: rgba(212, 175, 55, 0.05) !important; }
+    .type-badge { padding: 4px 10px; border-radius: 6px; font-weight: 700; font-size: 0.65rem; display: inline-flex; align-items: center; }
+    .type-badge.success { background: rgba(74, 222, 128, 0.1); color: #4ade80; border: 1px solid rgba(74, 222, 128, 0.3); }
+    .type-badge.danger { background: rgba(239, 68, 68, 0.1); color: #ef4444; border: 1px solid rgba(239, 68, 68, 0.3); }
+    .type-badge.info { background: rgba(59, 130, 246, 0.1); color: #3b82f6; border: 1px solid rgba(59, 130, 246, 0.3); }
+    
+    .no-focus-outline:focus { box-shadow: none; border-color: #ffd700; background-color: rgba(255,255,255,0.05) !important; color: #fff !important; }
+    
+    .sortable { cursor: pointer; transition: background 0.2s; }
+    .sortable:hover { background: rgba(212, 175, 55, 0.1); }
+    
+    table { color: #fff !important; }
+    .table-hover tbody tr:hover { background: rgba(255, 255, 255, 0.02); }
 </style>
 {% endblock %}

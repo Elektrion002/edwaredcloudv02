@@ -102,6 +102,9 @@ def kardex():
             (Customer.apellidos.ilike(f'%{search}%')) |
             (Customer.cliente_id.ilike(f'%{search}%'))
         )
+    else:
+        # Siempre unir para tener acceso a los nombres si queremos mostrarlos sin N+1 queries
+        query = query.join(Customer)
 
     movements = query.all()
     
