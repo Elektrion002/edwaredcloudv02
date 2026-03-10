@@ -1,0 +1,102 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2 class="text-gold"><i class="fas fa-history me-2"></i>Kardex de Movimientos</h2>
+        <a href="{{ url_for('admin.dashboard') }}" class="btn btn-outline-gold btn-sm">
+            <i class="fas fa-chart-pie me-1"></i>Volver al Dashboard
+        </a>
+    </div>
+
+    <!-- Filters Row -->
+    <div class="card bg-navy border-gold mb-4">
+        <div class="card-body">
+            <form method="GET" action="{{ url_for('admin.kardex') }}" class="row g-3 align-items-end">
+                <div class="col-md-4">
+                    <label class="text-white-50 small d-block mb-1">Buscar Cliente</label>
+                    <input type="text" name="q" value="{{ search }}" class="form-control bg-dark text-white border-gold-soft" placeholder="Nombre o ID...">
+                </div>
+                <div class="col-md-5">
+                    <label class="text-white-50 small d-block mb-1">Periodo</label>
+                    <div class="btn-group w-100" role="group">
+                        <a href="{{ url_for('admin.kardex', periodo='hoy', q=search) }}" class="btn btn-sm {% if periodo == 'hoy' %}btn-gold{% else %}btn-outline-gold{% endif %}">Hoy</a>
+                        <a href="{{ url_for('admin.kardex', periodo='ayer', q=search) }}" class="btn btn-sm {% if periodo == 'ayer' %}btn-gold{% else %}btn-outline-gold{% endif %}">Ayer</a>
+                        <a href="{{ url_for('admin.kardex', periodo='semana', q=search) }}" class="btn btn-sm {% if periodo == 'semana' %}btn-gold{% else %}btn-outline-gold{% endif %}">Semana</a>
+                        <a href="{{ url_for('admin.kardex', periodo='historico', q=search) }}" class="btn btn-sm {% if periodo == 'historico' %}btn-gold{% else %}btn-outline-gold{% endif %}">Histórico</a>
+                    </div>
+                    <input type="hidden" name="periodo" value="{{ periodo }}">
+                </div>
+                <div class="col-md-3">
+                    <button type="submit" class="btn btn-gold w-100">
+                        <i class="fas fa-filter me-1"></i>Filtrar
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Movements Table -->
+    <div class="card bg-navy border-gold overflow-hidden">
+        <div class="table-responsive">
+            <table class="table table-dark table-hover mb-0">
+                <thead>
+                    <tr class="text-white-50 small border-bottom border-gold">
+                        <th>Fecha</th>
+                        <th>Cliente</th>
+                        <th>Tipo</th>
+                        <th>Concepto</th>
+                        <th class="text-center">Puntos</th>
+                        <th>Operado por</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for m in movements %}
+                    <tr>
+                        <td class="small">{{ m.created_at.strftime('%d/%m/%Y %H:%M') }}</td>
+                        <td>
+                            <div class="fw-bold text-white small">{{ m.customer_id }}</div>
+                        </td>
+                        <td>
+                            {% if m.tipo == 'acumulacion' %}
+                            <span class="badge bg-success-soft text-success">Acumulación</span>
+                            {% elif m.tipo == 'canje' %}
+                            <span class="badge bg-danger-soft text-danger">Canje</span>
+                            {% else %}
+                            <span class="badge bg-info-soft text-info">Ajuste</span>
+                            {% endif %}
+                        </td>
+                        <td class="small">{{ m.concepto }}</td>
+                        <td class="text-center fw-bold {% if m.tipo == 'canje' %}text-danger{% else %}text-success{% endif %}">
+                            {{ "+" if m.tipo != 'canje' else "-" }}{{ m.puntos }}
+                        </td>
+                        <td class="small text-white-50">
+                            {{ staff_map.get(m.staff_id, 'Sistema') }}
+                        </td>
+                    </tr>
+                    {% else %}
+                    <tr><td colspan="6" class="text-center py-5 text-white-50">No se encontraron movimientos con estos filtros.</td></tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<style>
+    .bg-navy { background-color: #0a192f !important; }
+    .border-gold { border: 1px solid #d4af37 !important; }
+    .border-gold-soft { border: 1px solid rgba(212, 175, 55, 0.3) !important; }
+    .text-gold { color: #d4af37 !important; }
+    .btn-gold { background-color: #d4af37; color: #0a192f; border: none; }
+    .btn-gold:hover { background-color: #bfa030; }
+    .btn-outline-gold { color: #d4af37; border-color: #d4af37; }
+    .btn-outline-gold:hover { background-color: #d4af37; color: #0a192f; }
+    
+    .bg-success-soft { background-color: rgba(25, 135, 84, 0.2); border: 1px solid rgba(25, 135, 84, 0.4); }
+    .bg-danger-soft { background-color: rgba(220, 53, 69, 0.2); border: 1px solid rgba(220, 53, 69, 0.4); }
+    .bg-info-soft { background-color: rgba(13, 110, 253, 0.2); border: 1px solid rgba(13, 110, 253, 0.4); }
+    
+    .table-hover tbody tr:hover { background-color: rgba(212, 175, 55, 0.05) !important; }
+</style>
+{% endblock %}

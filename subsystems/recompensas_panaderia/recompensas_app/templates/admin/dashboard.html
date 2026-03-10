@@ -1,0 +1,173 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2 class="text-gold"><i class="fas fa-chart-line me-2"></i>Dashboard de Inteligencia</h2>
+        <a href="{{ url_for('admin.kardex') }}" class="btn btn-outline-gold btn-sm">
+            <i class="fas fa-list me-1"></i>Ver Kardex Completo
+        </a>
+    </div>
+
+    <!-- KPI Cards -->
+    <div class="row g-3 mb-4">
+        <div class="col-md-3">
+            <div class="card bg-navy border-gold h-100">
+                <div class="card-body text-center">
+                    <h6 class="text-white-50 small mb-2">Puntos Acumulados</h6>
+                    <h3 class="text-gold mb-0">{{ kpis.total_acumulacion }}</h3>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card bg-navy border-gold h-100">
+                <div class="card-body text-center">
+                    <h6 class="text-white-50 small mb-2">Puntos Canjeados</h6>
+                    <h3 class="text-gold mb-0">{{ kpis.total_canje }}</h3>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card bg-navy border-gold h-100">
+                <div class="card-body text-center">
+                    <h6 class="text-white-50 small mb-2">Dinero Canjeado (Est.)</h6>
+                    <h3 class="text-gold mb-0">${{ "{:,.2f}".format(kpis.dinero_canjeado) }}</h3>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card bg-navy border-gold h-100">
+                <div class="card-body text-center">
+                    <h6 class="text-white-50 small mb-2">Transacciones</h6>
+                    <h3 class="text-gold mb-0">{{ kpis.compras_generadoras }}</h3>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Charts Row -->
+    <div class="row g-4 mb-4">
+        <div class="col-md-6">
+            <div class="card bg-navy border-gold p-3">
+                <h5 class="text-gold mb-3">Top 5 Clientes (Generación)</h5>
+                <canvas id="chartClientesGanan"></canvas>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="card bg-navy border-gold p-3">
+                <h5 class="text-gold mb-3">Top 5 Staff (Asignación)</h5>
+                <canvas id="chartStaffAsigna"></canvas>
+            </div>
+        </div>
+    </div>
+
+    <!-- Detailed Tops -->
+    <div class="row g-4">
+        <div class="col-md-6">
+            <div class="card bg-navy border-gold">
+                <div class="card-header border-bottom border-gold bg-transparent">
+                    <h5 class="text-gold mb-0">Top Clientes que Canjean</h5>
+                </div>
+                <div class="card-body p-0">
+                    <table class="table table-dark table-hover mb-0">
+                        <thead>
+                            <tr class="text-white-50 small">
+                                <th>Cliente</th>
+                                <th class="text-end">Puntos Canjeados</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for c in tops.clientes_canje %}
+                            <tr>
+                                <td>{{ c.nombres }} {{ c.apellidos }}</td>
+                                <td class="text-end text-gold fw-bold">{{ c.total }}</td>
+                            </tr>
+                            {% else %}
+                            <tr><td colspan="2" class="text-center text-white-50">Sin datos</td></tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="card bg-navy border-gold">
+                <div class="card-header border-bottom border-gold bg-transparent">
+                    <h5 class="text-gold mb-0">Top Staff en Canjes</h5>
+                </div>
+                <div class="card-body p-0">
+                    <table class="table table-dark table-hover mb-0">
+                        <thead>
+                            <tr class="text-white-50 small">
+                                <th>Usuario</th>
+                                <th class="text-end">Canjes Operados</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for s in tops.staff_canje %}
+                            <tr>
+                                <td>{{ s.username }}</td>
+                                <td class="text-end text-gold fw-bold">{{ s.total }}</td>
+                            </tr>
+                            {% else %}
+                            <tr><td colspan="2" class="text-center text-white-50">Sin datos</td></tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+    const ctxClientes = document.getElementById('chartClientesGanan').getContext('2d');
+    new Chart(ctxClientes, {
+        type: 'bar',
+        data: {
+            labels: [{% for c in tops.clientes_ganan %}'{{ c.nombres }}',{% endfor %}],
+            datasets: [{
+                label: 'Puntos Acumulados',
+                data: [{% for c in tops.clientes_ganan %}{{ c.total }},{% endfor %}],
+                backgroundColor: 'rgba(212, 175, 55, 0.6)',
+                borderColor: 'rgba(212, 175, 55, 1)',
+                borderWidth: 1
+            }]
+        },
+        options: {
+            scales: { y: { beginAtZero: true, grid: { color: 'rgba(255,255,255,0.1)' }, ticks: { color: '#fff' } }, x: { ticks: { color: '#fff' } } },
+            plugins: { legend: { display: false } }
+        }
+    });
+
+    const ctxStaff = document.getElementById('chartStaffAsigna').getContext('2d');
+    new Chart(ctxStaff, {
+        type: 'bar',
+        data: {
+            labels: [{% for s in tops.staff_asigna %}'{{ s.username }}',{% endfor %}],
+            datasets: [{
+                label: 'Puntos Asignados',
+                data: [{% for s in tops.staff_asigna %}{{ s.total }},{% endfor %}],
+                backgroundColor: 'rgba(255, 255, 255, 0.4)',
+                borderColor: 'rgba(255, 255, 255, 0.8)',
+                borderWidth: 1
+            }]
+        },
+        options: {
+            scales: { y: { beginAtZero: true, grid: { color: 'rgba(255,255,255,0.1)' }, ticks: { color: '#fff' } }, x: { ticks: { color: '#fff' } } },
+            plugins: { legend: { display: false } }
+        }
+    });
+</script>
+
+<style>
+    .bg-navy { background-color: #0a192f !important; }
+    .border-gold { border: 1px solid #d4af37 !important; }
+    .text-gold { color: #d4af37 !important; }
+    .btn-outline-gold { color: #d4af37; border-color: #d4af37; }
+    .btn-outline-gold:hover { background-color: #d4af37; color: #0a192f; }
+    .table-dark { background-color: transparent !important; }
+    .table-hover tbody tr:hover { background-color: rgba(212, 175, 55, 0.1) !important; }
+</style>
+{% endblock %}
