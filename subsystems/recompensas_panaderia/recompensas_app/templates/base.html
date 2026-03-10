@@ -173,6 +173,7 @@
                 {% elif current_user.is_staff %}
                     <!-- Navegación Staff -->
                     <a href="{{ url_for('counter.index') }}" class="bold-gold"><i class="fas fa-cash-register"></i> Mostrador</a>
+                    <a href="{{ url_for('admin.dashboard') }}">Stats</a>
                     <a href="{{ url_for('customer.list') }}">Clientes</a>
                     <a href="{{ url_for('product.list') }}">Catálogo</a>
                     {% if current_user.nivel_numerico <= 30 %}
