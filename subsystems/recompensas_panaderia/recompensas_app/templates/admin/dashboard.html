@@ -1,120 +1,100 @@
 {% extends "base.html" %}
 
 {% block content %}
-<div class="container mt-4">
+<div class="container-fluid py-3 px-lg-5">
+    <!-- Header Compacto -->
     <div class="d-flex justify-content-between align-items-center mb-4">
-        <h2 class="text-gold"><i class="fas fa-chart-line me-2"></i>Dashboard de Inteligencia</h2>
-        <a href="{{ url_for('admin.kardex') }}" class="btn btn-outline-gold btn-sm">
-            <i class="fas fa-list me-1"></i>Ver Kardex Completo
+        <div>
+            <h2 class="text-gold mb-0 fs-3 fw-900"><i class="fas fa-chart-line me-2"></i>DASHBOARD</h2>
+            <p class="small text-white-50 mb-0">Inteligencia de Recompensas v2.0</p>
+        </div>
+        <a href="{{ url_for('admin.kardex') }}" class="btn btn-outline-gold btn-sm px-4 rounded-pill">
+            <i class="fas fa-list me-2"></i>KARDEX
         </a>
     </div>
 
-    <!-- KPI Cards Premium -->
-    <div class="row g-3 mb-4">
-        <div class="col-6 col-md-3">
-            <div class="kpi-card glass-card h-100 p-3 text-center">
-                <div class="icon-circle gold mb-2 mx-auto">
-                    <i class="fas fa-plus-circle"></i>
-                </div>
-                <div class="kpi-value">{{ kpis.total_acumulacion }}</div>
-                <div class="kpi-label">Puntos Generados</div>
-            </div>
-        </div>
-        <div class="col-6 col-md-3">
-            <div class="kpi-card glass-card h-100 p-3 text-center">
-                <div class="icon-circle red mb-2 mx-auto">
-                    <i class="fas fa-minus-circle"></i>
-                </div>
-                <div class="kpi-value text-danger">{{ kpis.total_canje }}</div>
-                <div class="kpi-label">Puntos Canjeados</div>
-            </div>
-        </div>
-        <div class="col-6 col-md-3">
-            <div class="kpi-card glass-card h-100 p-3 text-center">
-                <div class="icon-circle cyan mb-2 mx-auto">
-                    <i class="fas fa-hand-holding-usd"></i>
-                </div>
-                <div class="kpi-value text-info">${{ "{:,.2f}".format(kpis.dinero_canjeado) }}</div>
-                <div class="kpi-label">Valor Canjeado</div>
-            </div>
-        </div>
-        <div class="col-6 col-md-3">
-            <div class="kpi-card glass-card h-100 p-3 text-center">
-                <div class="icon-circle white mb-2 mx-auto">
-                    <i class="fas fa-receipt"></i>
-                </div>
-                <div class="kpi-value">{{ kpis.compras_generadoras }}</div>
-                <div class="kpi-label">Transacciones</div>
-            </div>
-        </div>
-    </div>
-
-    <!-- Charts Row -->
+    <!-- KPI Cards - Compact PC / Spaced Mobile -->
     <div class="row g-4 mb-4">
-        <div class="col-md-6">
-            <div class="card bg-navy border-gold p-3">
-                <h5 class="text-gold mb-3">Top 5 Clientes (Generación)</h5>
-                <canvas id="chartClientesGanan"></canvas>
+        {% set kpi_items = [
+            (kpis.total_acumulacion, 'Puntos Generados', 'gold', 'fa-plus-circle'),
+            (kpis.total_canje, 'Puntos Canjeados', 'red', 'fa-minus-circle'),
+            ('$' ~ "{:,.2f}".format(kpis.dinero_canjeado), 'Valor Canjeado', 'cyan', 'fa-hand-holding-usd'),
+            (kpis.compras_generadoras, 'Transacciones', 'white', 'fa-receipt')
+        ] %}
+        {% for value, label, color, icon in kpi_items %}
+        <div class="col-12 col-sm-6 col-xl-3 mb-3 mb-md-0">
+            <div class="kpi-card glass-premium h-100 p-3 p-lg-4">
+                <div class="d-flex align-items-center">
+                    <div class="icon-box {{ color }} me-3">
+                        <i class="fas {{ icon }}"></i>
+                    </div>
+                    <div>
+                        <div class="kpi-value {{ 'text-danger' if color == 'red' else 'text-info' if color == 'cyan' else 'text-white' }}">{{ value }}</div>
+                        <div class="kpi-label">{{ label }}</div>
+                    </div>
+                </div>
             </div>
         </div>
-        <div class="col-md-6">
-            <div class="card bg-navy border-gold p-3">
-                <h5 class="text-gold mb-3">Top 5 Staff (Asignación)</h5>
-                <canvas id="chartStaffAsigna"></canvas>
+        {% endfor %}
+    </div>
+
+    <div class="row g-4 mb-5">
+        <div class="col-12 col-lg-6">
+            <div class="chart-container glass-premium p-4">
+                <h6 class="text-gold mb-4 text-center fw-bold"><i class="fas fa-trophy me-2"></i>TOP 5 CLIENTES (GENERACIÓN)</h6>
+                <div class="chart-wrapper">
+                    <canvas id="chartClientes"></canvas>
+                </div>
+            </div>
+        </div>
+        <div class="col-12 col-lg-6">
+            <div class="chart-container glass-premium p-4">
+                <h6 class="text-gold mb-4 text-center fw-bold"><i class="fas fa-user-tie me-2 text-info"></i>TOP 5 STAFF (ASIGNACIÓN)</h6>
+                <div class="chart-wrapper">
+                    <canvas id="chartStaff"></canvas>
+                </div>
             </div>
         </div>
     </div>
 
-    <!-- Detailed Tops -->
+    <!-- Tables Row -->
     <div class="row g-4">
-        <div class="col-md-6">
-            <div class="card bg-navy border-gold">
-                <div class="card-header border-bottom border-gold bg-transparent">
-                    <h5 class="text-gold mb-0">Top Clientes que Canjean</h5>
+        <div class="col-12 col-md-6">
+            <div class="glass-premium overflow-hidden border-0">
+                <div class="p-3 border-bottom border-white border-opacity-10">
+                    <h6 class="text-gold mb-0 fw-bold">CLIENTES EN CANJE</h6>
                 </div>
-                <div class="card-body p-0">
+                <div class="table-responsive">
                     <table class="table table-dark table-hover mb-0">
-                        <thead>
-                            <tr class="text-white-50 small">
-                                <th>Cliente</th>
-                                <th class="text-end">Puntos Canjeados</th>
-                            </tr>
-                        </thead>
-                        <tbody>
+                        <tbody class="small">
                             {% for c in tops.clientes_canje %}
-                            <tr>
-                                <td>{{ c.nombres }} {{ c.apellidos }}</td>
-                                <td class="text-end text-gold fw-bold">{{ c.total }}</td>
+                            <tr class="border-bottom border-white border-opacity-5">
+                                <td class="ps-3 py-3">{{ c.nombres }} {{ c.apellidos }}</td>
+                                <td class="text-end text-gold fw-bold pe-3">{{ c.total }} pts</td>
                             </tr>
                             {% else %}
-                            <tr><td colspan="2" class="text-center text-white-50">Sin datos</td></tr>
+                            <tr><td colspan="2" class="text-center py-4 opacity-50">Sin actividad</td></tr>
                             {% endfor %}
                         </tbody>
                     </table>
                 </div>
             </div>
         </div>
-        <div class="col-md-6">
-            <div class="card bg-navy border-gold">
-                <div class="card-header border-bottom border-gold bg-transparent">
-                    <h5 class="text-gold mb-0">Top Staff en Canjes</h5>
+        <div class="col-12 col-md-6">
+            <div class="glass-premium overflow-hidden border-0">
+                <div class="p-3 border-bottom border-white border-opacity-10">
+                    <h6 class="text-gold mb-0 fw-bold">STAFF EN CANJES</h6>
                 </div>
-                <div class="card-body p-0">
+                <div class="table-responsive">
                     <table class="table table-dark table-hover mb-0">
-                        <thead>
-                            <tr class="text-white-50 small">
-                                <th>Usuario</th>
-                                <th class="text-end">Canjes Operados</th>
-                            </tr>
-                        </thead>
-                        <tbody>
+                        <tbody class="small">
                             {% for s in tops.staff_canje %}
-                            <tr>
-                                <td>{{ s.username }}</td>
-                                <td class="text-end text-gold fw-bold">{{ s.total }}</td>
+                            <tr class="border-bottom border-white border-opacity-5">
+                                <td class="ps-3 py-3">{{ s.username }}</td>
+                                <td class="text-end text-gold fw-bold pe-3">{{ s.total }} ops</td>
                             </tr>
                             {% else %}
-                            <tr><td colspan="2" class="text-center text-white-50">Sin datos</td></tr>
+                            <tr><td colspan="2" class="text-center py-4 opacity-50">Sin actividad</td></tr>
                             {% endfor %}
                         </tbody>
                     </table>
@@ -124,70 +104,101 @@
     </div>
 </div>
 
+{# Data Injection Section #}
+<script id="data-cl" type="application/json">
+    {
+        "labels": [{% for c in tops.clientes_ganan %}"{{ c.nombres }}"{{ "," if not loop.last }}{% endfor %}],
+        "values": [{% for c in tops.clientes_ganan %}{{ c.total }}{{ "," if not loop.last }}{% endfor %}]
+    }
+</script>
+<script id="data-st" type="application/json">
+    {
+        "labels": [{% for s in tops.staff_asigna %}"{{ s.username }}"{{ "," if not loop.last }}{% endfor %}],
+        "values": [{% for s in tops.staff_asigna %}{{ s.total }}{{ "," if not loop.last }}{% endfor %}]
+    }
+</script>
+
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script>
-    const ctxClientes = document.getElementById('chartClientesGanan').getContext('2d');
-    new Chart(ctxClientes, {
-        type: 'bar',
-        data: {
-            labels: [{% for c in tops.clientes_ganan %}'{{ c.nombres }}',{% endfor %}],
-            datasets: [{
-                label: 'Puntos Acumulados',
-                data: [{% for c in tops.clientes_ganan %}{{ c.total }},{% endfor %}],
-                backgroundColor: 'rgba(212, 175, 55, 0.6)',
-                borderColor: 'rgba(212, 175, 55, 1)',
-                borderWidth: 1
-            }]
-        },
-        options: {
-            scales: { y: { beginAtZero: true, grid: { color: 'rgba(255,255,255,0.1)' }, ticks: { color: '#fff' } }, x: { ticks: { color: '#fff' } } },
-            plugins: { legend: { display: false } }
-        }
-    });
+    document.addEventListener('DOMContentLoaded', function() {
+        const createGrad = (ctx, c1, c2) => {
+            const g = ctx.createLinearGradient(0, 0, 0, 300);
+            g.addColorStop(0, c1);
+            g.addColorStop(1, c2);
+            return g;
+        };
 
-    const ctxStaff = document.getElementById('chartStaffAsigna').getContext('2d');
-    new Chart(ctxStaff, {
-        type: 'bar',
-        data: {
-            labels: [{% for s in tops.staff_asigna %}'{{ s.username }}',{% endfor %}],
-            datasets: [{
-                label: 'Puntos Asignados',
-                data: [{% for s in tops.staff_asigna %}{{ s.total }},{% endfor %}],
-                backgroundColor: 'rgba(255, 255, 255, 0.4)',
-                borderColor: 'rgba(255, 255, 255, 0.8)',
-                borderWidth: 1
-            }]
-        },
-        options: {
-            scales: { y: { beginAtZero: true, grid: { color: 'rgba(255,255,255,0.1)' }, ticks: { color: '#fff' } }, x: { ticks: { color: '#fff' } } },
-            plugins: { legend: { display: false } }
-        }
+        const opts = {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: { legend: { display: false } },
+            scales: {
+                y: { beginAtZero: true, grid: { color: 'rgba(255,255,255,0.05)', drawBorder: false }, ticks: { color: 'rgba(255,255,255,0.4)', font: { size: 10 } } },
+                x: { grid: { display: false }, ticks: { color: '#fff', font: { size: 10, weight: '600' } } }
+            }
+        };
+
+        const initChart = (canvasId, dataId, color1, color2, border) => {
+            const el = document.getElementById(canvasId);
+            const dataEl = document.getElementById(dataId);
+            if (el && dataEl) {
+                const data = JSON.parse(dataEl.textContent);
+                const ctx = el.getContext('2d');
+                new Chart(ctx, {
+                    type: 'bar',
+                    data: {
+                        labels: data.labels,
+                        datasets: [{
+                            data: data.values,
+                            backgroundColor: createGrad(ctx, color1, color2),
+                            borderColor: border,
+                            borderWidth: 1.5,
+                            borderRadius: 8
+                        }]
+                    },
+                    options: opts
+                });
+            }
+        };
+
+        initChart('chartClientes', 'data-cl', 'rgba(212, 175, 55, 0.4)', 'rgba(212, 175, 55, 0)', '#d4af37');
+        initChart('chartStaff', 'data-st', 'rgba(13, 202, 240, 0.4)', 'rgba(13, 110, 253, 0)', '#0dcaf0');
     });
 </script>
 
 <style>
-    .kpi-card { transition: all 0.3s ease; border: 1px solid rgba(212, 175, 55, 0.2); }
-    .kpi-card:hover { transform: translateY(-5px); border-color: #d4af37; box-shadow: 0 10px 20px rgba(0,0,0,0.3); }
-    .icon-circle { width: 45px; height: 45px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 1.2rem; }
-    .icon-circle.gold { background: rgba(212, 175, 55, 0.1); color: #d4af37; border: 1px solid #d4af37; }
-    .icon-circle.red { background: rgba(220, 53, 69, 0.1); color: #dc3545; border: 1px solid #dc3545; }
-    .icon-circle.cyan { background: rgba(13, 202, 240, 0.1); color: #0dcaf0; border: 1px solid #0dcaf0; }
-    .icon-circle.white { background: rgba(255, 255, 255, 0.1); color: #fff; border: 1px solid rgba(255,255,255,0.3); }
-    .kpi-value { font-size: 1.5rem; font-weight: 700; color: #fff; }
-    .kpi-label { font-size: 0.7rem; color: rgba(255,255,255,0.6); text-transform: uppercase; letter-spacing: 1px; }
+    .fw-900 { font-weight: 900; }
+    .glass-premium { 
+        background: rgba(10, 25, 47, 0.4); 
+        backdrop-filter: blur(20px); 
+        border: 1px solid rgba(255,255,255,0.08); 
+        border-radius: 24px; 
+        box-shadow: 0 15px 35px rgba(0,0,0,0.4);
+        transition: all 0.3s ease;
+    }
+    .kpi-card:hover { transform: translateY(-3px); border-color: rgba(212, 175, 55, 0.3); }
     
-    .bg-navy { background-color: #0a192f !important; }
-    .border-gold { border: 1px solid #d4af37 !important; }
-    .text-gold { color: #d4af37 !important; }
-    .btn-outline-gold { color: #d4af37; border-color: #d4af37; font-weight: 600; padding: 0.5rem 1rem; }
-    .btn-outline-gold:hover { background-color: #d4af37; color: #0a192f; }
-    .table-dark { background-color: transparent !important; }
-    .table-hover tbody tr:hover { background-color: rgba(212, 175, 55, 0.05) !important; }
+    .icon-box { 
+        width: 48px; height: 48px; border-radius: 16px; 
+        display: flex; align-items: center; justify-content: center; font-size: 1.2rem;
+    }
+    .icon-box.gold { background: rgba(212, 175, 55, 0.1); color: #d4af37; border: 1px solid rgba(212, 175, 55, 0.2); }
+    .icon-box.red { background: rgba(220, 53, 69, 0.1); color: #ef4444; border: 1px solid rgba(220, 53, 69, 0.2); }
+    .icon-box.cyan { background: rgba(13, 202, 240, 0.1); color: #0dcaf0; border: 1px solid rgba(13, 202, 240, 0.2); }
+    .icon-box.white { background: rgba(255, 255, 255, 0.05); color: #fff; border: 1px solid rgba(255, 255, 255, 0.1); }
+
+    .kpi-value { font-size: 1.7rem; font-weight: 800; letter-spacing: -1px; line-height: 1.1; }
+    .kpi-label { font-size: 0.65rem; color: rgba(255,255,255,0.4); text-transform: uppercase; letter-spacing: 1.5px; margin-top: 2px; }
+
+    .chart-wrapper { height: 280px; position: relative; width: 100%; }
     
-    @media (max-width: 768px) {
-        .kpi-value { font-size: 1.2rem; }
-        .kpi-label { font-size: 0.6rem; }
-        .icon-circle { width: 35px; height: 35px; font-size: 1rem; }
+    @media (max-width: 1200px) {
+        .kpi-value { font-size: 1.5rem; }
+    }
+    @media (max-width: 576px) {
+        .container-fluid { padding-top: 1rem; }
+        .kpi-card { padding: 1.25rem !important; }
+        .mb-3 { margin-bottom: 1.5rem !important; } /* Forzado de espacio vertical móvil */
     }
 </style>
 {% endblock %}

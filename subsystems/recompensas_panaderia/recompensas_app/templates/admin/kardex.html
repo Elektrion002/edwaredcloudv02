@@ -1,81 +1,94 @@
 {% extends "base.html" %}
 
 {% block content %}
-<div class="container mt-4">
+<div class="container-fluid py-3 px-lg-5">
     <div class="d-flex justify-content-between align-items-center mb-4">
-        <h2 class="text-gold"><i class="fas fa-history me-2"></i>Kardex de Movimientos</h2>
-        <a href="{{ url_for('admin.dashboard') }}" class="btn btn-outline-gold btn-sm">
-            <i class="fas fa-chart-pie me-1"></i>Volver al Dashboard
+        <div>
+            <h2 class="text-gold mb-0 fs-3 fw-900"><i class="fas fa-history me-2"></i>KARDEX</h2>
+            <p class="small text-white-50 mb-0">Auditoría de Movimientos</p>
+        </div>
+        <a href="{{ url_for('admin.dashboard') }}" class="btn btn-outline-gold btn-sm px-4 rounded-pill">
+            <i class="fas fa-chart-pie me-2"></i>DASHBOARD
         </a>
     </div>
 
-    <!-- Filters Row Premium -->
-    <div class="card glass-card mb-4 p-3 shadow-lg" style="border-left: 5px solid var(--accent-gold);">
-        <form method="GET" action="{{ url_for('admin.kardex') }}" class="row g-3 align-items-center">
-            <div class="col-md-4">
-                <div class="input-group">
-                    <span class="input-group-text bg-transparent border-gold text-gold"><i class="fas fa-search"></i></span>
-                    <input type="text" name="q" value="{{ search }}" class="form-control bg-dark text-white border-gold no-focus-outline" placeholder="Buscar cliente por nombre o ID...">
+    <!-- Filter Panel - Space Optimizer -->
+    <div class="glass-premium p-3 p-lg-4 mb-4">
+        <form id="f" method="GET" action="{{ url_for('admin.kardex') }}" class="row g-3 align-items-end">
+            <!-- Search -->
+            <div class="col-12 col-lg-4">
+                <div class="search-box">
+                    <i class="fas fa-search search-icon"></i>
+                    <input type="text" id="q" name="q" value="{{ search }}" 
+                           class="filter-input ps-5" placeholder="Buscar cliente o ID...">
                 </div>
             </div>
-            <div class="col-md-5">
-                <div class="d-flex gap-1 justify-content-center">
-                    <a href="{{ url_for('admin.kardex', periodo='hoy', q=search) }}" class="btn btn-pill-gold {% if periodo == 'hoy' %}active{% endif %}">Hoy</a>
-                    <a href="{{ url_for('admin.kardex', periodo='ayer', q=search) }}" class="btn btn-pill-gold {% if periodo == 'ayer' %}active{% endif %}">Ayer</a>
-                    <a href="{{ url_for('admin.kardex', periodo='semana', q=search) }}" class="btn btn-pill-gold {% if periodo == 'semana' %}active{% endif %}">Semana</a>
-                    <a href="{{ url_for('admin.kardex', periodo='historico', q=search) }}" class="btn btn-pill-gold {% if periodo == 'historico' %}active{% endif %}">Todo</a>
-                </div>
-                <input type="hidden" name="periodo" value="{{ periodo }}">
+            
+            <!-- Dates -->
+            <div class="col-6 col-lg-2">
+                <input type="date" name="fecha_inicio" value="{{ fecha_inicio }}" 
+                       class="filter-input px-3 trigger-f" title="Desde">
             </div>
-            <div class="col-md-3">
-                <button type="submit" class="btn btn-gold w-100 fw-bold">
-                    APLICAR FILTROS
-                </button>
+            <div class="col-6 col-lg-2">
+                <input type="date" name="fecha_fin" value="{{ fecha_fin }}" 
+                       class="filter-input px-3 trigger-f" title="Hasta">
+            </div>
+
+            <!-- Fast Filters -->
+            <div class="col-12 col-lg-4">
+                <div class="d-flex justify-content-center justify-content-lg-end">
+                    <div class="pills-group">
+                        {% for p in [('hoy','Hoy'), ('ayer','Ayer'), ('semana','Semana'), ('historico','Todo')] %}
+                        <label class="pill-btn">
+                            <input type="radio" name="periodo" value="{{ p[0] }}" 
+                                   class="trigger-f"
+                                   {% if (periodo == p[0]) or (p[0] == 'historico' and not periodo) %}checked{% endif %}>
+                            <span>{{ p[1] }}</span>
+                        </label>
+                        {% endfor %}
+                    </div>
+                </div>
             </div>
         </form>
     </div>
 
-    <!-- Movements Table -->
-    <div class="card glass-card overflow-hidden shadow-2xl">
+    <!-- Table Section -->
+    <div class="glass-premium overflow-hidden border-0">
         <div class="table-responsive">
-            <table class="table table-hover mb-0" id="kardexTable">
+            <table class="table table-dark table-hover mb-0" id="t">
                 <thead>
-                    <tr class="text-gold-soft small text-uppercase">
-                        <th class="sortable" onclick="sortTable(0)">Fecha <i class="fas fa-sort float-end"></i></th>
-                        <th class="sortable" onclick="sortTable(1)">Cliente <i class="fas fa-sort float-end"></i></th>
-                        <th class="sortable" onclick="sortTable(2)">Tipo <i class="fas fa-sort float-end"></i></th>
-                        <th>Concepto</th>
-                        <th class="text-center sortable" onclick="sortTable(4)">Puntos <i class="fas fa-sort float-end"></i></th>
-                        <th>Staff</th>
+                    <tr class="text-gold opacity-50 small text-uppercase fw-bold">
+                        <th class="ps-3 py-3 pointer sort-t" data-n="0">Fecha <i class="fas fa-sort ms-1"></i></th>
+                        <th class="py-3 pointer sort-t" data-n="1">Cliente <i class="fas fa-sort ms-1"></i></th>
+                        <th class="py-3 pointer sort-t" data-n="2">Tipo <i class="fas fa-sort ms-1"></i></th>
+                        <th class="py-3">Concepto</th>
+                        <th class="text-center py-3 pointer sort-t" data-n="4">Pts <i class="fas fa-sort ms-1"></i></th>
+                        <th class="pe-3 py-3">Staff</th>
                     </tr>
                 </thead>
-                <tbody>
+                <tbody class="small">
                     {% for m in movements %}
-                    <tr class="align-middle">
-                        <td class="small opacity-75">{{ m.created_at.strftime('%d/%m/%Y %H:%M') }}</td>
+                    <tr class="border-bottom border-white border-opacity-5">
+                        <td class="opacity-50 ps-3">{{ m.created_at.strftime('%d/%m/%Y %H:%M') }}</td>
                         <td>
-                            <div class="text-white fw-bold mb-0">{{ m.customer.nombres }} {{ m.customer.apellidos }}</div>
-                            <div class="small text-gold opacity-50">{{ m.customer.cliente_id }}</div>
+                            <div class="fw-bold text-white">{{ m.customer.nombres }}</div>
+                            <div class="text-gold opacity-50" style="font-size: 0.7rem">{{ m.customer.cliente_id }}</div>
                         </td>
                         <td>
-                            {% if m.tipo == 'acumulacion' %}
-                            <div class="type-badge success"><i class="fas fa-arrow-up me-1"></i>ACUMULA</div>
-                            {% elif m.tipo == 'canje' %}
-                            <div class="type-badge danger"><i class="fas fa-arrow-down me-1"></i>CANJE</div>
-                            {% else %}
-                            <div class="type-badge info"><i class="fas fa-cog me-1"></i>AJUSTE</div>
-                            {% endif %}
+                            <span class="custom-badge {{ m.tipo }}">
+                                {{ m.tipo | upper if m.tipo != 'acumulacion' else 'GANÓ' }}
+                            </span>
                         </td>
-                        <td class="small text-white-50">{{ m.concepto }}</td>
-                        <td class="text-center fw-bold fs-5 {% if m.tipo == 'canje' %}text-danger{% else %}text-success{% endif %}">
-                            {{ "+" if m.tipo != 'canje' else "-" }}{{ m.puntos }}
+                        <td class="opacity-50">{{ m.concepto }}</td>
+                        <td class="text-center fw-bold {{ 'text-danger' if m.tipo == 'canje' else 'text-success' }}">
+                            {{ '-' if m.tipo == 'canje' else '+' }}{{ m.puntos }}
                         </td>
-                        <td class="small text-white-50">
-                            <span class="badge rounded-pill bg-dark border border-gold-soft">{{ staff_map.get(m.staff_id, 'Sistema') }}</span>
+                        <td class="pe-3">
+                            <span class="staff-badge">{{ staff_map.get(m.staff_id, 'System') }}</span>
                         </td>
                     </tr>
                     {% else %}
-                    <tr><td colspan="6" class="text-center py-5 text-gold opacity-50"><i>Sin registros coincidentes</i></td></tr>
+                    <tr><td colspan="6" class="text-center py-5 opacity-50">Sin registros.</td></tr>
                     {% endfor %}
                 </tbody>
             </table>
@@ -84,68 +97,76 @@
 </div>
 
 <script>
-function sortTable(n) {
-  var table, rows, switching, i, x, y, shouldSwitch, dir, switchcount = 0;
-  table = document.getElementById("kardexTable");
-  switching = true;
-  dir = "asc";
-  while (switching) {
-    switching = false;
-    rows = table.rows;
-    for (i = 1; i < (rows.length - 1); i++) {
-      shouldSwitch = false;
-      x = rows[i].getElementsByTagName("TD")[n];
-      y = rows[i + 1].getElementsByTagName("TD")[n];
-      if (dir == "asc") {
-        if (x.innerHTML.toLowerCase() > y.innerHTML.toLowerCase()) {
-          shouldSwitch = true;
-          break;
-        }
-      } else if (dir == "desc") {
-        if (x.innerHTML.toLowerCase() < y.innerHTML.toLowerCase()) {
-          shouldSwitch = true;
-          break;
-        }
-      }
-    }
-    if (shouldSwitch) {
-      rows[i].parentNode.insertBefore(rows[i + 1], rows[i]);
-      switching = true;
-      switchcount ++;
-    } else {
-      if (switchcount == 0 && dir == "asc") {
-        dir = "desc";
-        switching = true;
-      }
-    }
-  }
-}
+    document.addEventListener('DOMContentLoaded', function() {
+        const form = document.getElementById('f');
+        document.querySelectorAll('.trigger-f').forEach(el => {
+            el.addEventListener('change', () => form.submit());
+        });
+        const q = document.getElementById('q');
+        if (q) q.addEventListener('keypress', (e) => { if (e.key === 'Enter') { e.preventDefault(); form.submit(); } });
+
+        document.querySelectorAll('.sort-t').forEach(th => {
+            th.addEventListener('click', () => {
+                const n = parseInt(th.getAttribute('data-n'));
+                let table = document.getElementById("t"), switching = true, dir = "asc", rows, x, y, should, i;
+                while (switching) {
+                    switching = false; rows = table.rows;
+                    for (i = 1; i < (rows.length - 1); i++) {
+                        should = false;
+                        x = rows[i].getElementsByTagName("TD")[n].innerText.toLowerCase();
+                        y = rows[i+1].getElementsByTagName("TD")[n].innerText.toLowerCase();
+                        if (dir === "asc" ? x > y : x < y) { should = true; break; }
+                    }
+                    if (should) { rows[i].parentNode.insertBefore(rows[i + 1], rows[i]); switching = true; }
+                    else if (dir === "asc") { dir = "desc"; switching = true; }
+                }
+            });
+        });
+    });
 </script>
-</div>
 
 <style>
-    .glass-card { background: rgba(255, 255, 255, 0.03); backdrop-filter: blur(10px); border: 1px solid rgba(212, 175, 55, 0.2); border-radius: 15px; }
-    .border-gold { border: 1px solid #d4af37 !important; }
-    .border-gold-soft { border: 1px solid rgba(212, 175, 55, 0.3) !important; }
+    .fw-900 { font-weight: 900; }
+    .glass-premium { 
+        background: rgba(10, 25, 47, 0.4); 
+        backdrop-filter: blur(20px); 
+        border: 1px solid rgba(255,255,255,0.08); 
+        border-radius: 20px; 
+        box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+    }
     .text-gold { color: #d4af37 !important; }
-    .text-gold-soft { color: rgba(212, 175, 55, 0.6); }
-    .btn-gold { background: #d4af37; color: #0a1128; border: none; border-radius: 8px; transition: all 0.3s ease; }
-    .btn-gold:hover { transform: scale(1.02); background: #bfa030; }
     
-    .btn-pill-gold { color: #d4af37; border: 1px solid #d4af37; border-radius: 20px; padding: 0.3rem 0.8rem; font-size: 0.8rem; font-weight: 600; text-decoration: none; transition: all 0.2s; }
-    .btn-pill-gold:hover, .btn-pill-gold.active { background: #d4af37; color: #0a1128; }
+    .filter-input { 
+        background: rgba(0,0,0,0.3) !important; 
+        border: 1px solid rgba(212,175,55,0.2) !important; 
+        color: #fff !important; 
+        border-radius: 12px !important; 
+        padding: 0.6rem 1rem !important; 
+        width: 100%;
+        transition: 0.3s;
+    }
+    .filter-input:focus { border-color: #d4af37 !important; outline: none; box-shadow: 0 0 15px rgba(212,175,55,0.1); }
     
-    .type-badge { padding: 4px 10px; border-radius: 6px; font-weight: 700; font-size: 0.65rem; display: inline-flex; align-items: center; }
-    .type-badge.success { background: rgba(74, 222, 128, 0.1); color: #4ade80; border: 1px solid rgba(74, 222, 128, 0.3); }
-    .type-badge.danger { background: rgba(239, 68, 68, 0.1); color: #ef4444; border: 1px solid rgba(239, 68, 68, 0.3); }
-    .type-badge.info { background: rgba(59, 130, 246, 0.1); color: #3b82f6; border: 1px solid rgba(59, 130, 246, 0.3); }
+    .search-box { position: relative; }
+    .search-icon { position: absolute; left: 18px; top: 50%; transform: translateY(-50%); color: #d4af37; opacity: 0.7; }
     
-    .no-focus-outline:focus { box-shadow: none; border-color: #ffd700; background-color: rgba(255,255,255,0.05) !important; color: #fff !important; }
+    .pills-group { display: flex; background: rgba(0,0,0,0.4); border-radius: 40px; padding: 4px; border: 1px solid rgba(255,255,255,0.05); }
+    .pill-btn { margin-bottom: 0; cursor: pointer; flex: 1; text-align: center; }
+    .pill-btn input { display: none; }
+    .pill-btn span { padding: 6px 15px; border-radius: 35px; color: rgba(255,255,255,0.4); font-size: 0.8rem; font-weight: 600; transition: 0.3s; display: block; }
+    .pill-btn input:checked + span { background: #d4af37; color: #0a1128; box-shadow: 0 4px 10px rgba(212,175,55,0.2); }
+
+    .custom-badge { padding: 4px 8px; border-radius: 6px; font-size: 0.6rem; font-weight: 800; letter-spacing: 0.5px; }
+    .custom-badge.acumulacion { background: rgba(74, 222, 128, 0.1); color: #4ade80; border: 1px solid rgba(74,222,128,0.2); }
+    .custom-badge.canje { background: rgba(239, 68, 68, 0.1); color: #ef4444; border: 1px solid rgba(239,68,68,0.2); }
     
-    .sortable { cursor: pointer; transition: background 0.2s; }
-    .sortable:hover { background: rgba(212, 175, 55, 0.1); }
+    .staff-badge { font-size: 0.7rem; color: #d4af37; border: 1px solid rgba(212,175,55,0.2); padding: 2px 8px; border-radius: 4px; background: rgba(0,0,0,0.2); }
     
-    table { color: #fff !important; }
-    .table-hover tbody tr:hover { background: rgba(255, 255, 255, 0.02); }
+    .pointer { cursor: pointer; }
+    table tr:hover { background: rgba(212,175,55,0.02) !important; }
+    @media (max-width: 768px) {
+        .pills-group { justify-content: flex-start; overflow-x: auto; -webkit-overflow-scrolling: touch; }
+        .pill-btn span { white-space: nowrap; }
+    }
 </style>
 {% endblock %}
