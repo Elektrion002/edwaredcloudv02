@@ -1,0 +1,18 @@
+services:
+  recompensas_app:
+    build: .
+    container_name: rpandemo01_app
+    restart: always
+    networks:
+      - edwared_net
+    ports:
+      - "5001:5001"
+    environment:
+      - DATABASE_URL=postgresql://edwared_admin:MEwar3x4-12VpS@172.18.0.1:5432/db_rpanaderia001
+      - SECRET_KEY=dev-secret-key-change-it
+    volumes:
+      - ./recompensas_app/static/uploads:/app/recompensas_app/static/uploads
+
+networks:
+  edwared_net:
+    external: true
